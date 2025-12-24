@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>FinanceFlow Principal V2</title>
+    <title>FinanceFlow Dashboard Pro</title>
     <!-- Shim do process.env deve vir antes de qualquer script de módulo -->
     <script>
       window.process = window.process || {};
@@ -12,7 +12,7 @@
     </script>
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -20,41 +20,39 @@
           extend: {
             colors: {
               "primary": "#0ebe54",
-              "background-light": "#f6f8f7",
-              "background-dark": "#111814",
-              "surface-dark": "#1c2720",
-              "border-dark": "#3b5445",
-              "text-muted": "#9db9a8",
+              "background-dark": "#0a0f0c",
+              "surface-dark": "#141d18",
+              "border-dark": "#2d3d34",
+              "text-muted": "#8fa79a",
             },
             fontFamily: {
               "sans": ["Inter", "sans-serif"]
             },
-            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            borderRadius: {"DEFAULT": "0.75rem", "lg": "1.25rem", "xl": "2rem", "full": "9999px"},
           },
         },
       }
     </script>
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+        body { background-color: #0a0f0c; color: white; -webkit-font-smoothing: antialiased; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0a0f0c; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2d3d34; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #0ebe54; }
+        
+        .glass-panel {
+          background: rgba(20, 29, 24, 0.7);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(45, 61, 52, 0.5);
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #111814; 
+        
+        @keyframes subtle-pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.02); }
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #3b5445; 
-            border-radius: 10px;
+        .ai-glow {
+          box-shadow: 0 0 20px rgba(14, 190, 84, 0.3);
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #0ebe54; 
-        }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
-        .kpi-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .kpi-card:hover { transform: translateY(-4px); }
     </style>
 <script type="importmap">
 {
@@ -71,10 +69,9 @@
 }
 </script>
 </head>
-<body class="bg-background-dark text-white font-sans overflow-hidden">
+<body class="overflow-hidden">
     <div id="root"></div>
-    
-    <!-- Ponto de entrada absoluto para o Vite processar o grafo de módulos TSX -->
-    <script type="module" src="/index.tsx"></script>
+    <!-- Ponto de entrada relativo SEM BARRA para garantir o build no Vite/Vercel -->
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>
