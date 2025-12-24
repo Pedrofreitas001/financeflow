@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { WATERFALL_DATA } from '../../constants.tsx';
+import { WATERFALL_DATA } from '../../constants';
 
 const WaterfallChart: React.FC = () => {
   // Processing data for Waterfall effect in Recharts
