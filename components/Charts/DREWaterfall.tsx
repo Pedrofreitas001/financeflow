@@ -1,10 +1,30 @@
 
 import React from 'react';
-import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import { ComposedChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { useFinance } from '../../context/FinanceContext';
 
 const DREWaterfall: React.FC = () => {
   const { dadosFiltrados } = useFinance();
+
+  const formatYAxis = (value: number) => {
+    const absValue = Math.abs(value);
+    if (absValue >= 1000000) {
+      return `R$${(value / 1000000).toFixed(1)}mi`;
+    } else if (absValue >= 1000) {
+      return `R$${(value / 1000).toFixed(0)}k`;
+    }
+    return `R$${value.toFixed(0)}`;
+  };
+
+  const formatLabel = (value: number) => {
+    const absValue = Math.abs(value);
+    if (absValue >= 1000000) {
+      return `${(value / 1000000).toFixed(1)}mi`;
+    } else if (absValue >= 1000) {
+      return `${(value / 1000).toFixed(0)}k`;
+    }
+    return value.toFixed(0);
+  };
 
   const data = React.useMemo(() => {
     const sum = (cat: string) => Math.abs(dadosFiltrados.filter(d => d.categoria.toUpperCase().includes(cat.toUpperCase())).reduce((acc, curr) => acc + curr.valor, 0));
@@ -54,11 +74,11 @@ const DREWaterfall: React.FC = () => {
               interval={0}
               dy={10}
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
+            <YAxis
+              axisLine={false}
+              tickLine={false}
               tick={{ fill: '#9db9a8', fontSize: 10 }}
-              tickFormatter={(val) => `R$${(val/1000).toFixed(0)}k`}
+              tickFormatter={formatYAxis}
             />
             <Tooltip 
               cursor={{ fill: '#ffffff0a' }}
@@ -75,6 +95,12 @@ const DREWaterfall: React.FC = () => {
                 else if (entry.actual < 0) color = '#ef4444';
                 return <Cell key={`cell-${index}`} fill={color} />;
               })}
+              <LabelList
+                dataKey="actual"
+                position="center"
+                formatter={formatLabel}
+                style={{ fill: '#fff', fontSize: '11px', fontWeight: 'bold' }}
+              />
             </Bar>
           </ComposedChart>
         </ResponsiveContainer>

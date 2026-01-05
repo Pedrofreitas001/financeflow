@@ -42,9 +42,9 @@ const KPIGrid: React.FC = () => {
   ];
 
   return (
-    <div id="pdf-section-kpis" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 bg-[#111814] p-1">
+    <div id="pdf-section-kpis" className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-1">
       {metrics.map((m, i) => (
-        <div key={i} className="bg-[#1c2720] border border-[#3b5445] rounded-xl p-4 flex flex-col justify-between shadow-sm">
+        <div key={i} className="border border-[#3b5445] rounded-xl p-4 flex flex-col justify-between shadow-sm">
           <div className="flex justify-between items-start mb-2">
             <div className="w-8 h-8 rounded-lg bg-[#111814] flex items-center justify-center border border-[#3b5445]">
               <span className="material-symbols-outlined text-[16px]" style={{ color: m.color }}>{m.icon}</span>

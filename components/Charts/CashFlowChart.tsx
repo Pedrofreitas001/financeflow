@@ -6,6 +6,16 @@ import { useFinance } from '../../context/FinanceContext';
 const CashFlowChart: React.FC = () => {
   const { agregadoMensal } = useFinance();
 
+  const formatYAxis = (value: number) => {
+    const absValue = Math.abs(value);
+    if (absValue >= 1000000) {
+      return `R$${(value / 1000000).toFixed(1)}mi`;
+    } else if (absValue >= 1000) {
+      return `R$${(value / 1000).toFixed(0)}k`;
+    }
+    return `R$${value.toFixed(0)}`;
+  };
+
   return (
     <div className="bg-[#1c2720] border border-[#3b5445] rounded-xl p-6 flex flex-col h-[420px] w-full overflow-hidden">
       <div className="flex justify-between items-center mb-4 shrink-0">
@@ -22,11 +32,11 @@ const CashFlowChart: React.FC = () => {
               tick={{ fill: '#9db9a8', fontSize: 9 }} 
               dy={5} 
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: '#9db9a8', fontSize: 9 }} 
-              tickFormatter={(val) => `R$${(val/1000).toFixed(0)}k`} 
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#9db9a8', fontSize: 9 }}
+              tickFormatter={formatYAxis}
             />
             <Tooltip 
               cursor={{ fill: '#ffffff0a' }}
