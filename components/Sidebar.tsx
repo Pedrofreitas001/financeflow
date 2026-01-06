@@ -6,9 +6,10 @@ import * as XLSX from 'xlsx';
 
 interface SidebarProps {
   onExport?: () => void;
+  visible?: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onExport }) => {
+const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true }) => {
   const { empresas, mesesDisponiveis, filtros, setFiltroEmpresa, setFiltroMeses, carregarDados } = useFinance();
   const { theme, toggleTheme } = useTheme();
 
@@ -38,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport }) => {
   };
 
   return (
-    <aside className="w-80 flex-shrink-0 flex flex-col border-r border-border-dark bg-background-dark h-screen overflow-hidden">
+    <aside className={`w-80 flex-shrink-0 flex flex-col border-r border-border-dark bg-background-dark h-screen overflow-hidden transition-all duration-300 ${visible ? 'ml-0' : '-ml-80'}`}>
       <div className="p-6 pb-2">
         <div className="flex items-center gap-4">
           <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-[#054d22] flex items-center justify-center shrink-0">

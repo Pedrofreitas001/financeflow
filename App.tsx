@@ -14,6 +14,7 @@ const AppContent: React.FC = () => {
   const { filtros, kpis } = useFinance();
   const { theme } = useTheme();
   const [isExporting, setIsExporting] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   const isDark = theme === 'dark';
 
   const handleExportPDF = async () => {
@@ -103,9 +104,9 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-background-dark overflow-hidden">
-      <Sidebar onExport={handleExportPDF} />
+      <Sidebar onExport={handleExportPDF} visible={sidebarVisible} />
       <div className="flex-1 flex flex-col min-w-0">
-        <Header />
+        <Header onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} sidebarVisible={sidebarVisible} />
         <Dashboard />
         
         {/* Hidden Cover Component for Capture */}

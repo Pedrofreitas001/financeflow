@@ -3,14 +3,27 @@ import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useFinance } from '../context/FinanceContext';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onToggleSidebar: () => void;
+  sidebarVisible: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible }) => {
   const { theme } = useTheme();
   const { uploadDate } = useFinance();
   const isDark = theme === 'dark';
 
   return (
     <header className={`h-20 flex-shrink-0 px-8 flex items-center justify-between ${isDark ? 'bg-background-dark/80 border-border-dark' : 'bg-gray-100/80 border-gray-200'} border-b backdrop-blur-md z-10`}>
-      <div className="flex flex-col justify-center">
+      <div className="flex items-center gap-4">
+        <button
+          onClick={onToggleSidebar}
+          className={`p-2 rounded-lg ${isDark ? 'hover:bg-surface-dark text-text-muted hover:text-white' : 'hover:bg-gray-200 text-gray-600 hover:text-gray-900'} transition-colors`}
+          title={sidebarVisible ? 'Esconder sidebar' : 'Mostrar sidebar'}
+        >
+          <span className="material-symbols-outlined">{sidebarVisible ? 'menu_open' : 'menu'}</span>
+        </button>
+        <div className="flex flex-col justify-center">
         <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} leading-tight`}>Relatório financeiro consolidado</h1>
         <div className="flex items-center gap-2 mt-1">
           <span className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Visão Geral</span>
@@ -26,6 +39,7 @@ const Header: React.FC = () => {
               </div>
             </>
           )}
+        </div>
         </div>
       </div>
 
