@@ -40,7 +40,7 @@ const DREAcumuladoTable: React.FC = () => {
           </p>
         </div>
 
-        <div className="overflow-x-auto">
+        <div>
           <table className="w-full text-xs">
             <thead>
               <tr className={`${isDark ? 'bg-[#111814]' : 'bg-gray-100'} border-b ${isDark ? 'border-[#3b5445]' : 'border-gray-200'}`}>

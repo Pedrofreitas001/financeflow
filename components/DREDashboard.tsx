@@ -29,7 +29,7 @@ const DREDashboard: React.FC = () => {
         </div>
 
         {/* Cabeçalho - Sticky Abaixo dos Filtros */}
-        <div className={`sticky top-[120px] z-10 pb-4 mb-6 ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+        <div className={`sticky top-[100px] z-10 py-4 ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
           <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
             Tabelas DRE
           </h1>
@@ -39,7 +39,7 @@ const DREDashboard: React.FC = () => {
         </div>
 
         {/* Tabs de Visualização - Sticky Abaixo do Header */}
-        <div className={`sticky top-[220px] z-10 flex gap-2 mb-6 ${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-lg p-1`}>
+        <div className={`sticky top-[190px] z-10 flex gap-2 mb-8 ${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-lg p-1`}>
             {[
               { id: 'mensal' as ViewType, label: 'Projetado vs Real', icon: 'calendar_month' },
               { id: 'acumulado' as ViewType, label: 'Acumulado Mensal', icon: 'trending_up' },
