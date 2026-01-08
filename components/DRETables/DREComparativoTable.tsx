@@ -98,7 +98,7 @@ const DREComparativoTable: React.FC = () => {
         <div className="flex gap-6 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded bg-orange-500/30"></div>
-            <span className={isDark ? 'text-[#9db9a8]' : 'text-gray-600'}>Diferença significativa (>10%)</span>
+            <span className={isDark ? 'text-[#9db9a8]' : 'text-gray-600'}>Diferença significativa (&gt;10%)</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded bg-blue-500/30"></div>
