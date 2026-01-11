@@ -143,18 +143,16 @@ const DashboardIndicadores: React.FC = () => {
                     <p className="text-gray-400 text-sm mt-2">Análise de saúde financeira com benchmarks do setor</p>
                 </div>
 
-                {/* Filtros */}
-                <div className="mb-6 bg-surface-dark rounded-xl p-4 border border-border-dark">
-                    <label className="block text-xs font-bold text-text-muted uppercase mb-3">Empresa</label>
-                    <select
-                        value={selectedEmpresa || empresas[0] || ''}
-                        onChange={(e) => setSelectedEmpresa(e.target.value)}
-                        className="w-full p-2.5 border border-border-dark rounded-lg bg-background-dark text-gray-100 focus:ring-2 focus:ring-primary/50 text-sm"
-                    >
-                        {empresas.map(empresa => (
-                            <option key={empresa} value={empresa}>{empresa}</option>
-                        ))}
-                    </select>
+                {/* Links para Google Sheets */}
+                <div className="mb-6 flex gap-3">
+                    <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                        <span className="material-symbols-outlined text-base">open_in_new</span>
+                        Visualizar Modelo
+                    </a>
+                    <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                        <span className="material-symbols-outlined text-base">download</span>
+                        Baixar Arquivo
+                    </a>
                 </div>
 
                 {/* KPIs */}
@@ -262,6 +260,9 @@ const DashboardIndicadores: React.FC = () => {
                         </table>
                     </div>
                 </div>
+
+                {/* Espaço para exportação PDF */}
+                <div className="pb-12"></div>
             </div>
         </main>
     );

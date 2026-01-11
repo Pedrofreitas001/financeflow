@@ -11,20 +11,26 @@ interface KPIOrcamentoCardProps {
     status: 'positivo' | 'neutro' | 'negativo';
 }
 
-const KPIOrcamentoCard: React.FC<KPIOrcamentoCardProps> = ({ titulo, valor, percentual, unidade, cor, status }) => (
-    <div className={`bg-surface-dark rounded-lg p-4 border border-border-dark shadow-sm`}>
-        <p className="text-gray-400 text-sm">{titulo}</p>
-        <p className={`text-2xl font-bold ${cor}`}>
-            {unidade === '%' ? `${valor.toFixed(1)}%` : `R$ ${(valor / 1000).toFixed(1)}k`}
-        </p>
-        {percentual !== undefined && (
-            <p className={`text-xs font-semibold mt-1 ${percentual > 0 ? 'text-red-400' : 'text-green-400'
-                }`}>
-                {percentual > 0 ? '↑' : '↓'} {Math.abs(percentual).toFixed(1)}% vs Orçado
+const KPIOrcamentoCard: React.FC<KPIOrcamentoCardProps> = ({ titulo, valor, percentual, unidade, cor, status }) => {
+    // Garantir que valor é um número válido
+    const valorValido = isNaN(valor) ? 0 : valor;
+    const percentualValido = percentual !== undefined && isNaN(percentual) ? 0 : percentual;
+
+    return (
+        <div className={`bg-surface-dark rounded-lg p-4 border border-border-dark shadow-sm`}>
+            <p className="text-gray-400 text-sm">{titulo}</p>
+            <p className={`text-2xl font-bold ${cor}`}>
+                {unidade === '%' ? `${valorValido.toFixed(1)}%` : `R$ ${(valorValido / 1000).toFixed(1)}k`}
             </p>
-        )}
-    </div>
-);
+            {percentualValido !== undefined && (
+                <p className={`text-xs font-semibold mt-1 ${percentualValido > 0 ? 'text-red-400' : 'text-green-400'
+                    }`}>
+                    {percentualValido > 0 ? '↑' : '↓'} {Math.abs(percentualValido).toFixed(1)}% vs Orçado
+                </p>
+            )}
+        </div>
+    );
+};
 
 const DashboardOrcamento: React.FC = () => {
     const { dados, totalOrcado, totalRealizado, varianciaTotal, varianciaPercentual, empresas, obterDesviosPorCategoria } = useOrcamento();
@@ -58,7 +64,10 @@ const DashboardOrcamento: React.FC = () => {
         setDesviosPorCategoria(obterDesviosPorCategoria());
     }, [selectedEmpresa, dados, empresas, obterDesviosPorCategoria]);
 
-    const formatCurrency = (value: number) => `R$ ${(value / 1000).toFixed(1)}k`;
+    const formatCurrency = (value: number) => {
+        const validValue = isNaN(value) ? 0 : value;
+        return `R$ ${(validValue / 1000).toFixed(1)}k`;
+    };
     const statusVariancia = varianciaPercentual > 5 ? 'negativo' : varianciaPercentual < -5 ? 'positivo' : 'neutro';
 
     if (dados.length === 0) {
@@ -142,18 +151,16 @@ const DashboardOrcamento: React.FC = () => {
                     <p className="text-gray-400 text-sm mt-2">Análise de desvios orçamentários e controle de gastos</p>
                 </div>
 
-                {/* Filtro */}
-                <div className="mb-6 bg-surface-dark rounded-xl p-4 border border-border-dark">
-                    <label className="block text-xs font-bold text-text-muted uppercase mb-3">Empresa</label>
-                    <select
-                        value={selectedEmpresa || empresas[0] || ''}
-                        onChange={(e) => setSelectedEmpresa(e.target.value)}
-                        className="w-full p-2.5 border border-border-dark rounded-lg bg-background-dark text-gray-100 focus:ring-2 focus:ring-primary/50 text-sm"
-                    >
-                        {empresas.map(empresa => (
-                            <option key={empresa} value={empresa}>{empresa}</option>
-                        ))}
-                    </select>
+                {/* Links para Google Sheets */}
+                <div className="mb-6 flex gap-3">
+                    <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                        <span className="material-symbols-outlined text-base">open_in_new</span>
+                        Visualizar Modelo
+                    </a>
+                    <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                        <span className="material-symbols-outlined text-base">download</span>
+                        Baixar Arquivo
+                    </a>
                 </div>
 
                 {/* KPIs */}
@@ -305,6 +312,9 @@ const DashboardOrcamento: React.FC = () => {
                         </table>
                     </div>
                 </div>
+
+                {/* Espaço para exportação PDF */}
+                <div className="pb-12"></div>
             </div>
         </main>
     );
