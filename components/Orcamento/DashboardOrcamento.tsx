@@ -61,9 +61,82 @@ const DashboardOrcamento: React.FC = () => {
     const formatCurrency = (value: number) => `R$ ${(value / 1000).toFixed(1)}k`;
     const statusVariancia = varianciaPercentual > 5 ? 'negativo' : varianciaPercentual < -5 ? 'positivo' : 'neutro';
 
+    if (dados.length === 0) {
+        return (
+            <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark min-h-screen">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                        <div className="w-24 h-24 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-primary text-5xl">receipt_long</span>
+                        </div>
+                        <h2 className="text-white text-2xl font-bold mb-4">Nenhum dado carregado</h2>
+                        <p className="text-text-muted mb-8">Use o uploader na barra lateral para carregar dados de orçamento</p>
+
+                        {/* Formato Esperado */}
+                        <div className="bg-surface-dark rounded-xl border border-border-dark p-6 w-full max-w-2xl">
+                            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-primary">description</span>
+                                Formato Esperado: orcamento_template.xlsx
+                            </h3>
+                            <div className="bg-background-dark rounded-lg p-4 mb-4 overflow-x-auto">
+                                <table className="text-xs w-full">
+                                    <thead>
+                                        <tr className="text-text-muted border-b border-border-dark">
+                                            <th className="text-left py-2">Coluna</th>
+                                            <th className="text-left py-2">Tipo</th>
+                                            <th className="text-left py-2">Exemplo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-gray-300">
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">mes</td>
+                                            <td>número</td>
+                                            <td>1, 2, 3...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">empresa</td>
+                                            <td>texto</td>
+                                            <td>Alpha, Beta, Gamma...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">categoria</td>
+                                            <td>texto</td>
+                                            <td>Folha, Aluguel, Fornecedores...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">orcado</td>
+                                            <td>número (R$)</td>
+                                            <td>80000, 120000...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">realizado</td>
+                                            <td>número (R$)</td>
+                                            <td>82000, 118000...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">responsavel</td>
+                                            <td>texto (opcional)</td>
+                                            <td>RH, Compras, Admin...</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-2 font-mono text-primary">observacoes</td>
+                                            <td>texto (opcional)</td>
+                                            <td>Acima, Abaixo, Normal...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p className="text-xs text-text-muted">Arquivo: <span className="text-primary font-mono">dados/excel_exemplos/orcamento_template.xlsx</span></p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
     return (
-        <div className="p-6 bg-background-light dark:bg-background-dark min-h-screen">
-            <div className="mb-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark min-h-screen">
+            <div className="max-w-[1400px] mx-auto pb-8">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Budgeting vs Realizado</h1>
                 <p className="text-gray-600 dark:text-gray-400">Análise de desvios orçamentários e controle de gastos</p>
             </div>
@@ -190,8 +263,8 @@ const DashboardOrcamento: React.FC = () => {
                                     </td>
                                     <td className="px-4 py-2 text-center">
                                         <span className={`px-2 py-1 rounded text-xs font-semibold ${item.varianciaPercentual > 5 ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
-                                                item.varianciaPercentual < -5 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                            item.varianciaPercentual < -5 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
                                             }`}>
                                             {item.varianciaPercentual > 5 ? 'Crítico' : item.varianciaPercentual < -5 ? 'Ótimo' : 'OK'}
                                         </span>
@@ -231,7 +304,7 @@ const DashboardOrcamento: React.FC = () => {
                     </table>
                 </div>
             </div>
-        </div>
+        </main>
     );
 };
 

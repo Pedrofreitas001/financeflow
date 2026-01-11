@@ -190,6 +190,42 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             </span>
             <p className="text-sm font-medium">Tabelas DRE</p>
           </button>
+          <button
+            onClick={() => onNavigate?.('cashflow')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'cashflow'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'cashflow' ? 'text-primary' : ''}`}>
+              trending_up
+            </span>
+            <p className="text-sm font-medium">Fluxo de Caixa</p>
+          </button>
+          <button
+            onClick={() => onNavigate?.('indicadores')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'indicadores'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'indicadores' ? 'text-primary' : ''}`}>
+              analytics
+            </span>
+            <p className="text-sm font-medium">Indicadores</p>
+          </button>
+          <button
+            onClick={() => onNavigate?.('orcamento')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'orcamento'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'orcamento' ? 'text-primary' : ''}`}>
+              receipt_long
+            </span>
+            <p className="text-sm font-medium">Orçamento</p>
+          </button>
         </nav>
 
         <div className="flex flex-col gap-2">

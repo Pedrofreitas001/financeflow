@@ -30,13 +30,75 @@ const DashboardCashFlow: React.FC = () => {
     if (dados.length === 0) {
         return (
             <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
-                <div className="max-w-[1400px] mx-auto flex items-center justify-center h-full">
-                    <div className="text-center">
+                <div className="max-w-[1400px] mx-auto">
+                    <div className="flex flex-col items-center justify-center min-h-[60vh]">
                         <div className="w-24 h-24 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center mx-auto mb-6">
                             <span className="material-symbols-outlined text-primary text-5xl">trending_up</span>
                         </div>
-                        <h2 className="text-white text-2xl font-bold mb-2">Nenhum dado carregado</h2>
-                        <p className="text-text-muted">Carregue dados de fluxo de caixa para visualizar.</p>
+                        <h2 className="text-white text-2xl font-bold mb-4">Nenhum dado carregado</h2>
+                        <p className="text-text-muted mb-8">Use o uploader na barra lateral para carregar dados de fluxo de caixa</p>
+
+                        {/* Formato Esperado */}
+                        <div className="bg-surface-dark rounded-xl border border-border-dark p-6 w-full max-w-2xl">
+                            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+                                <span className="material-symbols-outlined text-primary">description</span>
+                                Formato Esperado: fluxo_caixa_template.xlsx
+                            </h3>
+                            <div className="bg-background-dark rounded-lg p-4 mb-4 overflow-x-auto">
+                                <table className="text-xs w-full">
+                                    <thead>
+                                        <tr className="text-text-muted border-b border-border-dark">
+                                            <th className="text-left py-2">Coluna</th>
+                                            <th className="text-left py-2">Tipo</th>
+                                            <th className="text-left py-2">Exemplo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-gray-300">
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">id</td>
+                                            <td>texto</td>
+                                            <td>cf1, cf2, cf3...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">mes</td>
+                                            <td>número</td>
+                                            <td>1, 2, 3...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">empresa</td>
+                                            <td>texto</td>
+                                            <td>Alpha, Beta, Gamma...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">tipo</td>
+                                            <td>Receber ou Pagar</td>
+                                            <td>Receber, Pagar</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">categoria</td>
+                                            <td>texto</td>
+                                            <td>Vendas, Folha, Aluguel...</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">data_vencimento</td>
+                                            <td>data (DD/MM/YYYY)</td>
+                                            <td>15/01/2025</td>
+                                        </tr>
+                                        <tr className="border-b border-border-dark/50">
+                                            <td className="py-2 font-mono text-primary">valor</td>
+                                            <td>número</td>
+                                            <td>50000, 120000...</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="py-2 font-mono text-primary">status</td>
+                                            <td>Aberto, Parcial, Pago, Atrasado</td>
+                                            <td>Pago, Aberto</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p className="text-xs text-text-muted">Arquivo: <span className="text-primary font-mono">dados/excel_exemplos/fluxo_caixa_template.xlsx</span></p>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -44,8 +106,8 @@ const DashboardCashFlow: React.FC = () => {
     }
 
     return (
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
-            <div className="max-w-[1400px] mx-auto">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark min-h-screen">
+            <div className="max-w-[1400px] mx-auto pb-8">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-100">Fluxo de Caixa</h1>
                     <p className="text-gray-400 text-sm mt-2">Gerenciamento de entradas e saídas</p>
@@ -152,8 +214,8 @@ const DashboardCashFlow: React.FC = () => {
                                             <td className="px-4 py-3 text-right font-semibold text-gray-300">{formatCurrency(item.valor)}</td>
                                             <td className="px-4 py-3">
                                                 <span className={`px-2 py-1 rounded text-xs font-bold ${item.status === 'Pago' ? 'bg-green-500/20 text-green-400' :
-                                                        item.status === 'Atrasado' ? 'bg-red-500/20 text-red-400' :
-                                                            'bg-yellow-500/20 text-yellow-400'
+                                                    item.status === 'Atrasado' ? 'bg-red-500/20 text-red-400' :
+                                                        'bg-yellow-500/20 text-yellow-400'
                                                     }`}>
                                                     {item.status}
                                                 </span>
