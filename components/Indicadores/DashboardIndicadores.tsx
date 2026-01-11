@@ -63,9 +63,6 @@ const DashboardIndicadores: React.FC = () => {
             <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark min-h-screen">
                 <div className="max-w-[1400px] mx-auto">
                     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-                        <div className="w-24 h-24 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center mx-auto mb-6">
-                            <span className="material-symbols-outlined text-primary text-5xl">analytics</span>
-                        </div>
                         <h2 className="text-white text-2xl font-bold mb-4">Nenhum dado carregado</h2>
                         <p className="text-text-muted mb-8">Use o uploader na barra lateral para carregar dados de indicadores</p>
 
@@ -123,7 +120,7 @@ const DashboardIndicadores: React.FC = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <p className="text-xs text-text-muted">Arquivo: <span className="text-primary font-mono">dados/excel_exemplos/indicadores_template.xlsx</span></p>
+                            <p className="text-xs text-text-muted">Arquivo: <span className="text-primary font-mono">Indicadores_Exemplo.xlsx</span></p>
                         </div>
 
                         {/* Botões Google Sheets */}
