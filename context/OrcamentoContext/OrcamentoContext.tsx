@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface OrcamentoItem {
     mes: number;
+    empresa: string;
     categoria: string;
     orcado: number;
     realizado: number;
@@ -21,7 +22,7 @@ interface OrcamentoContextType {
     error: string | null;
     setDados: (dados: OrcamentoItem[]) => void;
     calcularVariancia: (orcado: number, realizado: number) => { valor: number; percentual: number };
-    obterDesviosPorCategoria: () => Array<{ categoria: string; variancia: number; percentual: number }>;
+    obterDesviosPorCategoria: (empresa?: string) => Array<{ categoria: string; variancia: number; percentual: number }>;
 }
 
 const OrcamentoContext = createContext<OrcamentoContextType | undefined>(undefined);
@@ -44,9 +45,10 @@ export const OrcamentoProvider: React.FC<{ children: ReactNode }> = ({ children 
         percentual: orcado > 0 ? ((realizado - orcado) / orcado) * 100 : 0,
     });
 
-    const obterDesviosPorCategoria = () => {
+    const obterDesviosPorCategoria = (empresa?: string) => {
+        const filtrados = empresa ? dados.filter(d => d.empresa === empresa) : dados;
         const desvios = new Map<string, { orcado: number; realizado: number }>();
-        dados.forEach(item => {
+        filtrados.forEach(item => {
             if (!desvios.has(item.categoria)) {
                 desvios.set(item.categoria, { orcado: 0, realizado: 0 });
             }
