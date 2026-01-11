@@ -76,7 +76,7 @@ const DREWaterfall: React.FC = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-xl p-6 h-[400px] w-full overflow-hidden flex flex-col`}>
+    <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg h-[400px] w-full overflow-hidden flex flex-col">
       <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} font-semibold text-lg mb-6 shrink-0`}>Composição do Resultado (DRE)</h3>
       <div className="flex-1 w-full min-h-0">
         <ResponsiveContainer width="100%" height="100%">

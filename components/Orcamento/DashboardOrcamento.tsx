@@ -266,11 +266,11 @@ const DashboardOrcamento: React.FC = () => {
                                 {desviosPorCategoria
                                     .filter(d => Math.abs(d.percentual) > 5)
                                     .map((item, idx) => (
-                                        <tr key={idx} className="border-b border-border-dark hover:bg-background-dark/50 transition-colors">
-                                            <td className="px-4 py-3 text-gray-300">{item.categoria}</td>
-                                            <td className="px-4 py-3 text-right text-gray-300">{formatCurrency(item.orcado)}</td>
-                                            <td className="px-4 py-3 text-right text-gray-300">{formatCurrency(item.realizado)}</td>
-                                            <td className="px-4 py-3 text-right font-semibold">{formatCurrency(item.variancia)}</td>
+                                        <tr key={idx} className={`border-b transition-colors ${isDark ? 'border-border-dark hover:bg-background-dark/50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                                            <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.categoria}</td>
+                                            <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.orcado)}</td>
+                                            <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.realizado)}</td>
+                                            <td className={`px-4 py-3 text-right font-semibold ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.variancia)}</td>
                                             <td className="px-4 py-3 text-right">
                                                 <span className={`font-bold ${item.variancia > 0 ? 'text-red-400' : 'text-green-400'}`}>
                                                     {item.percentual > 0 ? '+' : ''}{item.percentual.toFixed(1)}%
@@ -307,17 +307,17 @@ const DashboardOrcamento: React.FC = () => {
                             </thead>
                             <tbody>
                                 {desviosPorCategoria.map((item, idx) => (
-                                    <tr key={idx} className="border-b border-border-dark hover:bg-background-dark/50 transition-colors">
-                                        <td className="px-4 py-3 text-gray-300">{item.categoria}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{formatCurrency(item.orcado)}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{formatCurrency(item.realizado)}</td>
-                                        <td className="px-4 py-3 text-right font-semibold text-gray-300">{formatCurrency(item.variancia)}</td>
+                                    <tr key={idx} className={`border-b transition-colors ${isDark ? 'border-border-dark hover:bg-background-dark/50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                                        <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.categoria}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.orcado)}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.realizado)}</td>
+                                        <td className={`px-4 py-3 text-right font-semibold ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.variancia)}</td>
                                         <td className="px-4 py-3 text-right">
                                             <span className={`font-bold ${item.variancia > 0 ? 'text-red-400' : 'text-green-400'}`}>
                                                 {item.percentual > 0 ? '+' : ''}{item.percentual.toFixed(1)}%
                                             </span>
                                         </td>
-                                        <td className="px-4 py-3 text-gray-300">-</td>
+                                        <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>-</td>
                                     </tr>
                                 ))}
                             </tbody>

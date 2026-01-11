@@ -9,7 +9,7 @@ const CompanyPerformance: React.FC = () => {
   const isDark = theme === 'dark';
 
   return (
-    <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-xl p-6 flex flex-col h-[420px] w-full overflow-hidden`}>
+    <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg flex flex-col h-[420px] w-full overflow-hidden">
       <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} font-semibold text-base mb-6`}>Faturamento por Empresa</h3>
       <div className="flex flex-col gap-5 justify-center flex-1 overflow-y-auto custom-scrollbar px-1">
         {agregadoEmpresa.map((company, idx) => (
@@ -19,11 +19,11 @@ const CompanyPerformance: React.FC = () => {
               <span className="text-primary font-bold">{company.performance}%</span>
             </div>
             <div className={`w-full ${isDark ? 'bg-[#111814] border-[#3b5445]/20' : 'bg-gray-100 border-gray-300/50'} rounded-full h-2 overflow-hidden border`}>
-              <div 
-                className="bg-gradient-to-r from-primary/60 to-primary h-full rounded-full transition-all duration-1000 ease-out" 
-                style={{ 
-                    width: `${company.performance}%`,
-                    opacity: 1 - (idx * 0.1)
+              <div
+                className="bg-gradient-to-r from-primary/60 to-primary h-full rounded-full transition-all duration-1000 ease-out"
+                style={{
+                  width: `${company.performance}%`,
+                  opacity: 1 - (idx * 0.1)
                 }}
               ></div>
             </div>

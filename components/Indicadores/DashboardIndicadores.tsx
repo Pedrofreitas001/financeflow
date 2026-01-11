@@ -238,13 +238,13 @@ const DashboardIndicadores: React.FC = () => {
                             </thead>
                             <tbody>
                                 {dados.map((item, idx) => (
-                                    <tr key={idx} className="border-b border-border-dark hover:bg-background-dark/50 transition-colors">
-                                        <td className="px-4 py-3 text-gray-300">{item.empresa}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{item.roe.toFixed(2)}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{item.roa.toFixed(2)}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{item.margemLiquida.toFixed(2)}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{item.liquidezCorrente.toFixed(2)}</td>
-                                        <td className="px-4 py-3 text-right text-gray-300">{item.endividamento.toFixed(2)}</td>
+                                    <tr key={idx} className={`border-b transition-colors ${isDark ? 'border-border-dark hover:bg-background-dark/50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                                        <td className={`px-4 py-3 ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.empresa}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.roe.toFixed(2)}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.roa.toFixed(2)}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.margemLiquida.toFixed(2)}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.liquidezCorrente.toFixed(2)}</td>
+                                        <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{item.endividamento.toFixed(2)}</td>
                                     </tr>
                                 ))}
                             </tbody>

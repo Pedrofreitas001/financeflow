@@ -28,7 +28,7 @@ const CashFlowChart: React.FC = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-xl p-6 flex flex-col h-[420px] w-full overflow-hidden`}>
+    <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg flex flex-col h-[420px] w-full overflow-hidden">
       <div className="flex justify-between items-center mb-4 shrink-0">
         <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} font-semibold text-base`}>Fluxo de Caixa Dinâmico</h3>
       </div>

@@ -18,7 +18,7 @@ const ExpenseDonut: React.FC = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-xl p-6 flex flex-col h-[420px] w-full`}>
+    <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg flex flex-col h-[420px] w-full">
       <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} font-semibold text-base mb-8 shrink-0`}>Despesas por Categoria</h3>
 
       <div className="flex items-center h-full min-h-0 gap-4">
@@ -48,7 +48,7 @@ const ExpenseDonut: React.FC = () => {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
             <span className={`text-[14px] font-black ${isDark ? 'text-white' : 'text-gray-900'} drop-shadow-sm`}>
-              {total > 1000000 ? `R$ ${(total/1000000).toFixed(1)}M` : `R$ ${(total/1000).toFixed(0)}k`}
+              {total > 1000000 ? `R$ ${(total / 1000000).toFixed(1)}M` : `R$ ${(total / 1000).toFixed(0)}k`}
             </span>
           </div>
         </div>

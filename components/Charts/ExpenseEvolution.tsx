@@ -74,7 +74,7 @@ const ExpenseEvolution: React.FC = () => {
   };
 
   return (
-    <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-xl p-6 flex flex-col h-[420px] w-full overflow-hidden`}>
+    <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg flex flex-col h-[420px] w-full overflow-hidden">
       <div className="flex justify-between items-center mb-4 shrink-0">
         <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} font-semibold text-base`}>Evolução das Despesas</h3>
 
@@ -83,11 +83,10 @@ const ExpenseEvolution: React.FC = () => {
             <button
               key={metric.key}
               onClick={() => setSelectedMetric(metric.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                selectedMetric === metric.key
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedMetric === metric.key
                   ? `${isDark ? 'bg-primary/20 text-primary border-primary' : 'bg-primary/10 text-primary border-primary'} border`
                   : `${isDark ? 'bg-[#111814] text-[#9db9a8] border-[#3b5445] hover:border-primary/50' : 'bg-gray-100 text-gray-600 border-gray-200 hover:border-primary/50'} border`
-              }`}
+                }`}
             >
               {metric.label}
             </button>
