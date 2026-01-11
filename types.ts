@@ -9,6 +9,18 @@ export interface DadosFinanceiros {
   data: Date;
 }
 
+export interface DadosDespesas {
+  ano: number;
+  mes: string;
+  mesNum: number;
+  empresa: string;
+  categoria: string;
+  subcategoria: string;
+  valor: number;
+  data: Date;
+  tipo?: string;
+}
+
 export interface KPIs {
   faturamentoBruto: number;
   faturamentoLiquido: number;
@@ -18,6 +30,15 @@ export interface KPIs {
   margemContribuicaoPerc: number;
   resultado: number;
   margemLiquida: number;
+}
+
+export interface KPIDespesas {
+  totalDespesas: number;
+  totalDespesasFixas: number;
+  totalDespesasVariaveis: number;
+  ticketMedio: number;
+  despesasPendentes: number;
+  percentualFaturamento: number;
 }
 
 export interface KPIData {
@@ -50,6 +71,18 @@ export interface ExpenseCategory {
   value: number;
   percentage: number;
   color: string;
+}
+
+export interface ExpenseEvolution {
+  month: string;
+  categoria: string;
+  valor: number;
+}
+
+export interface DespesaComparacao {
+  mes: string;
+  mesNum: number;
+  valor: number;
 }
 
 // Novos tipos para o Chat
