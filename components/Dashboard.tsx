@@ -7,13 +7,13 @@ import ExpenseDonut from './Charts/ExpenseDonut.tsx';
 import CompanyPerformance from './Charts/CompanyPerformance.tsx';
 import ExecutiveDRE from './Charts/ExecutiveDRE.tsx';
 import ExpenseEvolution from './Charts/ExpenseEvolution.tsx';
-import { useDespesas } from '../context/DespesasContext.tsx';
+import { useFinance } from '../context/FinanceContext.tsx';
 
 const Dashboard: React.FC = () => {
-  const { dadosDespesas } = useDespesas();
+  const { dados } = useFinance();
 
   // Se não houver dados, mostrar disclaimer
-  if (dadosDespesas.length === 0) {
+  if (dados.length === 0) {
     return (
       <main className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
         <div className="max-w-[1400px] mx-auto">
