@@ -53,16 +53,11 @@ const DashboardDespesas: React.FC = () => {
         <main id="dashboard-despesas-content" className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
             <div className="max-w-[1400px] mx-auto flex flex-col gap-6 w-full">
                 {/* Cabeçalho da página */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-white text-3xl font-bold mb-2">Análise de Despesas</h1>
-                        <p className="text-text-muted">
-                            Visualize e compare as despesas da empresa ao longo do tempo
-                        </p>
-                    </div>
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-[#054d22] flex items-center justify-center">
-                        <span className="material-symbols-outlined text-white text-3xl">account_balance_wallet</span>
-                    </div>
+                <div>
+                    <h1 className="text-white text-3xl font-bold mb-2">Análise de Despesas</h1>
+                    <p className="text-text-muted">
+                        Visualize e compare as despesas da empresa ao longo do tempo
+                    </p>
                 </div>
 
                 {/* KPIs */}

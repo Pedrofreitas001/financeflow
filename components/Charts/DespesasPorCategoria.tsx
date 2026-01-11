@@ -45,7 +45,7 @@ const DespesasPorCategoria: React.FC = () => {
 
             <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={agregadoDespesasCategoria} margin={{ top: 20, right: 30, left: 70, bottom: 80 }}>
+                    <BarChart data={agregadoDespesasCategoria} margin={{ top: 20, right: 30, left: 50, bottom: 80 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1f2937' : '#e5e7eb'} />
                         <XAxis
                             dataKey="name"
