@@ -14,6 +14,7 @@ const TabelaPlanoConta: React.FC = () => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+    const [displayMode, setDisplayMode] = useState<'mensal' | 'acumulado'>('mensal');
 
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -96,10 +97,22 @@ const TabelaPlanoConta: React.FC = () => {
 
             {/* Abas para Mensal / Acumulado */}
             <div className="flex gap-2 mb-6 border-b border-border-dark">
-                <button className="px-4 py-2 border-b-2 border-primary text-primary font-medium text-sm">
+                <button
+                    onClick={() => setDisplayMode('mensal')}
+                    className={`px-4 py-2 border-b-2 font-medium text-sm transition-colors ${displayMode === 'mensal'
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-text-muted hover:text-white'
+                        }`}
+                >
                     Mensal
                 </button>
-                <button className="px-4 py-2 text-text-muted font-medium text-sm hover:text-white transition-colors">
+                <button
+                    onClick={() => setDisplayMode('acumulado')}
+                    className={`px-4 py-2 border-b-2 font-medium text-sm transition-colors ${displayMode === 'acumulado'
+                            ? 'border-primary text-primary'
+                            : 'border-transparent text-text-muted hover:text-white'
+                        }`}
+                >
                     Acumulado
                 </button>
             </div>
@@ -125,59 +138,40 @@ const TabelaPlanoConta: React.FC = () => {
                     <tbody>
                         {tabelaComAcumulado.map((item, idx) => {
                             const cor = agregadoDespesasCategoria.find(c => c.name === item.categoria)?.color || '#6b7280';
+                            const dataToShow = displayMode === 'mensal' ? item.meses : item.acumulado;
 
                             return (
-                                <React.Fragment key={item.categoria}>
-                                    <tr
-                                        className="border-b border-border-dark hover:bg-background-dark transition-colors"
-                                        onClick={() => setExpandedCategory(expandedCategory === item.categoria ? null : item.categoria)}
-                                    >
-                                        <td className="py-3 px-4 sticky left-0 bg-surface-dark">
-                                            <div className="flex items-center gap-2">
-                                                <div
-                                                    className="w-3 h-3 rounded-full"
-                                                    style={{ backgroundColor: cor }}
-                                                ></div>
-                                                <span className="text-white font-medium cursor-pointer hover:text-primary">
-                                                    {item.categoria}
-                                                </span>
-                                            </div>
+                                <tr
+                                    key={item.categoria}
+                                    className="border-b border-border-dark hover:bg-background-dark transition-colors"
+                                >
+                                    <td className="py-3 px-4 sticky left-0 bg-surface-dark">
+                                        <div className="flex items-center gap-2">
+                                            <div
+                                                className="w-3 h-3 rounded-full"
+                                                style={{ backgroundColor: cor }}
+                                            ></div>
+                                            <span className="text-white font-medium">
+                                                {item.categoria}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    {tabelaData.meses.map(mes => (
+                                        <td key={mes} className="text-right py-3 px-3 whitespace-nowrap">
+                                            {dataToShow[mes] > 0 ? (
+                                                <span className="text-white">{formatCurrency(dataToShow[mes])}</span>
+                                            ) : (
+                                                <span className="text-text-muted">-</span>
+                                            )}
                                         </td>
-                                        {tabelaData.meses.map(mes => (
-                                            <td key={mes} className="text-right py-3 px-3 text-text-muted whitespace-nowrap">
-                                                {item.meses[mes] > 0 ? (
-                                                    <span className="text-white">{formatCurrency(item.meses[mes])}</span>
-                                                ) : (
-                                                    <span className="text-text-muted">-</span>
-                                                )}
-                                            </td>
-                                        ))}
-                                        <td className="text-right py-3 px-4 text-white font-bold bg-background-dark/50 whitespace-nowrap">
-                                            {formatCurrency(item.total)}
-                                        </td>
-                                    </tr>
-
-                                    {/* Linha de acumulado quando expandida */}
-                                    {expandedCategory === item.categoria && (
-                                        <tr className="border-b border-border-dark bg-background-dark/50">
-                                            <td className="py-3 px-4 sticky left-0 bg-background-dark/50">
-                                                <span className="text-primary text-sm font-medium ml-5">↳ Acumulado</span>
-                                            </td>
-                                            {tabelaData.meses.map(mes => (
-                                                <td key={mes} className="text-right py-3 px-3 whitespace-nowrap">
-                                                    <span className="text-primary text-sm font-bold">
-                                                        {formatCurrency(item.acumulado[mes])}
-                                                    </span>
-                                                </td>
-                                            ))}
-                                            <td className="text-right py-3 px-4 bg-background-dark/50 whitespace-nowrap">
-                                                <span className="text-primary font-bold">
-                                                    {formatCurrency(item.acumulado[tabelaData.meses[tabelaData.meses.length - 1]])}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </React.Fragment>
+                                    ))}
+                                    <td className="text-right py-3 px-4 text-white font-bold bg-background-dark/50 whitespace-nowrap">
+                                        {displayMode === 'mensal'
+                                            ? formatCurrency(item.total)
+                                            : formatCurrency(item.acumulado[tabelaData.meses[tabelaData.meses.length - 1]])
+                                        }
+                                    </td>
+                                </tr>
                             );
                         })}
                     </tbody>
@@ -189,17 +183,27 @@ const TabelaPlanoConta: React.FC = () => {
                             {tabelaData.meses.map(mes => (
                                 <td key={mes} className="text-right py-4 px-3 whitespace-nowrap">
                                     <span className="text-primary font-bold">
-                                        {formatCurrency(
-                                            tabelaComAcumulado.reduce((acc, cat) => acc + (cat.meses[mes] || 0), 0)
-                                        )}
+                                        {displayMode === 'mensal'
+                                            ? formatCurrency(
+                                                tabelaComAcumulado.reduce((acc, cat) => acc + (cat.meses[mes] || 0), 0)
+                                            )
+                                            : formatCurrency(
+                                                tabelaComAcumulado.reduce((acc, cat) => acc + (cat.acumulado[mes] || 0), 0)
+                                            )
+                                        }
                                     </span>
                                 </td>
                             ))}
                             <td className="text-right py-4 px-4 bg-primary/10 whitespace-nowrap">
                                 <span className="text-primary font-bold">
-                                    {formatCurrency(
-                                        tabelaComAcumulado.reduce((acc, cat) => acc + cat.total, 0)
-                                    )}
+                                    {displayMode === 'mensal'
+                                        ? formatCurrency(
+                                            tabelaComAcumulado.reduce((acc, cat) => acc + cat.total, 0)
+                                        )
+                                        : formatCurrency(
+                                            tabelaComAcumulado.reduce((acc, cat) => acc + cat.acumulado[tabelaData.meses[tabelaData.meses.length - 1]], 0)
+                                        )
+                                    }
                                 </span>
                             </td>
                         </tr>
@@ -209,7 +213,9 @@ const TabelaPlanoConta: React.FC = () => {
 
             {/* Legenda */}
             <div className="mt-6 pt-4 border-t border-border-dark">
-                <p className="text-text-muted text-xs mb-3">💡 Clique em uma categoria para ver o acumulado</p>
+                <p className="text-text-muted text-xs mb-3">
+                    💡 Visualizando dados em modo <strong className="text-primary capitalize">{displayMode}</strong>
+                </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                     {tabelaComAcumulado.slice(0, 4).map(cat => (
                         <div key={cat.categoria} className="flex items-center gap-2">

@@ -90,8 +90,9 @@ const EvolucaoDespesasMensal: React.FC = () => {
                             height={80}
                         />
                         <YAxis
-                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280' }}
-                            tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`}
+                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+                            tickFormatter={(value) => `R$ ${(value / 1000000).toFixed(1)}M`}
+                            width={60}
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Line
