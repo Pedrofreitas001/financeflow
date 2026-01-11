@@ -2,14 +2,15 @@
 import React from 'react';
 import { useFinance } from '../context/FinanceContext';
 import { useDespesas } from '../context/DespesasContext';
+import { useDRE } from '../context/DREContext';
 import { useTheme } from '../context/ThemeContext';
 import * as XLSX from 'xlsx';
 
 interface SidebarProps {
   onExport?: () => void;
   visible?: boolean;
-  currentPage?: 'dashboard' | 'despesas';
-  onNavigate?: (page: 'dashboard' | 'despesas') => void;
+  currentPage?: 'dashboard' | 'despesas' | 'dre';
+  onNavigate?: (page: 'dashboard' | 'despesas' | 'dre') => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage = 'dashboard', onNavigate }) => {
@@ -22,6 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
     setFiltroDespesasMeses,
     carregarDadosDespesas
   } = useDespesas();
+  const { carregarDREMensal } = useDRE();
   const { theme, toggleTheme } = useTheme();
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
     reader.readAsBinaryString(file);
   };
 
+<<<<<<< HEAD
   const handleFileUploadDespesas = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -54,6 +57,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
       carregarDadosDespesas(data);
     };
     reader.readAsBinaryString(file);
+  };
+
+  const handleDREUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      carregarDREMensal(file);
+    }
   };
 
   const toggleMonth = (month: string) => {
@@ -115,6 +125,19 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             </span>
             <p className="text-sm font-medium">Análise de Despesas</p>
           </button>
+          <button
+            onClick={() => onNavigate?.('dre')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'dre'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'dre' ? 'text-primary' : ''}`}>
+              table_chart
+            </span>
+            <p className="text-sm font-medium">Tabelas DRE</p>
+>>>>>>> origin/main
+          </button>
         </nav>
 
         <div className="flex flex-col gap-2">
@@ -170,17 +193,27 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           </div>
         </div>
 
-        {currentPage === 'dashboard' ? (
+        {currentPage === 'dashboard' && (
           <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
             <input type="file" onChange={handleFileUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
             <span className="material-symbols-outlined text-border-dark group-hover:text-primary mb-2">cloud_upload</span>
             <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel Financeiro</p>
           </div>
-        ) : (
+        )}
+
+        {currentPage === 'despesas' && (
           <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
             <input type="file" onChange={handleFileUploadDespesas} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
             <span className="material-symbols-outlined text-border-dark group-hover:text-primary mb-2">cloud_upload</span>
             <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel de Despesas</p>
+          </div>
+        )}
+
+        {currentPage === 'dre' && (
+          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+            <input type="file" onChange={handleDREUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
+            <span className="material-symbols-outlined text-border-dark group-hover:text-primary mb-2">table_chart</span>
+            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors leading-tight">Carregar Excel DRE<br />(4 abas completas)</p>
           </div>
         )}
       </div>
@@ -194,7 +227,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           <span>Exportar Relatório</span>
         </button>
       </div>
-    </aside>
+    </aside >
   );
 };
 

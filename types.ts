@@ -91,3 +91,55 @@ export interface ChatMessage {
   text: string;
   timestamp: Date;
 }
+
+// Tipos para DRE
+export interface DRELine {
+  descricao: string;
+  isResultado: boolean;  // true se começa com (=)
+  isDespesa: boolean;    // true se começa com (-)
+  isPercentual: boolean; // true se é Margem Bruta
+  isFinal: boolean;      // true se é Lucro/Prejuízo ou EBITDA
+}
+
+export interface DREMensal {
+  linha: DRELine;
+  projetado: number;
+  real: number;
+  variacao: string;
+  analiseVertical: string;
+}
+
+export interface ValoresMensais {
+  jan: number;
+  fev: number;
+  mar: number;
+  abr: number;
+  mai: number;
+  jun: number;
+  jul: number;
+  ago: number;
+  set: number;
+  out: number;
+  nov: number;
+  dez?: number;
+  total: number;
+}
+
+export interface DREAcumulado {
+  linha: DRELine;
+  valores: ValoresMensais;
+  analiseVertical: string;
+}
+
+export interface DREData {
+  regimeCaixa: {
+    mensal: DREMensal[];
+    acumulado: DREAcumulado[];
+  };
+  regimeCompetencia: {
+    mensal: DREMensal[];
+    acumulado: DREAcumulado[];
+  };
+  ano: number;
+  empresa: string;
+}

@@ -4,13 +4,17 @@ import Sidebar from './components/Sidebar.tsx';
 import Header from './components/Header.tsx';
 import Dashboard from './components/Dashboard.tsx';
 import DashboardDespesas from './components/DashboardDespesas.tsx';
+import DREDashboard from './components/DREDashboard.tsx';
 import ReportCover from './components/ReportCover.tsx';
 import AIChat from './components/AIChat.tsx';
 import { FinanceProvider, useFinance } from './context/FinanceContext.tsx';
 import { DespesasProvider, useDespesas } from './context/DespesasContext.tsx';
+import { DREProvider } from './context/DREContext.tsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.tsx';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+
+type PageType = 'dashboard' | 'despesas' | 'dre';
 
 const AppContent: React.FC = () => {
   const { filtros, kpis } = useFinance();
@@ -18,7 +22,13 @@ const AppContent: React.FC = () => {
   const { theme } = useTheme();
   const [isExporting, setIsExporting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+  const isDark = theme === 'dark';
+<<<<<<< HEAD
   const [currentPage, setCurrentPage] = useState<'dashboard' | 'despesas'>('dashboard');
+=======
+  const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+>>>>>>> origin/main
   const isDark = theme === 'dark';
 
   const handleExportPDF = async () => {
@@ -111,7 +121,9 @@ const AppContent: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0">
         <Header onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} sidebarVisible={sidebarVisible} />
 
-        {currentPage === 'dashboard' ? <Dashboard /> : <DashboardDespesas />}
+        {currentPage === 'dashboard' && <Dashboard />}
+        {currentPage === 'despesas' && <DashboardDespesas />}
+        {currentPage === 'dre' && <DREDashboard />}
 
         {/* Hidden Cover Component for Capture */}
         <ReportCover
@@ -147,11 +159,17 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       <FinanceProvider>
-        <DespesasProvider>
+<<<<<<< HEAD
+  <DespesasProvider>
+    <AppContent />
+  </DespesasProvider>
+=======
+        <DREProvider>
           <AppContent />
-        </DespesasProvider>
-      </FinanceProvider>
-    </ThemeProvider>
+        </DREProvider>
+>>>>>>> origin/main
+      </FinanceProvider >
+    </ThemeProvider >
   );
 };
 
