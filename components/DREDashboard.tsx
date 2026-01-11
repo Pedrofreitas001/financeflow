@@ -20,9 +20,6 @@ const DREDashboard: React.FC = () => {
       <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
         <div className="max-w-[1400px] mx-auto">
           <div className="flex flex-col items-center justify-center min-h-[60vh]">
-            <div className={`w-24 h-24 rounded-full ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-gray-200 border-gray-300'} border flex items-center justify-center mx-auto mb-6`}>
-              <span className={`material-symbols-outlined text-5xl ${isDark ? 'text-primary' : 'text-primary'}`}>table_chart</span>
-            </div>
             <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>Nenhum dado carregado</h2>
             <p className={`mb-8 ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
               Carregue um arquivo Excel com as 4 abas DRE na barra lateral

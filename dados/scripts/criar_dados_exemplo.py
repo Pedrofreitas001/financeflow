@@ -5,31 +5,42 @@ from datetime import datetime, timedelta
 # Seed para reproducibilidade
 random.seed(42)
 
+# ============= DEFINIÇÕES BÁSICAS =============
+empresas = ['Alpha', 'Beta', 'Gamma']
+meses = list(range(1, 13))
+base_date = datetime(2024, 1, 1)
+
+# Faturamento anual base (em reais)
+faturamento_anual = {
+    'Alpha': 4200000,   # 350k/mês média
+    'Beta': 5400000,    # 450k/mês média
+    'Gamma': 3360000    # 280k/mês média
+}
+
+# Custos mensais (em % do faturamento)
+custo_percentual = {
+    'Alpha': 0.70,
+    'Beta': 0.67,
+    'Gamma': 0.65
+}
+
+# Calcular custos mensais
+custos_mensais = {
+    empresa: (faturamento_anual[empresa] * custo_percentual[empresa]) / 12
+    for empresa in empresas
+}
+
+# ============= CATEGORIAS =============
+categorias_receita = ['Vendas de Produtos', 'Vendas de Serviços', 'Aluguel Recebido', 'Juros Recebidos']
+categorias_despesa = ['Fornecedores', 'Salários', 'Aluguel', 'Serviços', 'Transportes', 'Energia', 'Comunicação', 'IPTU', 'ISS']
+
 # ============= CASH FLOW DATA =============
 cash_flow_data = []
-empresas = ['Alpha', 'Beta', 'Gamma']
-categorias_receita = ['Vendas', 'Serviços', 'Outras Receitas', 'Juros', 'Aluguel de Imóvel']
-categorias_despesa = ['Folha', 'Aluguel', 'Fornecedores', 'Utilities', 'Marketing', 'Tecnologia', 'Transporte', 'Impostos']
-
-base_date = datetime(2025, 1, 1)
-
-# Valores base por empresa (mais realistas)
-faturamento_anual = {
-    'Alpha': 4200000,   # 350k/mês
-    'Beta': 5400000,    # 450k/mês
-    'Gamma': 3360000    # 280k/mês
-}
-
-custos_mensais = {
-    'Alpha': 2800000,   # 70% do faturamento
-    'Beta': 3600000,    # 67% do faturamento
-    'Gamma': 2200000    # 65% do faturamento
-}
 
 for empresa in empresas:
     for mes in range(1, 13):
         receita_mes = (faturamento_anual[empresa] / 12) * random.uniform(0.85, 1.15)
-        despesa_mes = (custos_mensais[empresa] / 12) * random.uniform(0.9, 1.1)
+        despesa_mes = custos_mensais[empresa] * random.uniform(0.9, 1.1)
         
         # Receitas - distribuir ao longo do mês
         num_receitas = random.randint(8, 15)
@@ -66,32 +77,54 @@ for empresa in empresas:
             })
 
 # ============= INDICADORES DATA =============
+# Valores base por empresa
+metricas_base = {
+    'Alpha': {
+        'roe': 18.5, 'roa': 10.2, 'margem': 16.5, 'liquidez': 1.8, 
+        'endividamento': 35, 'alavancagem': 2.2, 'giro': 2.0, 'receita_base': 350000
+    },
+    'Beta': {
+        'roe': 22.0, 'roa': 12.5, 'margem': 18.5, 'liquidez': 2.0, 
+        'endividamento': 30, 'alavancagem': 2.5, 'giro': 2.3, 'receita_base': 450000
+    },
+    'Gamma': {
+        'roe': 15.5, 'roa': 8.5, 'margem': 12.5, 'liquidez': 1.6, 
+        'endividamento': 40, 'alavancagem': 2.0, 'giro': 1.8, 'receita_base': 280000
+    }
+}
+
 indicadores_data = []
+
 for empresa in empresas:
-    # Valores base por empresa (para manter consistência)
-    roe_base = {'Alpha': 18, 'Beta': 22, 'Gamma': 15}[empresa]
-    roa_base = {'Alpha': 10, 'Beta': 12, 'Gamma': 8}[empresa]
-    margem_base = {'Alpha': 16, 'Beta': 18, 'Gamma': 12}[empresa]
-    
+    base = metricas_base[empresa]
     for mes in range(1, 13):
+        # Adicionar variação mensal realista
+        variacao_mes = (mes - 6.5) * 0.5  # Tendência ao longo do ano
+        sazonalidade = 0.05 * (3 if mes in [11, 12] else (0.8 if mes in [1, 2] else 1))
+        
+        receita_mes = base['receita_base'] * (1 + sazonalidade)
+        custos_mes = custos_mensais[empresa]
+        lucro_mes = receita_mes - custos_mes
+        patrimonio = (faturamento_anual[empresa] * 0.3)  # Patrimônio estimado
+        ativo = receita_mes * 3  # Ativo estimado
+        
         indicadores_data.append({
             'mes': mes,
             'empresa': empresa,
-            'roe': round(roe_base + random.uniform(-4, 4), 2),
-            'roa': round(roa_base + random.uniform(-2, 2), 2),
-            'margemLiquida': round(margem_base + random.uniform(-3, 3), 2),
-            'margemOperacional': round(margem_base + 5 + random.uniform(-3, 3), 2),
-            'liquidezCorrente': round(random.uniform(1.5, 2.8), 2),
-            'liquidezSeca': round(random.uniform(1.0, 2.2), 2),
-            'endividamento': round(random.uniform(25, 55), 2),
-            'alavancagem': round(random.uniform(1.8, 3.5), 2),
-            'giroAtivo': round(random.uniform(1.5, 3.5), 2),
-            'prazoRecebimento': random.randint(18, 45),
-            'prazoPagamento': random.randint(25, 60)
+            'roe': max(5, round(base['roe'] + variacao_mes + random.uniform(-3, 3), 2)),
+            'roa': max(2, round(base['roa'] + variacao_mes/2 + random.uniform(-2, 2), 2)),
+            'margemLiquida': max(5, round((lucro_mes / receita_mes * 100) + random.uniform(-2, 2), 2)),
+            'margemOperacional': max(8, round((lucro_mes / receita_mes * 100) + 5 + random.uniform(-2, 2), 2)),
+            'liquidezCorrente': max(0.8, round(base['liquidez'] + random.uniform(-0.3, 0.5), 2)),
+            'liquidezSeca': max(0.5, round(base['liquidez'] - 0.8 + random.uniform(-0.2, 0.4), 2)),
+            'endividamento': round(base['endividamento'] + random.uniform(-5, 5), 2),
+            'alavancagem': max(1, round(base['alavancagem'] + random.uniform(-0.3, 0.3), 2)),
+            'giroAtivo': max(1, round(base['giro'] + random.uniform(-0.3, 0.5), 2)),
+            'prazoRecebimento': max(15, int(30 + variacao_mes + random.randint(-5, 5))),
+            'prazoPagamento': max(20, int(35 + variacao_mes + random.randint(-5, 5)))
         })
 
 # ============= ORÇAMENTO DATA =============
-orcamento_data = []
 categorias_orcamento = [
     'Folha de Pagamento', 'Aluguel', 'Fornecedores', 'Marketing', 'Tecnologia', 
     'Utilities', 'Transporte', 'Manutenção', 'Consultoria', 'Seguros'
@@ -111,8 +144,10 @@ orcamento_anual_pct = {
     'Seguros': 0.03
 }
 
+orcamento_data = []
+
 for empresa in empresas:
-    custo_total_anual = custos_mensais[empresa]
+    custo_total_anual = faturamento_anual[empresa] * custo_percentual[empresa]
     
     for mes in range(1, 13):
         for categoria in categorias_orcamento:
@@ -144,252 +179,83 @@ for empresa in empresas:
             })
 
 # ============= DESPESAS DATA =============
-despesas_data = []
 categorias_despesa_detail = {
     'FOLHA DE PAGAMENTO': [
         'Salários', 'Adiantamento', 'Férias', '13º Salário', 'Pro-Labore', 
         'Estagiários', 'PLR', 'Sindicato'
     ],
     'ENCARGOS': [
-        'INSS', 'FGTS', 'PIS', 'Vale Transporte', 'Vale Refeição', 
-        'Plano de Saúde', 'Seguro de Vida'
-    ],
-    'INFRAESTRUTURA': [
-        'Aluguel', 'Energia Elétrica', 'Água', 'Internet', 'Telefonia', 
-        'Limpeza e Conservação', 'Segurança', 'Manutenção Predial'
-    ],
-    'FORNECEDORES': [
-        'Matérias Primas', 'Embalagem', 'Insumos', 'Componentes', 'Produtos Acabados'
-    ],
-    'COMERCIAL': [
-        'Comissões', 'Marketing', 'Publicidade', 'Despesas Comerciais', 'Brindes e Promoções'
+        'INSS', 'FGTS', 'Seguro Desemprego', 'Contribuição Sindical'
     ],
     'ADMINISTRATIVO': [
-        'Contador', 'Advogado', 'Consultorias', 'Softwares e Licenças', 
-        'Material de Escritório', 'Assinaturas'
+        'Aluguel', 'Luz', 'Água', 'Telefone', 'Internet', 'Limpeza', 'Segurança'
     ],
-    'LOGÍSTICA': [
-        'Frete', 'Combustível', 'Manutenção de Veículos', 'IPVA e Licenciamento'
+    'OPERACIONAL': [
+        'Fornecedores', 'Fretes', 'Combustível', 'Manutenção Equipamentos', 'Peças'
     ],
-    'IMPOSTOS': [
-        'ICMS', 'ISS', 'Simples Nacional', 'COFINS', 'CSLL', 'IRPJ', 'INSS Patronal'
+    'MARKETING': [
+        'Publicidade', 'Redes Sociais', 'Eventos', 'Impressos', 'Patrocínios'
+    ],
+    'TECNOLOGIA': [
+        'Software', 'Hardware', 'Licenças', 'Suporte TI', 'Infraestrutura'
+    ],
+    'FINANCEIRO': [
+        'Juros', 'Taxas Bancárias', 'Seguros', 'Impostos'
     ]
 }
 
-# Valores base por categoria (em % do custo mensal)
-valores_categoria = {
-    'FOLHA DE PAGAMENTO': 0.45,
-    'ENCARGOS': 0.12,
-    'INFRAESTRUTURA': 0.10,
-    'FORNECEDORES': 0.20,
-    'COMERCIAL': 0.04,
-    'ADMINISTRATIVO': 0.05,
-    'LOGÍSTICA': 0.02,
-    'IMPOSTOS': 0.02
-}
-
-for empresa in empresas:
-    custo_mes_base = custos_mensais[empresa] / 12
-    
-    for ano in [2024, 2025]:
-        for mes in range(1, 13):
-            for categoria_tipo, subcategorias in categorias_despesa_detail.items():
-                valor_categoria = custo_mes_base * valores_categoria[categoria_tipo]
-                num_lancamentos = len(subcategorias)
-                valor_unitario = valor_categoria / num_lancamentos
-                
-                for subcategoria in subcategorias:
-                    valor = int(valor_unitario * random.uniform(0.8, 1.2))
-                    
-                    despesas_data.append({
-                        'ano': ano,
-                        'mes': mes,
-                        'empresa': empresa,
-                        'categoria': categoria_tipo,
-                        'subcategoria': subcategoria,
-                        'valor': valor
-                    })
-
-# Salvar JSONs
-with open('dados_cash_flow_exemplo.json', 'w', encoding='utf-8') as f:
-    json.dump(cash_flow_data, f, ensure_ascii=False, indent=2)
-
-with open('dados_indicadores_exemplo.json', 'w', encoding='utf-8') as f:
-    json.dump(indicadores_data, f, ensure_ascii=False, indent=2)
-
-with open('dados_orcamento_exemplo.json', 'w', encoding='utf-8') as f:
-    json.dump(orcamento_data, f, ensure_ascii=False, indent=2)
-
-with open('dados_despesas_exemplo.json', 'w', encoding='utf-8') as f:
-    json.dump(despesas_data, f, ensure_ascii=False, indent=2)
-
-print("✅ Arquivos JSON gerados com sucesso!")
-print(f"  - Cash Flow: {len(cash_flow_data)} registros")
-print(f"  - Indicadores: {len(indicadores_data)} registros")
-print(f"  - Orçamento: {len(orcamento_data)} registros")
-print(f"  - Despesas: {len(despesas_data)} registros")
-
-# ============= INDICADORES DATA =============
-indicadores_data = []
-for empresa in empresas:
-    # Valores base por empresa (para manter consistência)
-    roe_base = {'Alpha': 18, 'Beta': 22, 'Gamma': 15}[empresa]
-    roa_base = {'Alpha': 10, 'Beta': 12, 'Gamma': 8}[empresa]
-    margem_base = {'Alpha': 16, 'Beta': 18, 'Gamma': 12}[empresa]
-    
-    for mes in range(1, 13):
-        indicadores_data.append({
-            'mes': mes,
-            'empresa': empresa,
-            'roe': round(roe_base + random.uniform(-4, 4), 2),
-            'roa': round(roa_base + random.uniform(-2, 2), 2),
-            'margemLiquida': round(margem_base + random.uniform(-3, 3), 2),
-            'margemOperacional': round(margem_base + 5 + random.uniform(-3, 3), 2),
-            'liquidezCorrente': round(random.uniform(1.5, 2.8), 2),
-            'liquidezSeca': round(random.uniform(1.0, 2.2), 2),
-            'endividamento': round(random.uniform(25, 55), 2),
-            'alavancagem': round(random.uniform(1.8, 3.5), 2),
-            'giroAtivo': round(random.uniform(1.5, 3.5), 2),
-            'prazoRecebimento': random.randint(18, 45),
-            'prazoPagamento': random.randint(25, 60)
-        })
-
-# ============= ORÇAMENTO DATA =============
-orcamento_data = []
-categorias_orcamento = [
-    'Folha de Pagamento', 'Aluguel', 'Fornecedores', 'Marketing', 'Tecnologia', 
-    'Utilities', 'Transporte', 'Manutenção', 'Consultoria', 'Seguros'
-]
-
-# Orçamento base anual por categoria (em %)
-orcamento_anual_pct = {
-    'Folha de Pagamento': 0.45,
-    'Aluguel': 0.08,
-    'Fornecedores': 0.20,
-    'Marketing': 0.05,
-    'Tecnologia': 0.04,
-    'Utilities': 0.03,
-    'Transporte': 0.03,
-    'Manutenção': 0.02,
-    'Consultoria': 0.02,
-    'Seguros': 0.03
-}
-
-for empresa in empresas:
-    custo_total_anual = custos_mensais[empresa]
-    
-    for mes in range(1, 13):
-        for categoria in categorias_orcamento:
-            # Orçado = base anual * % da categoria / 12
-            orcado = int((custo_total_anual * orcamento_anual_pct[categoria]) / 12)
-            
-            # Realizado com variação realista
-            variacao = random.uniform(0.85, 1.15)
-            realizado = int(orcado * variacao)
-            
-            desvio = ((realizado - orcado) / orcado) * 100
-            
-            # Classificar observação
-            if -5 <= desvio <= 5:
-                obs = 'Normal'
-            elif desvio > 5:
-                obs = 'Acima'
-            else:
-                obs = 'Abaixo'
-            
-            orcamento_data.append({
-                'mes': mes,
-                'empresa': empresa,
-                'categoria': categoria,
-                'orcado': orcado,
-                'realizado': realizado,
-                'responsavel': random.choice(['Gerente Financeiro', 'Diretor', 'Controller', 'Gerente de Área']),
-                'observacoes': obs
-            })
-
-# ============= DESPESAS DATA =============
 despesas_data = []
-categorias_despesa_detail = {
-    'FOLHA DE PAGAMENTO': [
-        'Salários', 'Adiantamento', 'Férias', '13º Salário', 'Pro-Labore', 
-        'Estagiários', 'PLR', 'Sindicato'
-    ],
-    'ENCARGOS': [
-        'INSS', 'FGTS', 'PIS', 'Vale Transporte', 'Vale Refeição', 
-        'Plano de Saúde', 'Seguro de Vida'
-    ],
-    'INFRAESTRUTURA': [
-        'Aluguel', 'Energia Elétrica', 'Água', 'Internet', 'Telefonia', 
-        'Limpeza e Conservação', 'Segurança', 'Manutenção Predial'
-    ],
-    'FORNECEDORES': [
-        'Matérias Primas', 'Embalagem', 'Insumos', 'Componentes', 'Produtos Acabados'
-    ],
-    'COMERCIAL': [
-        'Comissões', 'Marketing', 'Publicidade', 'Despesas Comerciais', 'Brindes e Promoções'
-    ],
-    'ADMINISTRATIVO': [
-        'Contador', 'Advogado', 'Consultorias', 'Softwares e Licenças', 
-        'Material de Escritório', 'Assinaturas'
-    ],
-    'LOGÍSTICA': [
-        'Frete', 'Combustível', 'Manutenção de Veículos', 'IPVA e Licenciamento'
-    ],
-    'IMPOSTOS': [
-        'ICMS', 'ISS', 'Simples Nacional', 'COFINS', 'CSLL', 'IRPJ', 'INSS Patronal'
-    ]
-}
-
-# Valores base por categoria (em % do custo mensal)
-valores_categoria = {
-    'FOLHA DE PAGAMENTO': 0.45,
-    'ENCARGOS': 0.12,
-    'INFRAESTRUTURA': 0.10,
-    'FORNECEDORES': 0.20,
-    'COMERCIAL': 0.04,
-    'ADMINISTRATIVO': 0.05,
-    'LOGÍSTICA': 0.02,
-    'IMPOSTOS': 0.02
-}
 
 for empresa in empresas:
-    custo_mes_base = custos_mensais[empresa] / 12
-    
-    for ano in [2024, 2025]:
-        for mes in range(1, 13):
-            for categoria_tipo, subcategorias in categorias_despesa_detail.items():
-                valor_categoria = custo_mes_base * valores_categoria[categoria_tipo]
-                num_lancamentos = len(subcategorias)
-                valor_unitario = valor_categoria / num_lancamentos
+    for mes in range(1, 13):
+        for categoria_principal, subcategorias in categorias_despesa_detail.items():
+            # Calcular despesa para categoria
+            pct_categoria = orcamento_anual_pct.get(categoria_principal, 0.05)
+            despesa_categoria = int((custos_mensais[empresa] * pct_categoria) / len(subcategorias))
+            
+            for subcategoria in subcategorias:
+                num_items = random.randint(1, 3)
+                item_value = despesa_categoria // num_items
                 
-                for subcategoria in subcategorias:
-                    valor = int(valor_unitario * random.uniform(0.8, 1.2))
+                for _ in range(num_items):
+                    data_lancamento = base_date + timedelta(days=random.randint(0, 30))
+                    data_vencimento = data_lancamento + timedelta(days=random.randint(0, 60))
                     
                     despesas_data.append({
-                        'ano': ano,
+                        'id': f"desp_{empresa}_{mes}_{len(despesas_data)}",
                         'mes': mes,
                         'empresa': empresa,
-                        'categoria': categoria_tipo,
+                        'categoria': categoria_principal,
                         'subcategoria': subcategoria,
-                        'valor': valor
+                        'data_lancamento': data_lancamento.strftime('%d/%m/%Y'),
+                        'data_vencimento': data_vencimento.strftime('%d/%m/%Y'),
+                        'valor': int(item_value * random.uniform(0.8, 1.2)),
+                        'status': random.choice(['Pago'] * 70 + ['Aberto'] * 20 + ['Atrasado'] * 10),
+                        'responsavel': random.choice(['Financeiro', 'RH', 'Admin', 'Operacional']),
+                        'fornecedor': f"Fornecedor {random.randint(1, 10)}"
                     })
 
-# Salvar JSONs
-with open('dados_cash_flow_exemplo.json', 'w', encoding='utf-8') as f:
+# ============= EXPORTAR DADOS =============
+print("✅ Gerando JSON de exemplos...")
+
+# Salvar cash flow
+with open('../cash_flow.json', 'w', encoding='utf-8') as f:
     json.dump(cash_flow_data, f, ensure_ascii=False, indent=2)
 
-with open('dados_indicadores_exemplo.json', 'w', encoding='utf-8') as f:
+# Salvar indicadores
+with open('../indicadores.json', 'w', encoding='utf-8') as f:
     json.dump(indicadores_data, f, ensure_ascii=False, indent=2)
 
-with open('dados_orcamento_exemplo.json', 'w', encoding='utf-8') as f:
+# Salvar orçamento
+with open('../orcamento.json', 'w', encoding='utf-8') as f:
     json.dump(orcamento_data, f, ensure_ascii=False, indent=2)
 
-with open('dados_despesas_exemplo.json', 'w', encoding='utf-8') as f:
+# Salvar despesas
+with open('../despesas.json', 'w', encoding='utf-8') as f:
     json.dump(despesas_data, f, ensure_ascii=False, indent=2)
 
-print("✅ Arquivos JSON gerados com sucesso!")
-print(f"  - Cash Flow: {len(cash_flow_data)} registros")
-print(f"  - Indicadores: {len(indicadores_data)} registros")
-print(f"  - Orçamento: {len(orcamento_data)} registros")
-print(f"  - Despesas: {len(despesas_data)} registros")
-print(f"  - Orçamento: {len(orcamento_data)} registros")
+print(f"✅ Arquivos JSON gerados com sucesso!")
+print(f"   - Cash Flow: {len(cash_flow_data)} registros")
+print(f"   - Indicadores: {len(indicadores_data)} registros")
+print(f"   - Orçamento: {len(orcamento_data)} registros")
+print(f"   - Despesas: {len(despesas_data)} registros")

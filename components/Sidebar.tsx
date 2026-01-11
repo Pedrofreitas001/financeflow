@@ -236,18 +236,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             <p className="text-sm font-medium">Tabelas DRE</p>
           </button>
           <button
-            onClick={() => onNavigate?.('cashflow')}
-            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'cashflow'
-              ? 'bg-surface-dark border-primary text-white'
-              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
-              }`}
-          >
-            <span className={`material-symbols-outlined ${currentPage === 'cashflow' ? 'text-primary' : ''}`}>
-              trending_up
-            </span>
-            <p className="text-sm font-medium">Fluxo de Caixa</p>
-          </button>
-          <button
             onClick={() => onNavigate?.('indicadores')}
             className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'indicadores'
               ? 'bg-surface-dark border-primary text-white'
@@ -347,14 +335,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             <input type="file" onChange={handleDREUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
             <span className="material-symbols-outlined text-border-dark group-hover:text-primary mb-2">table_chart</span>
             <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors leading-tight">Carregar Excel DRE<br />(4 abas completas)</p>
-          </div>
-        )}
-
-        {currentPage === 'cashflow' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
-            <input type="file" onChange={handleCashFlowUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-primary mb-2">cloud_upload</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel Fluxo de Caixa</p>
           </div>
         )}
 

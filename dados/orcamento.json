@@ -1,0 +1,3242 @@
+[
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 106566,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 20558,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 54354,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11487,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 9009,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 7368,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 8240,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5439,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4439,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 7483,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 95027,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 18621,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 52592,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11686,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 9374,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 6768,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 8037,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5456,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 5552,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 6744,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 123386,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 17176,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 49304,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11946,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 9583,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 8253,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 7237,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 4468,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 5019,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 8149,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 116485,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 19188,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 51296,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11579,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 8871,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 7850,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 8188,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5577,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4816,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 6582,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 97243,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 16814,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 50552,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 12604,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 10350,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 6422,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 6543,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5211,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4435,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 7331,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 99129,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 16849,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 55253,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11230,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 10557,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 6637,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 8159,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5176,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 5469,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 7140,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 113819,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 20894,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 50639,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 12325,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 9673,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 8183,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 7391,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5611,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4984,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 6666,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 106877,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 21209,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 48431,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11494,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 10358,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 7269,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 6446,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 4429,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4742,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 7241,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 108717,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 21849,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 45326,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 13052,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 8598,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 7645,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 7402,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5233,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4721,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 6344,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 123885,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 17613,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 44279,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 11954,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 10476,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 6884,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 6506,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5576,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 5080,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 6274,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 122005,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 20234,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 45146,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 12079,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 8563,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 6787,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 7614,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 4236,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4245,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 6328,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Folha de Pagamento",
+    "orcado": 110250,
+    "realizado": 115773,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Aluguel",
+    "orcado": 19600,
+    "realizado": 18606,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Fornecedores",
+    "orcado": 49000,
+    "realizado": 42370,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Marketing",
+    "orcado": 12250,
+    "realizado": 14064,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Tecnologia",
+    "orcado": 9800,
+    "realizado": 10305,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Utilities",
+    "orcado": 7350,
+    "realizado": 8378,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Transporte",
+    "orcado": 7350,
+    "realizado": 8301,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Manutenção",
+    "orcado": 4900,
+    "realizado": 5294,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Consultoria",
+    "orcado": 4900,
+    "realizado": 4706,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Alpha",
+    "categoria": "Seguros",
+    "orcado": 7350,
+    "realizado": 8056,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 149648,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 22620,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 53462,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 14302,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 12149,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 9349,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 9238,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6000,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 5898,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8392,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 153059,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 24262,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 60164,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 16810,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 12814,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 7692,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 8949,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6459,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6571,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8811,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 129555,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 20583,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 63737,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 16387,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 11337,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 9769,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 9549,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 5841,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6630,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8585,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 152862,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 27131,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 62934,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 13516,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 13478,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 8943,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 10205,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6636,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6147,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 9194,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 123800,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 26287,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 52452,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 14082,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 11478,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 9388,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 9237,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 5464,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6689,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 5,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 9601,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 144216,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 23496,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 67120,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 14857,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 11032,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 8163,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 9818,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6777,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6040,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 10143,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 123065,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 25801,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 65284,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 16293,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 13225,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 8245,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 8934,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 5132,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6368,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8592,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 119520,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 20664,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 62811,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 14264,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 11287,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 9785,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 8428,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 5620,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6859,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8248,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 137684,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 21526,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 61640,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 13135,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 12206,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 8041,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 10139,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 5317,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 5281,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8173,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 140409,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 22906,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 64151,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 17217,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 12305,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 9893,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 7952,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6363,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 5976,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 8078,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 152479,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 21828,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 65524,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 14863,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 10487,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 8641,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 9983,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6514,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6044,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 9906,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Folha de Pagamento",
+    "orcado": 135675,
+    "realizado": 128587,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Aluguel",
+    "orcado": 24120,
+    "realizado": 26236,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Fornecedores",
+    "orcado": 60300,
+    "realizado": 58505,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Marketing",
+    "orcado": 15075,
+    "realizado": 13892,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Tecnologia",
+    "orcado": 12060,
+    "realizado": 12233,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Utilities",
+    "orcado": 9045,
+    "realizado": 8729,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Transporte",
+    "orcado": 9045,
+    "realizado": 8253,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Manutenção",
+    "orcado": 6030,
+    "realizado": 6544,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Consultoria",
+    "orcado": 6030,
+    "realizado": 6151,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Beta",
+    "categoria": "Seguros",
+    "orcado": 9045,
+    "realizado": 9165,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 73867,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 15605,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 32188,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8623,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 7983,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5145,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 4755,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3842,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3451,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 1,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 4789,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 91415,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 15682,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 35886,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8799,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 6615,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5131,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 6145,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3877,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 4175,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 2,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5642,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 90441,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 12648,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 30949,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8034,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 8078,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5348,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 5665,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3537,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3689,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 3,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5418,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 83261,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 16044,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 34090,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8101,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 7604,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5822,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 5718,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3186,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 4033,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 4,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5661,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 82131,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 14056,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 32968,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 9312,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 7743,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5313,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 4695,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3714,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3217,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 5,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 6216,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 73106,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 14406,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 36655,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8404,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 7682,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5645,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 5517,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3606,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3720,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 6,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5330,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 76720,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 15411,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 38878,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 7902,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 7450,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5716,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 5965,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3407,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3232,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 7,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 6035,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 75807,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 13578,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 31095,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 9383,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 7627,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5964,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 5922,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3623,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3468,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 8,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 6225,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 90195,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 15740,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 38154,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8310,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 6306,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5878,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 4727,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3529,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3614,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 9,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5263,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 81275,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 14692,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 31069,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 8777,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 8288,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 4800,
+    "responsavel": "Controller",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 6207,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3760,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3459,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 10,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5955,
+    "responsavel": "Controller",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 85692,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 14390,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 38958,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 9154,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 6872,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5743,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 4660,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3667,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3477,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 11,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5053,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Folha de Pagamento",
+    "orcado": 81900,
+    "realizado": 70197,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Aluguel",
+    "orcado": 14560,
+    "realizado": 12624,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Fornecedores",
+    "orcado": 36400,
+    "realizado": 41319,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Marketing",
+    "orcado": 9100,
+    "realizado": 9668,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Tecnologia",
+    "orcado": 7280,
+    "realizado": 6376,
+    "responsavel": "Diretor",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Utilities",
+    "orcado": 5460,
+    "realizado": 5256,
+    "responsavel": "Diretor",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Transporte",
+    "orcado": 5460,
+    "realizado": 6108,
+    "responsavel": "Diretor",
+    "observacoes": "Acima"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Manutenção",
+    "orcado": 3640,
+    "realizado": 3370,
+    "responsavel": "Gerente de Área",
+    "observacoes": "Abaixo"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Consultoria",
+    "orcado": 3640,
+    "realizado": 3815,
+    "responsavel": "Gerente Financeiro",
+    "observacoes": "Normal"
+  },
+  {
+    "mes": 12,
+    "empresa": "Gamma",
+    "categoria": "Seguros",
+    "orcado": 5460,
+    "realizado": 5687,
+    "responsavel": "Controller",
+    "observacoes": "Normal"
+  }
+]
