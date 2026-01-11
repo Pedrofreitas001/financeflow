@@ -5,16 +5,22 @@ import Header from './components/Header.tsx';
 import Dashboard from './components/Dashboard.tsx';
 import DashboardDespesas from './components/DashboardDespesas.tsx';
 import DREDashboard from './components/DREDashboard.tsx';
+import DashboardCashFlow from './components/CashFlow/DashboardCashFlow.tsx';
+import DashboardIndicadores from './components/Indicadores/DashboardIndicadores.tsx';
+import DashboardOrcamento from './components/Orcamento/DashboardOrcamento.tsx';
 import ReportCover from './components/ReportCover.tsx';
 import AIChat from './components/AIChat.tsx';
 import { FinanceProvider, useFinance } from './context/FinanceContext.tsx';
 import { DespesasProvider, useDespesas } from './context/DespesasContext.tsx';
 import { DREProvider } from './context/DREContext.tsx';
+import { CashFlowProvider } from './context/CashFlowContext/CashFlowContext.tsx';
+import { IndicadoresProvider } from './context/IndicadoresContext/IndicadoresContext.tsx';
+import { OrcamentoProvider } from './context/OrcamentoContext/OrcamentoContext.tsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.tsx';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
-type PageType = 'dashboard' | 'despesas' | 'dre';
+type PageType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento';
 
 const AppContent: React.FC = () => {
   const { filtros, kpis } = useFinance();
@@ -118,6 +124,9 @@ const AppContent: React.FC = () => {
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'despesas' && <DashboardDespesas />}
         {currentPage === 'dre' && <DREDashboard />}
+        {currentPage === 'cashflow' && <DashboardCashFlow />}
+        {currentPage === 'indicadores' && <DashboardIndicadores />}
+        {currentPage === 'orcamento' && <DashboardOrcamento />}
 
         {/* Hidden Cover Component for Capture */}
         <ReportCover
@@ -155,7 +164,13 @@ const App: React.FC = () => {
       <FinanceProvider>
         <DespesasProvider>
           <DREProvider>
-            <AppContent />
+            <CashFlowProvider>
+              <IndicadoresProvider>
+                <OrcamentoProvider>
+                  <AppContent />
+                </OrcamentoProvider>
+              </IndicadoresProvider>
+            </CashFlowProvider>
           </DREProvider>
         </DespesasProvider>
       </FinanceProvider>

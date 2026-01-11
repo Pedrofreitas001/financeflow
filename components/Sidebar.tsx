@@ -9,8 +9,8 @@ import * as XLSX from 'xlsx';
 interface SidebarProps {
   onExport?: () => void;
   visible?: boolean;
-  currentPage?: 'dashboard' | 'despesas' | 'dre';
-  onNavigate?: (page: 'dashboard' | 'despesas' | 'dre') => void;
+  currentPage?: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento';
+  onNavigate?: (page: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento') => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage = 'dashboard', onNavigate }) => {
@@ -99,12 +99,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 space-y-8">
         <nav className="flex flex-col gap-2">
-          <p className="px-2 text-xs font-bold text-text-muted uppercase">Navegação</p>
+          <p className="px-2 text-xs font-bold text-text-muted uppercase">Navegação Principal</p>
           <button
             onClick={() => onNavigate?.('dashboard')}
             className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'dashboard'
-                ? 'bg-surface-dark border-primary text-white'
-                : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
               }`}
           >
             <span className={`material-symbols-outlined ${currentPage === 'dashboard' ? 'text-primary' : ''}`}>
@@ -115,8 +115,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           <button
             onClick={() => onNavigate?.('despesas')}
             className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'despesas'
-                ? 'bg-surface-dark border-primary text-white'
-                : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
               }`}
           >
             <span className={`material-symbols-outlined ${currentPage === 'despesas' ? 'text-primary' : ''}`}>
@@ -127,14 +127,54 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           <button
             onClick={() => onNavigate?.('dre')}
             className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'dre'
-                ? 'bg-surface-dark border-primary text-white'
-                : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
               }`}
           >
             <span className={`material-symbols-outlined ${currentPage === 'dre' ? 'text-primary' : ''}`}>
               table_chart
             </span>
             <p className="text-sm font-medium">Tabelas DRE</p>
+          </button>
+        </nav>
+
+        <nav className="flex flex-col gap-2">
+          <p className="px-2 text-xs font-bold text-text-muted uppercase">Novas Páginas</p>
+          <button
+            onClick={() => onNavigate?.('cashflow')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'cashflow'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'cashflow' ? 'text-primary' : ''}`}>
+              trending_up
+            </span>
+            <p className="text-sm font-medium">Fluxo de Caixa</p>
+          </button>
+          <button
+            onClick={() => onNavigate?.('indicadores')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'indicadores'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'indicadores' ? 'text-primary' : ''}`}>
+              analytics
+            </span>
+            <p className="text-sm font-medium">Indicadores</p>
+          </button>
+          <button
+            onClick={() => onNavigate?.('orcamento')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'orcamento'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'orcamento' ? 'text-primary' : ''}`}>
+              balance
+            </span>
+            <p className="text-sm font-medium">Budgeting</p>
           </button>
         </nav>
 
