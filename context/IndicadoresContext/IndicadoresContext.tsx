@@ -36,13 +36,7 @@ interface IndicadoresContextType {
 const IndicadoresContext = createContext<IndicadoresContextType | undefined>(undefined);
 
 export const IndicadoresProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [dados, setDados] = useState<FinancialIndicators[]>([
-        { mes: 1, empresa: 'Alpha', roe: 15.3, roa: 8.2, margemLiquida: 12.5, margemOperacional: 18.2, liquidezCorrente: 1.8, liquidezSeca: 1.2, endividamento: 35.0, alavancagem: 2.1, giroAtivo: 2.3, prazoRecebimento: 30, prazoPagamento: 35 },
-        { mes: 1, empresa: 'Beta', roe: 18.2, roa: 9.1, margemLiquida: 14.2, margemOperacional: 20.1, liquidezCorrente: 1.5, liquidezSeca: 1.0, endividamento: 40.5, alavancagem: 2.5, giroAtivo: 2.8, prazoRecebimento: 25, prazoPagamento: 40 },
-        { mes: 1, empresa: 'Gamma', roe: 12.5, roa: 7.1, margemLiquida: 10.2, margemOperacional: 15.5, liquidezCorrente: 2.1, liquidezSeca: 1.5, endividamento: 30.0, alavancagem: 1.8, giroAtivo: 2.0, prazoRecebimento: 35, prazoPagamento: 45 },
-        { mes: 2, empresa: 'Alpha', roe: 16.1, roa: 8.8, margemLiquida: 13.2, margemOperacional: 19.0, liquidezCorrente: 1.9, liquidezSeca: 1.3, endividamento: 34.5, alavancagem: 2.2, giroAtivo: 2.4, prazoRecebimento: 28, prazoPagamento: 36 },
-        { mes: 2, empresa: 'Beta', roe: 17.5, roa: 8.9, margemLiquida: 13.8, margemOperacional: 19.5, liquidezCorrente: 1.6, liquidezSeca: 1.1, endividamento: 41.0, alavancagem: 2.4, giroAtivo: 2.7, prazoRecebimento: 26, prazoPagamento: 41 },
-    ]);
+    const [dados, setDados] = useState<FinancialIndicators[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

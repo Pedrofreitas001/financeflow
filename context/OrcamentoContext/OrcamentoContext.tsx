@@ -27,16 +27,7 @@ interface OrcamentoContextType {
 const OrcamentoContext = createContext<OrcamentoContextType | undefined>(undefined);
 
 export const OrcamentoProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [dados, setDados] = useState<OrcamentoItem[]>([
-        { mes: 1, empresa: 'Alpha', categoria: 'Folha de Pagamento', orcado: 80000, realizado: 82000, responsavel: 'RH', observacoes: 'Acima' },
-        { mes: 1, empresa: 'Alpha', categoria: 'Aluguel', orcado: 10000, realizado: 10000, responsavel: 'Admin', observacoes: 'Normal' },
-        { mes: 1, empresa: 'Alpha', categoria: 'Fornecedores', orcado: 120000, realizado: 118000, responsavel: 'Compras', observacoes: 'Abaixo' },
-        { mes: 1, empresa: 'Alpha', categoria: 'Marketing', orcado: 15000, realizado: 17500, responsavel: 'Marketing', observacoes: 'Acima' },
-        { mes: 1, empresa: 'Beta', categoria: 'Folha de Pagamento', orcado: 95000, realizado: 93000, responsavel: 'RH', observacoes: 'Abaixo' },
-        { mes: 1, empresa: 'Beta', categoria: 'Aluguel', orcado: 12000, realizado: 12000, responsavel: 'Admin', observacoes: 'Normal' },
-        { mes: 2, empresa: 'Alpha', categoria: 'Folha de Pagamento', orcado: 80000, realizado: 84000, responsavel: 'RH', observacoes: 'Acima' },
-        { mes: 2, empresa: 'Alpha', categoria: 'Fornecedores', orcado: 125000, realizado: 122000, responsavel: 'Compras', observacoes: 'Abaixo' },
-    ]);
+    const [dados, setDados] = useState<OrcamentoItem[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

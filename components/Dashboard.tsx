@@ -21,35 +21,10 @@ const Dashboard: React.FC = () => {
             <div className="w-24 h-24 rounded-full bg-surface-dark border border-border-dark flex items-center justify-center mx-auto mb-6">
               <span className="material-symbols-outlined text-primary text-5xl">dashboard</span>
             </div>
-            <h2 className="text-white text-2xl font-bold mb-2">Nenhum dado carregado</h2>
-            <p className="text-text-muted mb-6">
-              Carregue dados nas páginas de Despesas, Fluxo de Caixa, Indicadores ou Orçamento para visualizar o dashboard.
+            <h2 className="text-white text-2xl font-bold mb-2">Bem-vindo ao Dashboard Contábil</h2>
+            <p className="text-text-muted mb-6 max-w-md">
+              Para começar, carregue dados em uma das seções de análise na barra lateral
             </p>
-            <div className="bg-surface-dark border border-border-dark rounded-xl p-6 max-w-2xl mx-auto text-left">
-              <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">info</span>
-                Como começar
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <h4 className="text-primary font-semibold">1. Análise de Despesas</h4>
-                  <p className="text-text-muted text-sm">Colunas: Ano, Mes, Empresa, Categoria, Subcategoria, Valor</p>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="text-primary font-semibold">2. Fluxo de Caixa</h4>
-                  <p className="text-text-muted text-sm">Colunas: Data, Empresa, Tipo, Categoria, Valor</p>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="text-primary font-semibold">3. Indicadores</h4>
-                  <p className="text-text-muted text-sm">Colunas: Mes, Empresa, ROE, ROA, Margem Líquida</p>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="text-primary font-semibold">4. Orçamento</h4>
-                  <p className="text-text-muted text-sm">Colunas: Mes, Empresa, Categoria, Orçado, Realizado</p>
-                </div>
-              </div>
-              <p className="text-xs text-text-muted mt-4">Use o uploader na sidebar à esquerda para carregar dados</p>
-            </div>
           </div>
         </div>
       </main>

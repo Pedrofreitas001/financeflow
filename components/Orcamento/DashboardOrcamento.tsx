@@ -137,6 +137,18 @@ const DashboardOrcamento: React.FC = () => {
                             </div>
                             <p className="text-xs text-text-muted">Arquivo: <span className="text-primary font-mono">dados/excel_exemplos/orcamento_template.xlsx</span></p>
                         </div>
+
+                        {/* Botões Google Sheets */}
+                        <div className="mt-6 flex gap-3">
+                            <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                                <span className="material-symbols-outlined text-base">open_in_new</span>
+                                Visualizar Modelo
+                            </a>
+                            <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                                <span className="material-symbols-outlined text-base">download</span>
+                                Baixar Arquivo
+                            </a>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -149,18 +161,6 @@ const DashboardOrcamento: React.FC = () => {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-100">Budgeting vs Realizado</h1>
                     <p className="text-gray-400 text-sm mt-2">Análise de desvios orçamentários e controle de gastos</p>
-                </div>
-
-                {/* Links para Google Sheets */}
-                <div className="mb-6 flex gap-3">
-                    <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
-                        <span className="material-symbols-outlined text-base">open_in_new</span>
-                        Visualizar Modelo
-                    </a>
-                    <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
-                        <span className="material-symbols-outlined text-base">download</span>
-                        Baixar Arquivo
-                    </a>
                 </div>
 
                 {/* KPIs */}
