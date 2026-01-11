@@ -5,7 +5,7 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 def criar_excel_cash_flow():
-    with open('dados/excel_exemplos/dados_cash_flow_exemplo.json', 'r', encoding='utf-8') as f:
+    with open('dados_cash_flow_exemplo.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     df = pd.DataFrame(data)
@@ -54,11 +54,11 @@ def criar_excel_cash_flow():
     ws.column_dimensions['H'].width = 12
     ws.column_dimensions['I'].width = 15
     
-    wb.save('dados/excel_exemplos/CashFlow_Exemplo.xlsx')
+    wb.save('../excel_exemplos/CashFlow_Exemplo.xlsx')
     print("✅ CashFlow_Exemplo.xlsx criado")
 
 def criar_excel_indicadores():
-    with open('dados/excel_exemplos/dados_indicadores_exemplo.json', 'r', encoding='utf-8') as f:
+    with open('dados_indicadores_exemplo.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     df = pd.DataFrame(data)
@@ -106,11 +106,11 @@ def criar_excel_indicadores():
     for i, header in enumerate(headers, 1):
         ws.column_dimensions[chr(64 + i)].width = 16
     
-    wb.save('dados/excel_exemplos/Indicadores_Exemplo.xlsx')
+    wb.save('../excel_exemplos/Indicadores_Exemplo.xlsx')
     print("✅ Indicadores_Exemplo.xlsx criado")
 
 def criar_excel_orcamento():
-    with open('dados/excel_exemplos/dados_orcamento_exemplo.json', 'r', encoding='utf-8') as f:
+    with open('dados_orcamento_exemplo.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
     
     df = pd.DataFrame(data)
@@ -157,11 +157,59 @@ def criar_excel_orcamento():
     for i, header in enumerate(headers, 1):
         ws.column_dimensions[chr(64 + i)].width = 15
     
-    wb.save('dados/excel_exemplos/Orcamento_Exemplo.xlsx')
+    wb.save('../excel_exemplos/Orcamento_Exemplo.xlsx')
     print("✅ Orcamento_Exemplo.xlsx criado")
 
-# Gerar os 3 arquivos
+def criar_excel_despesas():
+    with open('dados_despesas_exemplo.json', 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    df = pd.DataFrame(data)
+    
+    # Criar workbook
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Despesas"
+    
+    # Escrever headers
+    headers = ['Ano', 'Mês', 'Empresa', 'Categoria', 'Subcategoria', 'Valor']
+    ws.append(headers)
+    
+    # Formatar headers
+    header_fill = PatternFill(start_color="E74C3C", end_color="E74C3C", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF")
+    
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num)
+        cell.fill = header_fill
+        cell.font = header_font
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+    
+    # Escrever dados
+    for item in data:
+        ws.append([
+            item.get('ano', ''),
+            item.get('mes', ''),
+            item.get('empresa', ''),
+            item.get('categoria', ''),
+            item.get('subcategoria', ''),
+            item.get('valor', 0)
+        ])
+    
+    # Ajustar largura de colunas
+    ws.column_dimensions['A'].width = 8
+    ws.column_dimensions['B'].width = 8
+    ws.column_dimensions['C'].width = 12
+    ws.column_dimensions['D'].width = 20
+    ws.column_dimensions['E'].width = 20
+    ws.column_dimensions['F'].width = 12
+    
+    wb.save('../excel_exemplos/Despesas_Exemplo.xlsx')
+    print("✅ Despesas_Exemplo.xlsx criado")
+
+# Gerar os 4 arquivos
 criar_excel_cash_flow()
 criar_excel_indicadores()
 criar_excel_orcamento()
+criar_excel_despesas()
 print("\n✅ Todos os arquivos Excel foram criados com sucesso!")
