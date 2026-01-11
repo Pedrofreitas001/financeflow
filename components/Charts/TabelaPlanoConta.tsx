@@ -99,7 +99,7 @@ const TabelaPlanoConta: React.FC = () => {
                             const cor = agregadoDespesasCategoria.find(c => c.name === item.categoria)?.color || '#6b7280';
 
                             return (
-                                <tr key={item.categoria} className="border-b border-border-dark hover:bg-background-dark transition-colors">
+                                <tr key={item.categoria} className="border-b border-border-dark hover:bg-background-dark/30 transition-colors">
                                     <td className="py-3 px-4 sticky left-0 bg-surface-dark">
                                         <div className="flex items-center gap-2">
                                             <div
