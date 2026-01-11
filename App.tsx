@@ -3,19 +3,22 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar.tsx';
 import Header from './components/Header.tsx';
 import Dashboard from './components/Dashboard.tsx';
+import DashboardDespesas from './components/DashboardDespesas.tsx';
 import DREDashboard from './components/DREDashboard.tsx';
 import ReportCover from './components/ReportCover.tsx';
 import AIChat from './components/AIChat.tsx';
 import { FinanceProvider, useFinance } from './context/FinanceContext.tsx';
+import { DespesasProvider, useDespesas } from './context/DespesasContext.tsx';
 import { DREProvider } from './context/DREContext.tsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.tsx';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
-type PageType = 'dashboard' | 'dre';
+type PageType = 'dashboard' | 'despesas' | 'dre';
 
 const AppContent: React.FC = () => {
   const { filtros, kpis } = useFinance();
+  const { filtrosDespesas } = useDespesas();
   const { theme } = useTheme();
   const [isExporting, setIsExporting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -101,12 +104,6 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const periodoTexto = filtros.meses.length === 0 
-    ? 'Período Completo' 
-    : filtros.meses.length === 12 
-      ? 'Anual Consolidado' 
-      : filtros.meses.sort((a, b) => a.localeCompare(b)).join(', ');
-
   return (
     <div className="flex h-screen bg-background-dark overflow-hidden">
       <Sidebar
@@ -117,19 +114,25 @@ const AppContent: React.FC = () => {
       />
       <div className="flex-1 flex flex-col min-w-0">
         <Header onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} sidebarVisible={sidebarVisible} />
+
         {currentPage === 'dashboard' && <Dashboard />}
+        {currentPage === 'despesas' && <DashboardDespesas />}
         {currentPage === 'dre' && <DREDashboard />}
-        
+
         {/* Hidden Cover Component for Capture */}
-        <ReportCover 
-          empresa={filtros.empresa === 'Todas' ? 'Consolidado FinanceFlow' : filtros.empresa} 
-          periodo={periodoTexto}
+        <ReportCover
+          empresa={filtros.empresa === 'Todas' ? 'Consolidado FinanceFlow' : filtros.empresa}
+          periodo={filtros.meses.length === 0
+            ? 'Período Completo'
+            : filtros.meses.length === 12
+              ? 'Anual Consolidado'
+              : filtros.meses.sort((a, b) => a.localeCompare(b)).join(', ')}
           kpis={kpis}
         />
-        
+
         {/* IA Chat Component */}
         <AIChat />
-        
+
         {/* Export Loading Overlay */}
         {isExporting && (
           <div className="fixed inset-0 bg-background-dark/95 backdrop-blur-xl z-[100] flex flex-col items-center justify-center animate-in fade-in duration-300">
@@ -150,9 +153,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       <FinanceProvider>
-        <DREProvider>
-          <AppContent />
-        </DREProvider>
+        <DespesasProvider>
+          <DREProvider>
+            <AppContent />
+          </DREProvider>
+        </DespesasProvider>
       </FinanceProvider>
     </ThemeProvider>
   );
