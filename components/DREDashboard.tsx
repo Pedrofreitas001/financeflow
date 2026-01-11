@@ -68,6 +68,18 @@ const DREDashboard: React.FC = () => {
                 </table>
               </div>
               <p className={`text-xs ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Cada aba deve conter os dados mensais estruturados para análise detalhada</p>
+
+              {/* Botões Google Sheets */}
+              <div className="mt-6 flex gap-3">
+                <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                  <span className="material-symbols-outlined text-base">open_in_new</span>
+                  Visualizar Modelo
+                </a>
+                <a href="#" className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors">
+                  <span className="material-symbols-outlined text-base">download</span>
+                  Baixar Arquivo
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -110,10 +122,10 @@ const DREDashboard: React.FC = () => {
               key={tab.id}
               onClick={() => setViewType(tab.id)}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-all ${viewType === tab.id
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                  : isDark
-                    ? 'text-[#9db9a8] hover:text-white hover:bg-[#111814]'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                : isDark
+                  ? 'text-[#9db9a8] hover:text-white hover:bg-[#111814]'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
             >
               <span className="material-symbols-outlined text-lg">{tab.icon}</span>
