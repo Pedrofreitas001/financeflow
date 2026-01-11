@@ -43,6 +43,7 @@ export const IndicadoresProvider: React.FC<{ children: ReactNode }> = ({ childre
         { mes: 2, empresa: 'Alpha', roe: 16.1, roa: 8.8, margemLiquida: 13.2, margemOperacional: 19.0, liquidezCorrente: 1.9, liquidezSeca: 1.3, endividamento: 34.5, alavancagem: 2.2, giroAtivo: 2.4, prazoRecebimento: 28, prazoPagamento: 36 },
         { mes: 2, empresa: 'Beta', roe: 17.5, roa: 8.9, margemLiquida: 13.8, margemOperacional: 19.5, liquidezCorrente: 1.6, liquidezSeca: 1.1, endividamento: 41.0, alavancagem: 2.4, giroAtivo: 2.7, prazoRecebimento: 26, prazoPagamento: 41 },
     ]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const empresas = Array.from(new Set(dados.map(item => item.empresa)));

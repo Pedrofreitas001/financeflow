@@ -37,6 +37,7 @@ export const OrcamentoProvider: React.FC<{ children: ReactNode }> = ({ children 
         { mes: 2, empresa: 'Alpha', categoria: 'Folha de Pagamento', orcado: 80000, realizado: 84000, responsavel: 'RH', observacoes: 'Acima' },
         { mes: 2, empresa: 'Alpha', categoria: 'Fornecedores', orcado: 125000, realizado: 122000, responsavel: 'Compras', observacoes: 'Abaixo' },
     ]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const totalOrcado = dados.reduce((acc, item) => acc + item.orcado, 0);
