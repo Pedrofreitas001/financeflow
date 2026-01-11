@@ -45,7 +45,7 @@ const DespesasPorCategoria: React.FC = () => {
 
             <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={agregadoDespesasCategoria} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                    <BarChart data={agregadoDespesasCategoria} margin={{ top: 20, right: 30, left: 70, bottom: 80 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1f2937' : '#e5e7eb'} />
                         <XAxis
                             dataKey="name"
@@ -55,8 +55,9 @@ const DespesasPorCategoria: React.FC = () => {
                             tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
                         />
                         <YAxis
-                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280' }}
-                            tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`}
+                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+                            tickFormatter={(value) => `R$ ${(value / 1000000).toFixed(1)}M`}
+                            width={75}
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Bar dataKey="value" radius={[8, 8, 0, 0]}>
