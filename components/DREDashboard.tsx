@@ -14,6 +14,67 @@ const DREDashboard: React.FC = () => {
   const isDark = theme === 'dark';
   const [viewType, setViewType] = useState<ViewType>('mensal');
 
+  // Se não houver dados, mostrar disclaimer
+  if (!dreData || (dreData && Object.keys(dreData).length === 0)) {
+    return (
+      <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <div className={`w-24 h-24 rounded-full ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-gray-200 border-gray-300'} border flex items-center justify-center mx-auto mb-6`}>
+              <span className={`material-symbols-outlined text-5xl ${isDark ? 'text-primary' : 'text-primary'}`}>table_chart</span>
+            </div>
+            <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>Nenhum dado carregado</h2>
+            <p className={`mb-8 ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
+              Carregue um arquivo Excel com as 4 abas DRE na barra lateral
+            </p>
+
+            {/* Formato Esperado */}
+            <div className={`rounded-xl border p-6 w-full max-w-2xl ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-200'}`}>
+              <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                <span className={`material-symbols-outlined ${isDark ? 'text-primary' : 'text-primary'}`}>description</span>
+                Formato Esperado: DRE com 4 Abas
+              </h3>
+              <div className={`rounded-lg p-4 mb-4 overflow-x-auto ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+                <table className={`text-xs w-full ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <thead>
+                    <tr className={`border-b ${isDark ? 'text-text-muted border-border-dark' : 'text-gray-600 border-gray-200'}`}>
+                      <th className="text-left py-2">Aba</th>
+                      <th className="text-left py-2">Descrição</th>
+                      <th className="text-left py-2">Colunas Principais</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className={`border-b ${isDark ? 'border-border-dark/50' : 'border-gray-200/50'}`}>
+                      <td className={`py-2 font-mono ${isDark ? 'text-primary' : 'text-primary'}`}>DRE Mensal</td>
+                      <td>Projetado vs Real</td>
+                      <td>Receita, Custo, EBITDA, Lucro</td>
+                    </tr>
+                    <tr className={`border-b ${isDark ? 'border-border-dark/50' : 'border-gray-200/50'}`}>
+                      <td className={`py-2 font-mono ${isDark ? 'text-primary' : 'text-primary'}`}>DRE Acumulado</td>
+                      <td>Acumulado Mensal</td>
+                      <td>Receita, Custo, EBITDA, Lucro</td>
+                    </tr>
+                    <tr className={`border-b ${isDark ? 'border-border-dark/50' : 'border-gray-200/50'}`}>
+                      <td className={`py-2 font-mono ${isDark ? 'text-primary' : 'text-primary'}`}>DRE Comparativo</td>
+                      <td>Regimes Diferentes</td>
+                      <td>Receita, Custo, EBITDA, Lucro</td>
+                    </tr>
+                    <tr>
+                      <td className={`py-2 font-mono ${isDark ? 'text-primary' : 'text-primary'}`}>Indicadores</td>
+                      <td>Métricas Financeiras</td>
+                      <td>Margem, ROE, Índices</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className={`text-xs ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Cada aba deve conter os dados mensais estruturados para análise detalhada</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
       <div className="max-w-[1600px] mx-auto">
@@ -40,27 +101,26 @@ const DREDashboard: React.FC = () => {
 
         {/* Tabs de Visualização */}
         <div className={`flex gap-2 mb-6 ${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-white border-gray-200'} border rounded-lg p-1`}>
-            {[
-              { id: 'mensal' as ViewType, label: 'Projetado vs Real', icon: 'calendar_month' },
-              { id: 'acumulado' as ViewType, label: 'Acumulado Mensal', icon: 'trending_up' },
-              { id: 'comparativo' as ViewType, label: 'Comparativo Regimes', icon: 'compare' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setViewType(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-all ${
-                  viewType === tab.id
-                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                    : isDark
+          {[
+            { id: 'mensal' as ViewType, label: 'Projetado vs Real', icon: 'calendar_month' },
+            { id: 'acumulado' as ViewType, label: 'Acumulado Mensal', icon: 'trending_up' },
+            { id: 'comparativo' as ViewType, label: 'Comparativo Regimes', icon: 'compare' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setViewType(tab.id)}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-md text-sm font-medium transition-all ${viewType === tab.id
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                  : isDark
                     ? 'text-[#9db9a8] hover:text-white hover:bg-[#111814]'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
-              >
-                <span className="material-symbols-outlined text-lg">{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
+            >
+              <span className="material-symbols-outlined text-lg">{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
 
         {/* Loading State */}
         {loading && (
