@@ -42,7 +42,7 @@ const DREAcumuladoTable: React.FC = () => {
           <table className="w-full">
             <thead>
               <tr className={`${isDark ? 'bg-background-dark border-border-dark' : 'bg-gray-100 border-gray-200'} border-b`}>
-                <th className={`px-5 py-2 text-left text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest sticky left-0 z-10 ${isDark ? 'bg-background-dark' : 'bg-gray-100'} border-r ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
+                <th className={`px-5 py-2 text-left text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest sticky left-0 z-20 ${isDark ? 'bg-background-dark' : 'bg-gray-100'} border-r ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
                   Descrição
                 </th>
                 {mesesFiltrados.map((mes) => (
@@ -84,11 +84,10 @@ const DREAcumuladoTable: React.FC = () => {
                     key={idx}
                     className={`${rowClass} border-b ${isDark ? 'border-border-dark/20' : 'border-gray-200'} hover:${isDark ? 'bg-gray-800/50' : 'bg-gray-50/80'} transition-colors`}
                   >
-                    <td className={`px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-10 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${
-                      linha.linha.isFinal ? (isDark ? 'bg-primary/15' : 'bg-primary/10') :
+                    <td className={`px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-50 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${linha.linha.isFinal ? (isDark ? 'bg-primary/15' : 'bg-primary/10') :
                       linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-gray-800/30' : 'bg-gray-100/50') :
-                      (isDark ? 'bg-surface-dark' : 'bg-white')
-                    }`}>
+                        (isDark ? 'bg-surface-dark' : 'bg-white')
+                      }`}>
                       {linha.linha.descricao}
                     </td>
                     {valoresFiltrados.map((mes) => {
