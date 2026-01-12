@@ -25,6 +25,14 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
     const isDark = theme === 'dark';
     const [visualizacao, setVisualizacao] = useState<'piramide' | 'barras'>('piramide');
 
+    // Calcular largura dinâmica do YAxis baseado no tamanho das legendas
+    const calcularLarguraYAxis = (dados: any[]): number => {
+        if (!dados || dados.length === 0) return 80;
+        const maiorNome = Math.max(...dados.map(d => (d.nome || '').length));
+        // Aproximadamente 7-8 pixels por caractere em fontSize 12
+        return Math.min(Math.max(maiorNome * 7.5, 60), 200);
+    };
+
     // Calcular camadas da pirâmide
     const ativoTotal = totais.ativo || 1; // Evitar divisão por zero
     const totalFinanciamento = totais.passivo + totais.pl;
@@ -197,7 +205,7 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                         <BarChart
                             layout="vertical"
                             data={dadosBarras}
-                            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                            margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
                         >
                             <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
                             <XAxis type="number" />
@@ -205,7 +213,7 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                                 type="category"
                                 dataKey="nome"
                                 tick={{ fontSize: 12, fill: isDark ? '#9ca3af' : '#6b7280' }}
-                                width={0}
+                                width={calcularLarguraYAxis(dadosBarras)}
                             />
                             <Tooltip content={handleCustomTooltip} />
                             <Bar dataKey="percentualAtivo" fill="#8884d8" radius={[0, 8, 8, 0]}>

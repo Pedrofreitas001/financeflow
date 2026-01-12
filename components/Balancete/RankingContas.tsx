@@ -31,6 +31,14 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
     const [topN, setTopN] = useState<5 | 10 | 15>(10);
     const [filtroGrupo, setFiltroGrupo] = useState<string>('Todos');
 
+    // Calcular largura dinâmica do YAxis baseado no tamanho das legendas
+    const calcularLarguraYAxis = (dados: any[]): number => {
+        if (!dados || dados.length === 0) return 100;
+        const maiorNome = Math.max(...dados.map(d => (d.nome || '').length));
+        // Aproximadamente 7-8 pixels por caractere em fontSize 11
+        return Math.min(Math.max(maiorNome * 7.5, 80), 250);
+    };
+
     // Filtrar dados
     const dadosFiltrados = empresaSelecionada
         ? dados.filter(d => d.empresa === empresaSelecionada)
@@ -162,7 +170,7 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
                     <BarChart
                         layout="vertical"
                         data={ranking}
-                        margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+                        margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
                         <XAxis type="number" />
@@ -170,7 +178,7 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
                             type="category"
                             dataKey="nome"
                             tick={{ fontSize: 11, fill: isDark ? '#9ca3af' : '#6b7280' }}
-                            width={0}
+                            width={calcularLarguraYAxis(ranking)}
                         />
                         <Tooltip content={handleCustomTooltip} />
                         <Bar dataKey="valor" fill="#8884d8" radius={[0, 8, 8, 0]}>
