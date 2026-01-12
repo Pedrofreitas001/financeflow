@@ -110,7 +110,7 @@ const DREAcumuladoTable: React.FC = () => {
                     key={idx}
                     className={`${rowClass} border-b ${isDark ? 'border-border-dark/20' : 'border-gray-200'} hover:${isDark ? 'bg-gray-800/50' : 'bg-gray-50/80'} transition-colors`}
                   >
-                    <td className={`dre-descricao-cell px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-50 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${linha.linha.isFinal ? (isDark ? 'bg-[#164e3b]' : 'bg-[#d1fae5]') :
+                    <td className={`dre-descricao-cell px-6 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-50 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} min-w-[280px] ${linha.linha.isFinal ? (isDark ? 'bg-[#164e3b]' : 'bg-[#d1fae5]') :
                       linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-[#1e293b]' : 'bg-[#e0e7ff]') :
                         (isDark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]')
                       }`}>
