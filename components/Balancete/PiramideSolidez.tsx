@@ -80,7 +80,7 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
         if (props.active && props.payload && props.payload.length > 0) {
             const data = props.payload[0].payload;
             return (
-                <div className={`p-3 rounded-lg shadow-lg border ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'}`}>
+                <div className={`p-3 rounded-xl shadow-lg border ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'}`}>
                     <p className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         {data.nome}
                     </p>
@@ -192,7 +192,7 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                     </div>
 
                     {/* Legenda interpretativa */}
-                    <div className={`mt-12 p-4 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'} w-full`}>
+                    <div className={`mt-12 p-4 rounded-xl text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'} w-full`}>
                         <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                             <span className="font-bold">Interpretação:</span> Uma pirâmide mais larga na base e estreita no topo indica maior endividamento. Uma estrutura mais balanceada reflete menos risco financeiro.
                         </p>

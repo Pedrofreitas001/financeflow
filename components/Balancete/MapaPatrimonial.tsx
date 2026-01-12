@@ -64,7 +64,7 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas, tota
             const percentualAtivo = (data.absoluteValue / ativoTotal) * 100;
 
             return (
-                <div className={`p-3 rounded-lg shadow-lg border ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'}`}>
+                <div className={`p-3 rounded-xl shadow-lg border ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'}`}>
                     <p className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         {data.name}
                     </p>
@@ -125,7 +125,7 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas, tota
             {/* Narrativa Visual */}
             <div className="space-y-4">
                 {waterfallData.map((step, idx) => (
-                    <div key={idx} className={`p-4 rounded-lg ${isDark ? 'bg-background-dark' : 'bg-gray-50'} border ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
+                    <div key={idx} className={`p-4 rounded-xl ${isDark ? 'bg-background-dark' : 'bg-gray-50'} border ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div
@@ -157,7 +157,7 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas, tota
             </div>
 
             {/* Validação de Balancete */}
-            <div className={`mt-6 p-4 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'} border ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
+            <div className={`mt-6 p-4 rounded-xl text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'} border ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
                 <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     <span className="font-semibold">📊 Validação:</span> Ativo ({formatarValor(ativoTotal)}) = Passivo ({formatarValor(passivoTotal)}) + PL ({formatarValor(plTotal)})
                     <br />

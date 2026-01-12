@@ -218,7 +218,7 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
                             return (
                                 <div
                                     key={idx}
-                                    className={`rounded-lg border p-4 transition-all hover:shadow-md ${style.bg}`}
+                                    className={`rounded-xl border p-4 transition-all hover:shadow-md ${style.bg}`}
                                 >
                                     <div className="flex gap-3">
                                         <div className={`text-xl flex-shrink-0 ${style.icone}`}>
@@ -239,7 +239,7 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
                     </div>
 
                     {/* Dica de Interpretação */}
-                    <div className={`mt-4 p-3 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+                    <div className={`mt-4 p-3 rounded-xl text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
                         <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                             <span className="font-semibold">💡 Nota:</span> Os insights acima traduzem a contabilidade em linguagem executiva e devem ser complementados pela análise detalhada dos dados na tabela de balancete.
                         </p>

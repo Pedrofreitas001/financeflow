@@ -68,7 +68,7 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
         if (props.active && props.payload && props.payload.length > 0) {
             const data = props.payload[0].payload;
             return (
-                <div className={`p-3 rounded-lg shadow-lg border ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'}`}>
+                <div className={`p-3 rounded-xl shadow-lg border ${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'}`}>
                     <p className={`text-xs font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                         {data.nome}
                     </p>
@@ -267,7 +267,7 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
             </div>
 
             {/* Insights */}
-            <div className={`mt-4 p-3 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+            <div className={`mt-4 p-3 rounded-xl text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
                 <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     <span className="font-semibold">💡 Insight:</span> As Top {topN} contas representam {percentualCobertura.toFixed(1)}% do patrimônio total. Foco em gestão dessas contas críticas potencializa o impacto de decisões financeiras.
                 </p>

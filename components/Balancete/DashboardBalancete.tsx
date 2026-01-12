@@ -25,12 +25,12 @@ const KPIBalanceteCard: React.FC<KPIBalanceteCardProps> = ({ titulo, valor, unid
     const statusIcon = status === 'ok' ? '✓' : status === 'alerta' ? '⚠' : '✕';
 
     return (
-        <div className={`${isDarkCard ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm`}>
-            <p className={`${isDarkCard ? 'text-gray-400' : 'text-gray-600'} text-sm`}>{titulo}</p>
-            <p className={`text-2xl font-bold ${cor}`}>
+        <div className={`${isDarkCard ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl p-5 border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all`}>
+            <p className={`${isDarkCard ? 'text-text-muted' : 'text-gray-600'} text-xs font-medium uppercase tracking-wide`}>{titulo}</p>
+            <p className={`text-2xl font-bold ${cor} mt-2 tracking-tight`}>
                 {unidade === 'R$' ? `R$ ${(valor / 1000000).toFixed(2)}M` : `${valor.toFixed(2)}%`}
             </p>
-            <div className={`mt-2 px-3 py-1 rounded-full w-fit text-xs font-semibold flex items-center gap-1 ${statusColor}`}>
+            <div className={`mt-3 px-3 py-1 rounded-full w-fit text-xs font-semibold flex items-center gap-1 ${statusColor}`}>
                 <span>{statusIcon}</span>
                 <span>{status === 'ok' ? 'OK' : status === 'alerta' ? 'Atenção' : 'Erro'}</span>
             </div>
@@ -63,7 +63,7 @@ const DashboardBalancete: React.FC = () => {
                         </div>
 
                         {/* Informações do Formato */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg border shadow-sm p-6`}>
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6`}>
                             <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 <span className="material-symbols-outlined text-primary">description</span>
                                 Formato Esperado: Balancete_exemplo.xlsx
@@ -113,12 +113,6 @@ const DashboardBalancete: React.FC = () => {
                                 <span className="material-symbols-outlined text-base">download</span>
                                 Baixar Arquivo
                             </a>
-                        </div>
-
-                        <div className={`mt-6 p-4 rounded-lg ${isDark ? 'bg-blue-500/10 border border-blue-500/30' : 'bg-blue-50 border border-blue-200'}`}>
-                            <p className={`text-xs ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
-                                💡 Dica: Vá até a barra lateral e clique em "Carregar Excel Balancete" para importar seus dados
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -210,470 +204,470 @@ const DashboardBalancete: React.FC = () => {
     };
 
     return (
-        <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
-            {/* Header */}
-            <div className={`px-8 py-6 border-b ${isDark ? 'border-border-dark bg-surface-dark' : 'border-gray-200 bg-white'}`}>
-                <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                    Balancete Contábil
-                </h1>
-                <p className={`mt-1 text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
-                    Posição patrimonial consolidada da empresa
-                </p>
-            </div>
+        <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+            <div className="max-w-[1400px] mx-auto flex flex-col gap-6 w-full">
+                {/* Cabeçalho */}
+                <div>
+                    <h1 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Balancete Contábil
+                    </h1>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
+                        Posição patrimonial consolidada da empresa
+                    </p>
+                </div>
 
-            {/* Conteúdo Principal */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar">
-                <div className="p-8 space-y-8">
-                    {/* Selector de Empresa */}
-                    {dados && dados.length > 0 && Array.from(new Set(dados.map(d => d.empresa))).length > 1 && (
-                        <div className="flex items-center gap-4">
-                            <label className={`text-sm font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Selecionar Empresa:
-                            </label>
-                            <select
-                                value={empresaSelecionada}
-                                onChange={(e) => setEmpresaSelecionada(e.target.value)}
-                                className={`px-4 py-2 rounded border text-sm ${isDark
-                                    ? 'bg-surface-dark border-border-dark text-white'
-                                    : 'bg-white border-gray-300 text-gray-900'
-                                    } focus:outline-none focus:border-primary`}
-                            >
-                                {Array.from(new Set(dados.map(d => d.empresa))).map(empresa => (
-                                    <option key={empresa} value={empresa}>{empresa}</option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                {/* Selector de Empresa */}
+                {dados && dados.length > 0 && Array.from(new Set(dados.map(d => d.empresa))).length > 1 && (
+                    <div className="flex items-center gap-4">
+                        <label className={`text-sm font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Selecionar Empresa:
+                        </label>
+                        <select
+                            value={empresaSelecionada}
+                            onChange={(e) => setEmpresaSelecionada(e.target.value)}
+                            className={`px-4 py-2 rounded border text-sm ${isDark
+                                ? 'bg-surface-dark border-border-dark text-white'
+                                : 'bg-white border-gray-300 text-gray-900'
+                                } focus:outline-none focus:border-primary`}
+                        >
+                            {Array.from(new Set(dados.map(d => d.empresa))).map(empresa => (
+                                <option key={empresa} value={empresa}>{empresa}</option>
+                            ))}
+                        </select>
+                    </div>
+                )}
 
-                    {/* KPIs Principais */}
-                    <div>
-                        <h2 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            Indicadores Principais
-                        </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                            <KPIBalanceteCard
-                                titulo="Ativo Total"
-                                valor={totalAtivo}
-                                cor="text-blue-400"
-                                status="ok"
-                            />
-                            <KPIBalanceteCard
-                                titulo="Passivo Total"
-                                valor={totalPassivo}
-                                cor="text-red-400"
-                                status="ok"
-                            />
-                            <KPIBalanceteCard
-                                titulo="Patrimônio Líquido"
-                                valor={totalPL}
-                                cor="text-cyan-400"
-                                status="ok"
-                            />
-                            <KPIBalanceteCard
-                                titulo="Ativo Circulante"
-                                valor={ativoCirculante}
-                                cor="text-green-400"
-                                status="ok"
-                            />
-                            <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm flex flex-col justify-center items-center text-center`}>
-                                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-2`}>Status Balancete</p>
-                                <div className={`px-3 py-2 rounded-full font-bold text-sm ${balanceteOk ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                                    {balanceteOk ? '✓ Balanceado' : '✕ Desequilibrado'}
-                                </div>
+                {/* KPIs Principais */}
+                <div>
+                    <h2 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Indicadores Principais
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                        <KPIBalanceteCard
+                            titulo="Ativo Total"
+                            valor={totalAtivo}
+                            cor="text-blue-400"
+                            status="ok"
+                        />
+                        <KPIBalanceteCard
+                            titulo="Passivo Total"
+                            valor={totalPassivo}
+                            cor="text-red-400"
+                            status="ok"
+                        />
+                        <KPIBalanceteCard
+                            titulo="Patrimônio Líquido"
+                            valor={totalPL}
+                            cor="text-cyan-400"
+                            status="ok"
+                        />
+                        <KPIBalanceteCard
+                            titulo="Ativo Circulante"
+                            valor={ativoCirculante}
+                            cor="text-green-400"
+                            status="ok"
+                        />
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm flex flex-col justify-center items-center text-center`}>
+                            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-2`}>Status Balancete</p>
+                            <div className={`px-3 py-2 rounded-full font-bold text-sm ${balanceteOk ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                                {balanceteOk ? '✓ Balanceado' : '✕ Desequilibrado'}
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    {/* Gráficos */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        {/* Distribuição do Ativo */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
-                            <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Distribuição do Ativo
-                            </h3>
-                            <div className="flex items-center h-full min-h-0 gap-4">
-                                <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={dataAtivoDistribuicao}
-                                                cx="50%"
-                                                cy="50%"
-                                                innerRadius="55%"
-                                                outerRadius="90%"
-                                                paddingAngle={5}
-                                                dataKey="value"
-                                                stroke="none"
-                                            >
-                                                {dataAtivoDistribuicao.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip formatter={(value: any) => `R$ ${(value / 1000000).toFixed(2)}M`} />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                        <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                            {totalAtivo > 1000000 ? `R$ ${(totalAtivo / 1000000).toFixed(1)}M` : `R$ ${(totalAtivo / 1000).toFixed(0)}k`}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="w-[50%] flex flex-col justify-center">
-                                    <div className="flex flex-col gap-4">
-                                        {dataAtivoDistribuicao.map((item, idx) => (
-                                            <div key={idx} className="flex items-center gap-3 group w-full">
-                                                <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
-                                                <div className="flex flex-col flex-1 min-w-0">
-                                                    <div className="flex justify-between items-center w-full gap-2">
-                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
-                                                            {item.name}
-                                                        </span>
-                                                        <span className="text-xs text-primary font-bold shrink-0">
-                                                            {((item.value / totalAtivo) * 100).toFixed(0)}%
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Distribuição do Passivo */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
-                            <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Distribuição do Passivo
-                            </h3>
-                            <div className="flex items-center h-full min-h-0 gap-4">
-                                <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={dataPassivoDistribuicao}
-                                                cx="50%"
-                                                cy="50%"
-                                                innerRadius="55%"
-                                                outerRadius="90%"
-                                                paddingAngle={5}
-                                                dataKey="value"
-                                                stroke="none"
-                                            >
-                                                {dataPassivoDistribuicao.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip formatter={(value: any) => `R$ ${(value / 1000000).toFixed(2)}M`} />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                        <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                            {totalPassivo > 1000000 ? `R$ ${(totalPassivo / 1000000).toFixed(1)}M` : `R$ ${(totalPassivo / 1000).toFixed(0)}k`}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="w-[50%] flex flex-col justify-center">
-                                    <div className="flex flex-col gap-4">
-                                        {dataPassivoDistribuicao.map((item, idx) => (
-                                            <div key={idx} className="flex items-center gap-3 group w-full">
-                                                <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
-                                                <div className="flex flex-col flex-1 min-w-0">
-                                                    <div className="flex justify-between items-center w-full gap-2">
-                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
-                                                            {item.name}
-                                                        </span>
-                                                        <span className="text-xs text-primary font-bold shrink-0">
-                                                            {((item.value / totalPassivo) * 100).toFixed(0)}%
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Proporção Passivo x PL */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
-                            <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                Proporção Passivo x PL
-                            </h3>
-                            <div className="flex items-center h-full min-h-0 gap-4">
-                                <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <PieChart>
-                                            <Pie
-                                                data={dataProportao}
-                                                cx="50%"
-                                                cy="50%"
-                                                innerRadius="55%"
-                                                outerRadius="90%"
-                                                paddingAngle={5}
-                                                dataKey="value"
-                                                stroke="none"
-                                            >
-                                                {dataProportao.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                                ))}
-                                            </Pie>
-                                            <Tooltip formatter={(value: any) => `R$ ${(value / 1000000).toFixed(2)}M`} />
-                                        </PieChart>
-                                    </ResponsiveContainer>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                        <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                            {(totalPassivo + totalPL) > 1000000 ? `R$ ${((totalPassivo + totalPL) / 1000000).toFixed(1)}M` : `R$ ${((totalPassivo + totalPL) / 1000).toFixed(0)}k`}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="w-[50%] flex flex-col justify-center">
-                                    <div className="flex flex-col gap-4">
-                                        {dataProportao.map((item, idx) => (
-                                            <div key={idx} className="flex items-center gap-3 group w-full">
-                                                <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
-                                                <div className="flex flex-col flex-1 min-w-0">
-                                                    <div className="flex justify-between items-center w-full gap-2">
-                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
-                                                            {item.name}
-                                                        </span>
-                                                        <span className="text-xs text-primary font-bold shrink-0">
-                                                            {((item.value / (totalPassivo + totalPL)) * 100).toFixed(0)}%
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Novos Componentes Executivos */}
-                    <div className="space-y-8">
-                        {/* Snapshot Executivo */}
-                        <SnapshotExecutivo
-                            dados={dados}
-                            empresas={empresas}
-                            totais={{
-                                ativo: totalAtivo,
-                                passivo: totalPassivo,
-                                pl: totalPL,
-                                ativoCirculante: ativoCirculante,
-                                ativoNaoCirculante: ativoNaoCirculante,
-                                passivoCirculante: passivoCirculante,
-                                passivoNaoCirculante: passivoNaoCirculante,
-                            }}
-                        />
-
-                        {/* Mapa Patrimonial */}
-                        <MapaPatrimonial
-                            dados={dados}
-                            empresas={empresas}
-                            totais={{
-                                ativo: totalAtivo,
-                                passivo: totalPassivo,
-                                pl: totalPL,
-                            }}
-                        />
-
-                        {/* Pirâmide de Solidez */}
-                        <PiramideSolidez
-                            empresas={empresas}
-                            totais={{
-                                ativo: totalAtivo,
-                                passivo: totalPassivo,
-                                pl: totalPL,
-                                passivoCirculante: passivoCirculante,
-                                passivoNaoCirculante: passivoNaoCirculante,
-                            }}
-                        />
-
-                        {/* Ranking de Contas Críticas */}
-                        <RankingContas
-                            dados={dados}
-                            empresas={empresas}
-                        />
-                    </div>
-
-                    {/* Tabela de Balancete */}
-                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg border shadow-sm overflow-hidden`}>
-                        <div className="p-6 border-b border-border-dark">
-                            <div className="flex items-center justify-between mb-4">
-                                <h3 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    Tabela de Balancete
-                                </h3>
-                                <button
-                                    onClick={handleExportarCSV}
-                                    className="text-xs bg-primary/10 text-primary px-3 py-1.5 rounded hover:bg-primary/20 transition-colors"
-                                >
-                                    ↓ Exportar CSV
-                                </button>
-                            </div>
-
-                            {/* Filtros */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        Grupo
-                                    </label>
-                                    <select
-                                        value={filtroGrupo}
-                                        onChange={(e) => {
-                                            setFiltroGrupo(e.target.value);
-                                            setFiltroSubgrupo('Todos');
-                                        }}
-                                        className={`w-full px-3 py-2 rounded border ${isDark
-                                            ? 'bg-background-dark border-border-dark text-white'
-                                            : 'bg-white border-gray-300 text-gray-900'
-                                            } text-sm focus:outline-none focus:border-primary`}
-                                    >
-                                        <option value="Todos">Todos</option>
-                                        {grupos.map(g => (
-                                            <option key={g} value={g}>{g}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        Subgrupo
-                                    </label>
-                                    <select
-                                        value={filtroSubgrupo}
-                                        onChange={(e) => setFiltroSubgrupo(e.target.value)}
-                                        className={`w-full px-3 py-2 rounded border ${isDark
-                                            ? 'bg-background-dark border-border-dark text-white'
-                                            : 'bg-white border-gray-300 text-gray-900'
-                                            } text-sm focus:outline-none focus:border-primary`}
-                                    >
-                                        <option value="Todos">Todos</option>
-                                        {subgrupos.map(s => (
-                                            <option key={s} value={s}>{s}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                        Ordenação
-                                    </label>
-                                    <select
-                                        value={ordenacao}
-                                        onChange={(e) => setOrdenacao(e.target.value as 'conta' | 'saldo')}
-                                        className={`w-full px-3 py-2 rounded border ${isDark
-                                            ? 'bg-background-dark border-border-dark text-white'
-                                            : 'bg-white border-gray-300 text-gray-900'
-                                            } text-sm focus:outline-none focus:border-primary`}
-                                    >
-                                        <option value="conta">Por Conta</option>
-                                        <option value="saldo">Por Saldo (maior)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Tabela */}
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead>
-                                    <tr className={`border-b ${isDark ? 'border-border-dark bg-background-dark' : 'border-gray-200 bg-gray-50'}`}>
-                                        <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            Conta
-                                        </th>
-                                        <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            Nome
-                                        </th>
-                                        <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            Grupo
-                                        </th>
-                                        <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            Débitos
-                                        </th>
-                                        <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            Créditos
-                                        </th>
-                                        <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                            Saldo
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {dadosFiltrados.map((conta, idx) => (
-                                        <tr
-                                            key={idx}
-                                            className={`border-b transition-colors ${isDark
-                                                ? 'border-border-dark hover:bg-background-dark'
-                                                : 'border-gray-200 hover:bg-gray-50'
-                                                }`}
+                {/* Gráficos */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Distribuição do Ativo */}
+                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
+                        <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Distribuição do Ativo
+                        </h3>
+                        <div className="flex items-center h-full min-h-0 gap-4">
+                            <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={dataAtivoDistribuicao}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius="55%"
+                                            outerRadius="90%"
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                            stroke="none"
                                         >
-                                            <td className={`px-6 py-3 font-mono text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                {conta.contaContabil}
-                                            </td>
-                                            <td className={`px-6 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                {conta.nomeContaContabil}
-                                            </td>
-                                            <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                                                <span className={`px-2 py-1 rounded text-xs font-semibold ${conta.grupo === 'Ativo'
-                                                    ? 'bg-blue-500/20 text-blue-400'
-                                                    : conta.grupo === 'Passivo'
-                                                        ? 'bg-red-500/20 text-red-400'
-                                                        : 'bg-cyan-500/20 text-cyan-400'
-                                                    }`}>
-                                                    {conta.grupo}
-                                                </span>
-                                            </td>
-                                            <td className={`px-6 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                R$ {conta.totalDebitos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                            </td>
-                                            <td className={`px-6 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                R$ {conta.totalCreditos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                            </td>
-                                            <td className={`px-6 py-3 text-right font-semibold ${conta.saldo >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                                R$ {conta.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                            {dataAtivoDistribuicao.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip formatter={(value: any) => `R$ ${(value / 1000000).toFixed(2)}M`} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        {totalAtivo > 1000000 ? `R$ ${(totalAtivo / 1000000).toFixed(1)}M` : `R$ ${(totalAtivo / 1000).toFixed(0)}k`}
+                                    </span>
+                                </div>
+                            </div>
 
-                        {/* Resumo */}
-                        <div className={`px-6 py-4 border-t ${isDark ? 'border-border-dark bg-background-dark' : 'border-gray-200 bg-gray-50'}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <div>
-                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Débitos</p>
-                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalDebitos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                    </p>
+                            <div className="w-[50%] flex flex-col justify-center">
+                                <div className="flex flex-col gap-4">
+                                    {dataAtivoDistribuicao.map((item, idx) => (
+                                        <div key={idx} className="flex items-center gap-3 group w-full">
+                                            <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
+                                            <div className="flex flex-col flex-1 min-w-0">
+                                                <div className="flex justify-between items-center w-full gap-2">
+                                                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                        {item.name}
+                                                    </span>
+                                                    <span className="text-xs text-primary font-bold shrink-0">
+                                                        {((item.value / totalAtivo) * 100).toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <div>
-                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Créditos</p>
-                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalCreditos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                    </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Distribuição do Passivo */}
+                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
+                        <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Distribuição do Passivo
+                        </h3>
+                        <div className="flex items-center h-full min-h-0 gap-4">
+                            <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={dataPassivoDistribuicao}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius="55%"
+                                            outerRadius="90%"
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                            stroke="none"
+                                        >
+                                            {dataPassivoDistribuicao.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip formatter={(value: any) => `R$ ${(value / 1000000).toFixed(2)}M`} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        {totalPassivo > 1000000 ? `R$ ${(totalPassivo / 1000000).toFixed(1)}M` : `R$ ${(totalPassivo / 1000).toFixed(0)}k`}
+                                    </span>
                                 </div>
-                                <div>
-                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Saldos</p>
-                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        R$ {dadosFiltrados.reduce((acc, d) => acc + d.saldo, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                    </p>
+                            </div>
+
+                            <div className="w-[50%] flex flex-col justify-center">
+                                <div className="flex flex-col gap-4">
+                                    {dataPassivoDistribuicao.map((item, idx) => (
+                                        <div key={idx} className="flex items-center gap-3 group w-full">
+                                            <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
+                                            <div className="flex flex-col flex-1 min-w-0">
+                                                <div className="flex justify-between items-center w-full gap-2">
+                                                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                        {item.name}
+                                                    </span>
+                                                    <span className="text-xs text-primary font-bold shrink-0">
+                                                        {((item.value / totalPassivo) * 100).toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <div>
-                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Registros</p>
-                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                        {dadosFiltrados.length}
-                                    </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Proporção Passivo x PL */}
+                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
+                        <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Proporção Passivo x PL
+                        </h3>
+                        <div className="flex items-center h-full min-h-0 gap-4">
+                            <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <PieChart>
+                                        <Pie
+                                            data={dataProportao}
+                                            cx="50%"
+                                            cy="50%"
+                                            innerRadius="55%"
+                                            outerRadius="90%"
+                                            paddingAngle={5}
+                                            dataKey="value"
+                                            stroke="none"
+                                        >
+                                            {dataProportao.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip formatter={(value: any) => `R$ ${(value / 1000000).toFixed(2)}M`} />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                    <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        {(totalPassivo + totalPL) > 1000000 ? `R$ ${((totalPassivo + totalPL) / 1000000).toFixed(1)}M` : `R$ ${((totalPassivo + totalPL) / 1000).toFixed(0)}k`}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="w-[50%] flex flex-col justify-center">
+                                <div className="flex flex-col gap-4">
+                                    {dataProportao.map((item, idx) => (
+                                        <div key={idx} className="flex items-center gap-3 group w-full">
+                                            <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
+                                            <div className="flex flex-col flex-1 min-w-0">
+                                                <div className="flex justify-between items-center w-full gap-2">
+                                                    <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                        {item.name}
+                                                    </span>
+                                                    <span className="text-xs text-primary font-bold shrink-0">
+                                                        {((item.value / (totalPassivo + totalPL)) * 100).toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Novos Componentes Executivos */}
+                <div className="space-y-8">
+                    {/* Snapshot Executivo */}
+                    <SnapshotExecutivo
+                        dados={dados}
+                        empresas={empresas}
+                        totais={{
+                            ativo: totalAtivo,
+                            passivo: totalPassivo,
+                            pl: totalPL,
+                            ativoCirculante: ativoCirculante,
+                            ativoNaoCirculante: ativoNaoCirculante,
+                            passivoCirculante: passivoCirculante,
+                            passivoNaoCirculante: passivoNaoCirculante,
+                        }}
+                    />
+
+                    {/* Mapa Patrimonial */}
+                    <MapaPatrimonial
+                        dados={dados}
+                        empresas={empresas}
+                        totais={{
+                            ativo: totalAtivo,
+                            passivo: totalPassivo,
+                            pl: totalPL,
+                        }}
+                    />
+
+                    {/* Pirâmide de Solidez */}
+                    <PiramideSolidez
+                        empresas={empresas}
+                        totais={{
+                            ativo: totalAtivo,
+                            passivo: totalPassivo,
+                            pl: totalPL,
+                            passivoCirculante: passivoCirculante,
+                            passivoNaoCirculante: passivoNaoCirculante,
+                        }}
+                    />
+
+                    {/* Ranking de Contas Críticas */}
+                    <RankingContas
+                        dados={dados}
+                        empresas={empresas}
+                    />
+                </div>
+
+                {/* Tabela de Balancete */}
+                <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
+                    <div className="p-6 border-b border-border-dark">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                Tabela de Balancete
+                            </h3>
+                            <button
+                                onClick={handleExportarCSV}
+                                className="text-xs bg-primary/10 text-primary px-3 py-1.5 rounded hover:bg-primary/20 transition-colors"
+                            >
+                                ↓ Exportar CSV
+                            </button>
+                        </div>
+
+                        {/* Filtros */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Grupo
+                                </label>
+                                <select
+                                    value={filtroGrupo}
+                                    onChange={(e) => {
+                                        setFiltroGrupo(e.target.value);
+                                        setFiltroSubgrupo('Todos');
+                                    }}
+                                    className={`w-full px-3 py-2 rounded border ${isDark
+                                        ? 'bg-background-dark border-border-dark text-white'
+                                        : 'bg-white border-gray-300 text-gray-900'
+                                        } text-sm focus:outline-none focus:border-primary`}
+                                >
+                                    <option value="Todos">Todos</option>
+                                    {grupos.map(g => (
+                                        <option key={g} value={g}>{g}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Subgrupo
+                                </label>
+                                <select
+                                    value={filtroSubgrupo}
+                                    onChange={(e) => setFiltroSubgrupo(e.target.value)}
+                                    className={`w-full px-3 py-2 rounded border ${isDark
+                                        ? 'bg-background-dark border-border-dark text-white'
+                                        : 'bg-white border-gray-300 text-gray-900'
+                                        } text-sm focus:outline-none focus:border-primary`}
+                                >
+                                    <option value="Todos">Todos</option>
+                                    {subgrupos.map(s => (
+                                        <option key={s} value={s}>{s}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Ordenação
+                                </label>
+                                <select
+                                    value={ordenacao}
+                                    onChange={(e) => setOrdenacao(e.target.value as 'conta' | 'saldo')}
+                                    className={`w-full px-3 py-2 rounded border ${isDark
+                                        ? 'bg-background-dark border-border-dark text-white'
+                                        : 'bg-white border-gray-300 text-gray-900'
+                                        } text-sm focus:outline-none focus:border-primary`}
+                                >
+                                    <option value="conta">Por Conta</option>
+                                    <option value="saldo">Por Saldo (maior)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Tabela */}
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead>
+                                <tr className={`border-b ${isDark ? 'border-border-dark bg-background-dark' : 'border-gray-200 bg-gray-50'}`}>
+                                    <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Conta
+                                    </th>
+                                    <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Nome
+                                    </th>
+                                    <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Grupo
+                                    </th>
+                                    <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Débitos
+                                    </th>
+                                    <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Créditos
+                                    </th>
+                                    <th className={`px-6 py-3 text-left font-semibold ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                        Saldo
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {dadosFiltrados.map((conta, idx) => (
+                                    <tr
+                                        key={idx}
+                                        className={`border-b transition-colors ${isDark
+                                            ? 'border-border-dark hover:bg-background-dark'
+                                            : 'border-gray-200 hover:bg-gray-50'
+                                            }`}
+                                    >
+                                        <td className={`px-6 py-3 font-mono text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            {conta.contaContabil}
+                                        </td>
+                                        <td className={`px-6 py-3 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            {conta.nomeContaContabil}
+                                        </td>
+                                        <td className={`px-6 py-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                            <span className={`px-2 py-1 rounded text-xs font-semibold ${conta.grupo === 'Ativo'
+                                                ? 'bg-blue-500/20 text-blue-400'
+                                                : conta.grupo === 'Passivo'
+                                                    ? 'bg-red-500/20 text-red-400'
+                                                    : 'bg-cyan-500/20 text-cyan-400'
+                                                }`}>
+                                                {conta.grupo}
+                                            </span>
+                                        </td>
+                                        <td className={`px-6 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            R$ {conta.totalDebitos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                        </td>
+                                        <td className={`px-6 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            R$ {conta.totalCreditos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                        </td>
+                                        <td className={`px-6 py-3 text-right font-semibold ${conta.saldo >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                            R$ {conta.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Resumo */}
+                    <div className={`px-6 py-4 border-t ${isDark ? 'border-border-dark bg-background-dark' : 'border-gray-200 bg-gray-50'}`}>
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Débitos</p>
+                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalDebitos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                </p>
+                            </div>
+                            <div>
+                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Créditos</p>
+                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalCreditos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                </p>
+                            </div>
+                            <div>
+                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Saldos</p>
+                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    R$ {dadosFiltrados.reduce((acc, d) => acc + d.saldo, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                </p>
+                            </div>
+                            <div>
+                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Registros</p>
+                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    {dadosFiltrados.length}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Espaço para exportação PDF */}
+                <div className="pb-12"></div>
             </div>
-        </div>
+        </main>
     );
 };
 
