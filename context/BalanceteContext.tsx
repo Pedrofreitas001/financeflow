@@ -35,20 +35,9 @@ export const BalanceteProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [dados, setDados] = useState<ContaBalancete[]>([]);
     const [empresas, setEmpresas] = useState<string[]>([]);
 
+    // Não carregar dados inicialmente - esperar upload do usuário
     useEffect(() => {
-        const carregarDadosIniciais = async () => {
-            try {
-                const response = await fetch('/dados/balancete.json');
-                const data: ContaBalancete[] = await response.json();
-                setDados(data);
-                const empresasUnicas = Array.from(new Set(data.map(d => d.empresa)));
-                setEmpresas(empresasUnicas);
-            } catch (error) {
-                console.error('Erro ao carregar dados do balancete:', error);
-            }
-        };
-
-        carregarDadosIniciais();
+        // Vazio intencional - dados carregarão apenas via upload
     }, []);
 
     const obterTotalAtivo = (): number => {

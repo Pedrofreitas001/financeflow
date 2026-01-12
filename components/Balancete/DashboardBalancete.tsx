@@ -43,10 +43,92 @@ const DashboardBalancete: React.FC = () => {
     const [filtroSubgrupo, setFiltroSubgrupo] = useState<string>('Todos');
     const [ordenacao, setOrdenacao] = useState<'conta' | 'saldo'>('conta');
 
-    const totalAtivo = obterTotalAtivo();
-    const totalPassivo = obterTotalPassivo();
-    const totalPL = obterTotalPL();
-    const balanceteOk = obterBalanceteOk();
+    // Se não houver dados, mostrar disclaimer
+    if (!dados || dados.length === 0) {
+        return (
+            <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+                <div className={`px-8 py-6 border-b ${isDark ? 'border-border-dark bg-surface-dark' : 'border-gray-200 bg-white'}`}>
+                    <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Balancete Contábil
+                    </h1>
+                    <p className={`mt-1 text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
+                        Posição patrimonial consolidada da empresa
+                    </p>
+                </div>
+
+                <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+                    <div className="max-w-2xl w-full mx-auto px-8">
+                        <div className="flex flex-col items-center justify-center text-center mb-8">
+                            <div className="mb-6 p-4 rounded-full bg-primary/10">
+                                <span className="material-symbols-outlined text-5xl text-primary">account_balance</span>
+                            </div>
+                            <h2 className={`text-2xl font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                Nenhum dado carregado
+                            </h2>
+                            <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
+                                Importe um arquivo Excel com dados de balancete para visualizar
+                            </p>
+                        </div>
+
+                        {/* Informações do Formato */}
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg border shadow-sm p-6`}>
+                            <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                <span className="material-symbols-outlined text-primary">description</span>
+                                Formato Esperado: Balancete_exemplo.xlsx
+                            </h3>
+                            <div className={`${isDark ? 'bg-background-dark' : 'bg-gray-50'} rounded-lg p-4 mb-4 overflow-x-auto`}>
+                                <table className="text-xs w-full">
+                                    <thead>
+                                        <tr className={`${isDark ? 'text-text-muted border-b border-border-dark' : 'text-gray-600 border-b border-gray-300'}`}>
+                                            <th className="text-left py-2">Coluna</th>
+                                            <th className="text-left py-2">Tipo</th>
+                                            <th className="text-left py-2">Exemplo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
+                                            <td className="py-2 font-mono text-primary">Data</td>
+                                            <td>data</td>
+                                            <td>2024-12-31</td>
+                                        </tr>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
+                                            <td className="py-2 font-mono text-primary">Conta Contábil</td>
+                                            <td>texto</td>
+                                            <td>1.1.1.01, 1.1.2.01...</td>
+                                        </tr>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
+                                            <td className="py-2 font-mono text-primary">Nome Conta</td>
+                                            <td>texto</td>
+                                            <td>Caixa, Banco, Fornecedores...</td>
+                                        </tr>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
+                                            <td className="py-2 font-mono text-primary">Grupo</td>
+                                            <td>Ativo/Passivo/PL</td>
+                                            <td>Ativo, Passivo, PL</td>
+                                        </tr>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
+                                            <td className="py-2 font-mono text-primary">Saldo</td>
+                                            <td>moeda (R$)</td>
+                                            <td>150000, 450000...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p className={`text-xs ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
+                                Use o arquivo de exemplo <span className={`${isDark ? 'text-primary' : 'text-primary'} font-mono`}>Balancete_exemplo.xlsx</span> como referência
+                            </p>
+                        </div>
+
+                        <div className={`mt-6 p-4 rounded-lg ${isDark ? 'bg-blue-500/10 border border-blue-500/30' : 'bg-blue-50 border border-blue-200'}`}>
+                            <p className={`text-xs ${isDark ? 'text-blue-300' : 'text-blue-700'}`}>
+                                💡 Dica: Vá até a barra lateral e clique em "Carregar Excel Balancete" para importar seus dados
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     // Dados para gráfico de distribuição do Ativo
     const ativoCirculante = obterAtivoCirculante();
@@ -174,81 +256,168 @@ const DashboardBalancete: React.FC = () => {
                     {/* Gráficos */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Distribuição do Ativo */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-6 border shadow-sm`}>
-                            <h3 className={`text-sm font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
+                            <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Distribuição do Ativo
                             </h3>
-                            <ResponsiveContainer width="100%" height={250}>
-                                <PieChart>
-                                    <Pie
-                                        data={dataAtivoDistribuicao}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                    >
-                                        {dataAtivoDistribuicao.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                            <div className="flex items-center h-full min-h-0 gap-4">
+                                <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={dataAtivoDistribuicao}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius="55%"
+                                                outerRadius="90%"
+                                                paddingAngle={5}
+                                                dataKey="value"
+                                                stroke="none"
+                                            >
+                                                {dataAtivoDistribuicao.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `R$ ${(value / 1000000).toFixed(2)}M`} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                        <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                            {totalAtivo > 1000000 ? `R$ ${(totalAtivo / 1000000).toFixed(1)}M` : `R$ ${(totalAtivo / 1000).toFixed(0)}k`}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="w-[50%] flex flex-col justify-center">
+                                    <div className="flex flex-col gap-4">
+                                        {dataAtivoDistribuicao.map((item, idx) => (
+                                            <div key={idx} className="flex items-center gap-3 group w-full">
+                                                <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
+                                                <div className="flex flex-col flex-1 min-w-0">
+                                                    <div className="flex justify-between items-center w-full gap-2">
+                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                            {item.name}
+                                                        </span>
+                                                        <span className="text-xs text-primary font-bold shrink-0">
+                                                            {((item.value / totalAtivo) * 100).toFixed(0)}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value) => `R$ ${(value / 1000000).toFixed(2)}M`} />
-                                </PieChart>
-                            </ResponsiveContainer>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Distribuição do Passivo */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-6 border shadow-sm`}>
-                            <h3 className={`text-sm font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
+                            <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Distribuição do Passivo
                             </h3>
-                            <ResponsiveContainer width="100%" height={250}>
-                                <PieChart>
-                                    <Pie
-                                        data={dataPassivoDistribuicao}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                    >
-                                        {dataPassivoDistribuicao.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                            <div className="flex items-center h-full min-h-0 gap-4">
+                                <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={dataPassivoDistribuicao}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius="55%"
+                                                outerRadius="90%"
+                                                paddingAngle={5}
+                                                dataKey="value"
+                                                stroke="none"
+                                            >
+                                                {dataPassivoDistribuicao.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `R$ ${(value / 1000000).toFixed(2)}M`} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                        <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                            {totalPassivo > 1000000 ? `R$ ${(totalPassivo / 1000000).toFixed(1)}M` : `R$ ${(totalPassivo / 1000).toFixed(0)}k`}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="w-[50%] flex flex-col justify-center">
+                                    <div className="flex flex-col gap-4">
+                                        {dataPassivoDistribuicao.map((item, idx) => (
+                                            <div key={idx} className="flex items-center gap-3 group w-full">
+                                                <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
+                                                <div className="flex flex-col flex-1 min-w-0">
+                                                    <div className="flex justify-between items-center w-full gap-2">
+                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                            {item.name}
+                                                        </span>
+                                                        <span className="text-xs text-primary font-bold shrink-0">
+                                                            {((item.value / totalPassivo) * 100).toFixed(0)}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value) => `R$ ${(value / 1000000).toFixed(2)}M`} />
-                                </PieChart>
-                            </ResponsiveContainer>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Proporção Passivo x PL */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-6 border shadow-sm`}>
-                            <h3 className={`text-sm font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
+                            <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Proporção Passivo x PL
                             </h3>
-                            <ResponsiveContainer width="100%" height={250}>
-                                <PieChart>
-                                    <Pie
-                                        data={dataProportao}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                    >
-                                        {dataProportao.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                            <div className="flex items-center h-full min-h-0 gap-4">
+                                <div className="w-[50%] h-full relative min-h-[200px] flex items-center justify-center">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={dataProportao}
+                                                cx="50%"
+                                                cy="50%"
+                                                innerRadius="55%"
+                                                outerRadius="90%"
+                                                paddingAngle={5}
+                                                dataKey="value"
+                                                stroke="none"
+                                            >
+                                                {dataProportao.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={entry.color} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip formatter={(value) => `R$ ${(value / 1000000).toFixed(2)}M`} />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                        <span className={`text-xs font-black drop-shadow-sm ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                            {(totalPassivo + totalPL) > 1000000 ? `R$ ${((totalPassivo + totalPL) / 1000000).toFixed(1)}M` : `R$ ${((totalPassivo + totalPL) / 1000).toFixed(0)}k`}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="w-[50%] flex flex-col justify-center">
+                                    <div className="flex flex-col gap-4">
+                                        {dataProportao.map((item, idx) => (
+                                            <div key={idx} className="flex items-center gap-3 group w-full">
+                                                <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
+                                                <div className="flex flex-col flex-1 min-w-0">
+                                                    <div className="flex justify-between items-center w-full gap-2">
+                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                            {item.name}
+                                                        </span>
+                                                        <span className="text-xs text-primary font-bold shrink-0">
+                                                            {((item.value / (totalPassivo + totalPL)) * 100).toFixed(0)}%
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         ))}
-                                    </Pie>
-                                    <Tooltip formatter={(value) => `R$ ${(value / 1000000).toFixed(2)}M`} />
-                                </PieChart>
-                            </ResponsiveContainer>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
