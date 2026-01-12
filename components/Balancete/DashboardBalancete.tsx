@@ -495,7 +495,7 @@ const DashboardBalancete: React.FC = () => {
                 <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
                     <div className="p-6 border-b border-border-dark">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Tabela de Balancete
                             </h3>
                             <button
@@ -635,30 +635,32 @@ const DashboardBalancete: React.FC = () => {
 
                     {/* Resumo */}
                     <div className={`px-6 py-4 border-t ${isDark ? 'border-border-dark bg-background-dark' : 'border-gray-200 bg-gray-50'}`}>
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Débitos</p>
-                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalDebitos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                </p>
-                            </div>
-                            <div>
-                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Créditos</p>
-                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalCreditos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                </p>
-                            </div>
-                            <div>
-                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Saldos</p>
-                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    R$ {dadosFiltrados.reduce((acc, d) => acc + d.saldo, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                                </p>
-                            </div>
-                            <div>
-                                <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Registros</p>
-                                <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    {dadosFiltrados.length}
-                                </p>
+                        <div className="flex justify-center">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 w-fit">
+                                <div className="text-center">
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Débitos</p>
+                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalDebitos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                    </p>
+                                </div>
+                                <div className="text-center">
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Créditos</p>
+                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        R$ {dadosFiltrados.reduce((acc, d) => acc + d.totalCreditos, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                    </p>
+                                </div>
+                                <div className="text-center">
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Saldos</p>
+                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        R$ {dadosFiltrados.reduce((acc, d) => acc + d.saldo, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                    </p>
+                                </div>
+                                <div className="text-center">
+                                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Registros</p>
+                                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                        {dadosFiltrados.length}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
