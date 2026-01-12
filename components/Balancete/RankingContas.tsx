@@ -125,8 +125,8 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
                                     key={n}
                                     onClick={() => setTopN(n as 5 | 10 | 15)}
                                     className={`px-3 py-1.5 rounded text-xs font-semibold transition-all ${topN === n
-                                            ? `${isDark ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'} border border-primary`
-                                            : `${isDark ? 'bg-surface-dark text-gray-400 border-border-dark' : 'bg-gray-50 text-gray-600 border-gray-300'} border`
+                                        ? `${isDark ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'} border border-primary`
+                                        : `${isDark ? 'bg-surface-dark text-gray-400 border-border-dark' : 'bg-gray-50 text-gray-600 border-gray-300'} border`
                                         }`}
                                 >
                                     Top {n}
@@ -254,10 +254,10 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
                                 </td>
                                 <td className={`px-4 py-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                                     <span className={`px-2 py-1 rounded text-xs font-semibold ${conta.grupo === 'Ativo'
-                                            ? 'bg-blue-500/20 text-blue-400'
-                                            : conta.grupo === 'Passivo'
-                                                ? 'bg-red-500/20 text-red-400'
-                                                : 'bg-cyan-500/20 text-cyan-400'
+                                        ? 'bg-blue-500/20 text-blue-400'
+                                        : conta.grupo === 'Passivo'
+                                            ? 'bg-red-500/20 text-red-400'
+                                            : 'bg-cyan-500/20 text-cyan-400'
                                         }`}>
                                         {conta.grupo}
                                     </span>

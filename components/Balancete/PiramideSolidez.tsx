@@ -110,8 +110,8 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                 <button
                     onClick={() => setVisualizacao('piramide')}
                     className={`px-4 py-2 rounded text-xs font-semibold transition-all ${visualizacao === 'piramide'
-                            ? `${isDark ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'} border border-primary`
-                            : `${isDark ? 'bg-surface-dark text-gray-400 border-border-dark' : 'bg-gray-50 text-gray-600 border-gray-300'} border`
+                        ? `${isDark ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'} border border-primary`
+                        : `${isDark ? 'bg-surface-dark text-gray-400 border-border-dark' : 'bg-gray-50 text-gray-600 border-gray-300'} border`
                         }`}
                 >
                     Visualização Piramidal
@@ -119,8 +119,8 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                 <button
                     onClick={() => setVisualizacao('barras')}
                     className={`px-4 py-2 rounded text-xs font-semibold transition-all ${visualizacao === 'barras'
-                            ? `${isDark ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'} border border-primary`
-                            : `${isDark ? 'bg-surface-dark text-gray-400 border-border-dark' : 'bg-gray-50 text-gray-600 border-gray-300'} border`
+                        ? `${isDark ? 'bg-primary/20 text-primary' : 'bg-primary/10 text-primary'} border border-primary`
+                        : `${isDark ? 'bg-surface-dark text-gray-400 border-border-dark' : 'bg-gray-50 text-gray-600 border-gray-300'} border`
                         }`}
                 >
                     Visualização em Barras
