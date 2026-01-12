@@ -157,12 +157,12 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
             </div>
 
             {/* Gráfico */}
-            <div className="w-full h-[380px] flex justify-center">
-                <ResponsiveContainer width="95%" height="100%">
+            <div className="w-full h-[380px]">
+                <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         layout="vertical"
                         data={ranking}
-                        margin={{ top: 5, right: 20, left: 190, bottom: 5 }}
+                        margin={{ top: 5, right: 30, left: 170, bottom: 5 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
                         <XAxis type="number" />
@@ -184,34 +184,34 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
 
             {/* Resumo Estatístico */}
             <div className="flex justify-center">
-            <div className="grid grid-cols-3 gap-6 mt-6 pt-6 border-t border-border-dark w-full max-w-lg">
-                <div className="text-center">
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Total Top {topN}
-                    </p>
-                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        R$ {(totalRanking / 1000000).toFixed(2)}M
-                    </p>
-                </div>
+                <div className="grid grid-cols-3 gap-6 mt-6 pt-6 border-t border-border-dark w-full max-w-lg">
+                    <div className="text-center">
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Total Top {topN}
+                        </p>
+                        <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            R$ {(totalRanking / 1000000).toFixed(2)}M
+                        </p>
+                    </div>
 
-                <div className="text-center">
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Cobertura do Patrimônio
-                    </p>
-                    <p className={`text-lg font-bold text-primary`}>
-                        {percentualCobertura.toFixed(1)}%
-                    </p>
-                </div>
+                    <div className="text-center">
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Cobertura do Patrimônio
+                        </p>
+                        <p className={`text-lg font-bold text-primary`}>
+                            {percentualCobertura.toFixed(1)}%
+                        </p>
+                    </div>
 
-                <div className="text-center">
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Média por Conta
-                    </p>
-                    <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        R$ {(totalRanking / topN / 1000000).toFixed(2)}M
-                    </p>
+                    <div className="text-center">
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Média por Conta
+                        </p>
+                        <p className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            R$ {(totalRanking / topN / 1000000).toFixed(2)}M
+                        </p>
+                    </div>
                 </div>
-            </div>
             </div>
 
             {/* Tabela Detalhe */}

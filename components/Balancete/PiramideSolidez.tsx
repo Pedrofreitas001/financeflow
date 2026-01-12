@@ -192,12 +192,12 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                 </div>
             ) : (
                 // Visualização em Barras Horizontais
-                <div className="w-full h-[280px] flex items-center justify-center">
+                <div className="w-full h-[280px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             layout="vertical"
                             data={dadosBarras}
-                            margin={{ top: 5, right: 30, left: 150, bottom: 5 }}
+                            margin={{ top: 5, right: 30, left: 120, bottom: 5 }}
                         >
                             <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
                             <XAxis type="number" />
@@ -220,29 +220,29 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
 
             {/* Resumo de Solidez */}
             <div className="flex justify-center">
-            <div className="grid grid-cols-3 gap-6 mt-6 pt-6 border-t border-border-dark w-full max-w-lg">
-                <div className="text-center">
-                    <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: '#06b6d4' }}></div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Capital Próprio</p>
-                    <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {solidezPL.toFixed(1)}%
-                    </p>
+                <div className="grid grid-cols-3 gap-6 mt-6 pt-6 border-t border-border-dark w-full max-w-lg">
+                    <div className="text-center">
+                        <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: '#06b6d4' }}></div>
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Capital Próprio</p>
+                        <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            {solidezPL.toFixed(1)}%
+                        </p>
+                    </div>
+                    <div className="text-center">
+                        <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: '#8b5cf6' }}></div>
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Financiamento LP</p>
+                        <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            {solidezPassivoLP.toFixed(1)}%
+                        </p>
+                    </div>
+                    <div className="text-center">
+                        <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: '#ef4444' }}></div>
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Obrigações CP</p>
+                        <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            {solidezPassivoCP.toFixed(1)}%
+                        </p>
+                    </div>
                 </div>
-                <div className="text-center">
-                    <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: '#8b5cf6' }}></div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Financiamento LP</p>
-                    <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {solidezPassivoLP.toFixed(1)}%
-                    </p>
-                </div>
-                <div className="text-center">
-                    <div className="w-3 h-3 rounded-full mx-auto mb-2" style={{ backgroundColor: '#ef4444' }}></div>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Obrigações CP</p>
-                    <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {solidezPassivoCP.toFixed(1)}%
-                    </p>
-                </div>
-            </div>
             </div>
         </div>
     );
