@@ -50,9 +50,6 @@ const DashboardBalancete: React.FC = () => {
                 <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
                     <div className="max-w-2xl w-full mx-auto px-8">
                         <div className="flex flex-col items-center justify-center text-center mb-8">
-                            <div className="mb-6 p-4 rounded-full bg-primary/10">
-                                <span className="material-symbols-outlined text-5xl text-primary">account_balance</span>
-                            </div>
                             <h2 className={`text-2xl font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 Nenhum dado carregado
                             </h2>
@@ -105,9 +102,13 @@ const DashboardBalancete: React.FC = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <p className={`text-xs ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
-                                Use o arquivo de exemplo <span className={`${isDark ? 'text-primary' : 'text-primary'} font-mono`}>Balancete_exemplo.xlsx</span> como referência
-                            </p>
+                            <p className={`text-xs mb-4 ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Arquivo: <span className={`${isDark ? 'text-primary' : 'text-primary'} font-mono`}>Balancete_exemplo.xlsx</span></p>
+
+                            {/* Botão Download */}
+                            <a href="https://docs.google.com/spreadsheets/d/1WI-CCHrZF0jHoT6wbnj5jvOQ1wqr1zIU57X_5_v2dKI/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors w-full">
+                                <span className="material-symbols-outlined text-base">download</span>
+                                Baixar Arquivo
+                            </a>
                         </div>
 
                         <div className={`mt-6 p-4 rounded-lg ${isDark ? 'bg-blue-500/10 border border-blue-500/30' : 'bg-blue-50 border border-blue-200'}`}>
@@ -587,59 +588,6 @@ const DashboardBalancete: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Informações do Balancete */}
-                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg border shadow-sm p-6`}>
-                        <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                            <span className="material-symbols-outlined text-primary">info</span>
-                            Informações sobre Balancete
-                        </h3>
-                        <div className={`${isDark ? 'bg-background-dark' : 'bg-gray-50'} rounded-lg p-4 mb-4 overflow-x-auto`}>
-                            <table className="text-xs w-full">
-                                <thead>
-                                    <tr className={`${isDark ? 'text-text-muted border-b border-border-dark' : 'text-gray-600 border-b border-gray-300'}`}>
-                                        <th className="text-left py-2">Propriedade</th>
-                                        <th className="text-left py-2">Descrição</th>
-                                        <th className="text-left py-2">Valor</th>
-                                    </tr>
-                                </thead>
-                                <tbody className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                                    <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
-                                        <td className="py-2 font-mono text-primary">Data</td>
-                                        <td>Data de referência do balancete</td>
-                                        <td className="font-semibold">31/12/2024</td>
-                                    </tr>
-                                    <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
-                                        <td className="py-2 font-mono text-primary">Empresa</td>
-                                        <td>Empresa de origem dos dados</td>
-                                        <td className="font-semibold">Alpha</td>
-                                    </tr>
-                                    <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
-                                        <td className="py-2 font-mono text-primary">Estrutura</td>
-                                        <td>Consolidação de saldos por conta</td>
-                                        <td className="font-semibold">Saldos Consolidados</td>
-                                    </tr>
-                                    <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
-                                        <td className="py-2 font-mono text-primary">Fonte</td>
-                                        <td>Origem dos dados contábeis</td>
-                                        <td className="font-semibold">Balancete Manual</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="py-2 font-mono text-primary">Validação</td>
-                                        <td>Status de equilíbrio contábil</td>
-                                        <td className="font-semibold">
-                                            <span className={balanceteOk ? 'text-green-400' : 'text-red-400'}>
-                                                {balanceteOk ? '✓ Balanceado' : '✕ Desequilibrado'}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <p className={`text-xs ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
-                            <strong>Nota:</strong> Este balancete é independente e não possui vínculo técnico com DRE ou Despesas. Os saldos são consolidados por conta contábil sem desagregação de lançamentos unitários.
-                        </p>
                     </div>
                 </div>
             </div>
