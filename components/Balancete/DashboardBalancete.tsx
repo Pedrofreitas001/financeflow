@@ -124,6 +124,7 @@ const DashboardBalancete: React.FC = () => {
     // Dados para gráfico de distribuição do Ativo
     const ativoCirculante = obterAtivoCirculante();
     const ativoNaoCirculante = obterAtivoNaoCirculante();
+    const totalAtivo = obterTotalAtivo();
     const dataAtivoDistribuicao = [
         { name: 'Circulante', value: ativoCirculante, color: '#10b981' },
         { name: 'Não Circulante', value: ativoNaoCirculante, color: '#3b82f6' }
@@ -132,12 +133,15 @@ const DashboardBalancete: React.FC = () => {
     // Dados para gráfico de distribuição do Passivo
     const passivoCirculante = obterPassivoCirculante();
     const passivoNaoCirculante = obterPassivoNaoCirculante();
+    const totalPassivo = obterTotalPassivo();
     const dataPassivoDistribuicao = [
         { name: 'Circulante', value: passivoCirculante, color: '#f59e0b' },
         { name: 'Não Circulante', value: passivoNaoCirculante, color: '#8b5cf6' }
     ];
 
     // Dados para gráfico de Proporção Passivo x PL
+    const totalPL = obterTotalPL();
+    const balanceteOk = obterBalanceteOk();
     const dataProportao = [
         { name: 'Passivo', value: totalPassivo, color: '#ef4444' },
         { name: 'PL', value: totalPL, color: '#06b6d4' }
