@@ -84,7 +84,11 @@ const DREAcumuladoTable: React.FC = () => {
                     key={idx}
                     className={`${rowClass} border-b ${isDark ? 'border-border-dark/20' : 'border-gray-200'} hover:${isDark ? 'bg-gray-800/50' : 'bg-gray-50/80'} transition-colors`}
                   >
-                    <td className={`px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-10 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${rowClass || (isDark ? 'bg-surface-dark' : 'bg-white')}`}>
+                    <td className={`px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-10 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${
+                      linha.linha.isFinal ? (isDark ? 'bg-primary/15' : 'bg-primary/10') :
+                      linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-gray-800/30' : 'bg-gray-100/50') :
+                      (isDark ? 'bg-surface-dark' : 'bg-white')
+                    }`}>
                       {linha.linha.descricao}
                     </td>
                     {valoresFiltrados.map((mes) => {
