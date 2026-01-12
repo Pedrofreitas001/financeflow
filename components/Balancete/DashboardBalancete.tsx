@@ -473,6 +473,11 @@ const DashboardBalancete: React.FC = () => {
                         <MapaPatrimonial
                             dados={dados}
                             empresas={empresas}
+                            totais={{
+                                ativo: totalAtivo,
+                                passivo: totalPassivo,
+                                pl: totalPL,
+                            }}
                         />
 
                         {/* Pirâmide de Solidez */}

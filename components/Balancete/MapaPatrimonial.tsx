@@ -6,6 +6,11 @@ import { ContaBalancete } from '../../context/BalanceteContext';
 interface MapaPatrimonialProps {
     dados: ContaBalancete[];
     empresas: string[];
+    totais: {
+        ativo: number;
+        passivo: number;
+        pl: number;
+    };
 }
 
 interface WaterfallStep {
@@ -16,25 +21,17 @@ interface WaterfallStep {
     absoluteValue: number;
 }
 
-const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas }) => {
+const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas, totais }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
     // Dados já vêm filtrados do contexto
     const dadosFiltrados = dados;
 
-    // Agregações necessárias
-    const ativoTotal = dadosFiltrados
-        .filter(d => d.grupo === 'Ativo')
-        .reduce((acc, d) => acc + Math.abs(d.saldo), 0);
-
-    const passivoTotal = dadosFiltrados
-        .filter(d => d.grupo === 'Passivo')
-        .reduce((acc, d) => acc + Math.abs(d.saldo), 0);
-
-    const plTotal = dadosFiltrados
-        .filter(d => d.grupo === 'PL')
-        .reduce((acc, d) => acc + Math.abs(d.saldo), 0);
+    // Usar totais já calculados no contexto
+    const ativoTotal = totais.ativo;
+    const passivoTotal = totais.passivo;
+    const plTotal = totais.pl;
 
     // Dataset para o Waterfall
     const waterfallData: WaterfallStep[] = [

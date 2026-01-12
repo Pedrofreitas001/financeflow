@@ -54,10 +54,10 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
             d.nomeContaContabil.toLowerCase().includes('banco') ||
             d.nomeContaContabil.toLowerCase().includes('aplicação')
         )
-        .reduce((acc, d) => acc + d.saldo, 0);
+        .reduce((acc, d) => acc + Math.abs(d.saldo), 0);
 
     const caixaPercentualAC = totais.ativoCirculante > 0
-        ? (Math.abs(caixaEquivalentes) / totais.ativoCirculante) * 100
+        ? (caixaEquivalentes / totais.ativoCirculante) * 100
         : 0;
 
     // Gerar insights dinamicamente

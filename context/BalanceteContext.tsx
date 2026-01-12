@@ -57,51 +57,43 @@ export const BalanceteProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const obterTotalAtivo = (): number => {
         return dadosFiltrados
             .filter(c => c.grupo === 'Ativo')
-            .reduce((acc, c) => acc + c.saldo, 0);
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterTotalPassivo = (): number => {
-        return Math.abs(
-            dadosFiltrados
-                .filter(c => c.grupo === 'Passivo')
-                .reduce((acc, c) => acc + c.saldo, 0)
-        );
+        return dadosFiltrados
+            .filter(c => c.grupo === 'Passivo')
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterTotalPL = (): number => {
-        return Math.abs(
-            dadosFiltrados
-                .filter(c => c.grupo === 'PL')
-                .reduce((acc, c) => acc + c.saldo, 0)
-        );
+        return dadosFiltrados
+            .filter(c => c.grupo === 'PL')
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterAtivoCirculante = (): number => {
         return dadosFiltrados
             .filter(c => c.grupo === 'Ativo' && c.subgrupo === 'Circulante')
-            .reduce((acc, c) => acc + c.saldo, 0);
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterAtivoNaoCirculante = (): number => {
         return dadosFiltrados
             .filter(c => c.grupo === 'Ativo' && c.subgrupo === 'Não Circulante')
-            .reduce((acc, c) => acc + c.saldo, 0);
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterPassivoCirculante = (): number => {
-        return Math.abs(
-            dadosFiltrados
-                .filter(c => c.grupo === 'Passivo' && c.subgrupo === 'Circulante')
-                .reduce((acc, c) => acc + c.saldo, 0)
-        );
+        return dadosFiltrados
+            .filter(c => c.grupo === 'Passivo' && c.subgrupo === 'Circulante')
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterPassivoNaoCirculante = (): number => {
-        return Math.abs(
-            dadosFiltrados
-                .filter(c => c.grupo === 'Passivo' && c.subgrupo === 'Não Circulante')
-                .reduce((acc, c) => acc + c.saldo, 0)
-        );
+        return dadosFiltrados
+            .filter(c => c.grupo === 'Passivo' && c.subgrupo === 'Não Circulante')
+            .reduce((acc, c) => acc + Math.abs(c.saldo), 0);
     };
 
     const obterBalanceteOk = (): boolean => {
