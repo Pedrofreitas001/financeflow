@@ -10,7 +10,7 @@ const formatValor = (valor: number): string => {
   }).format(valor);
 };
 
-// Estilos para scroll customizado
+// Estilos para scroll customizado e texto com quebras limitadas
 const scrollStyles = `
   .dre-scroll-container::-webkit-scrollbar {
     height: 8px;
@@ -24,6 +24,14 @@ const scrollStyles = `
   }
   .dre-scroll-container::-webkit-scrollbar-thumb:hover {
     background: #16a34a;
+  }
+  .dre-descricao-cell {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+    line-height: 1.3;
   }
 `;
 
@@ -102,9 +110,9 @@ const DREAcumuladoTable: React.FC = () => {
                     key={idx}
                     className={`${rowClass} border-b ${isDark ? 'border-border-dark/20' : 'border-gray-200'} hover:${isDark ? 'bg-gray-800/50' : 'bg-gray-50/80'} transition-colors`}
                   >
-                    <td className={`px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-50 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${linha.linha.isFinal ? (isDark ? 'bg-[#164e3b]' : 'bg-[#dcfce7]') :
-                      linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-[#1e293b]' : 'bg-[#f1f5f9]') :
-                        (isDark ? 'bg-[#0f172a]' : 'bg-white')
+                    <td className={`dre-descricao-cell px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-50 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} ${linha.linha.isFinal ? (isDark ? 'bg-[#164e3b]' : 'bg-[#d1fae5]') :
+                      linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-[#1e293b]' : 'bg-[#e0e7ff]') :
+                        (isDark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]')
                       }`}>
                       {linha.linha.descricao}
                     </td>
