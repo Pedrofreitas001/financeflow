@@ -35,10 +35,12 @@ export const BalanceteProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const [dados, setDados] = useState<ContaBalancete[]>([]);
     const [empresas, setEmpresas] = useState<string[]>([]);
 
-    // Não carregar dados inicialmente - esperar upload do usuário
+    // Atualizar empresas quando dados mudarem
     useEffect(() => {
-        // Vazio intencional - dados carregarão apenas via upload
-    }, []);
+        const empresasUnicas = Array.from(new Set(dados.map(d => d.empresa)));
+        setEmpresas(empresasUnicas);
+        console.log('BalanceteContext atualizado com', dados.length, 'registros e', empresasUnicas.length, 'empresas');
+    }, [dados]);
 
     const obterTotalAtivo = (): number => {
         return dados

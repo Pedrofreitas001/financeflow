@@ -47,15 +47,6 @@ const DashboardBalancete: React.FC = () => {
     if (!dados || dados.length === 0) {
         return (
             <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
-                <div className={`px-8 py-6 border-b ${isDark ? 'border-border-dark bg-surface-dark' : 'border-gray-200 bg-white'}`}>
-                    <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Balancete Contábil
-                    </h1>
-                    <p className={`mt-1 text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
-                        Posição patrimonial consolidada da empresa
-                    </p>
-                </div>
-
                 <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
                     <div className="max-w-2xl w-full mx-auto px-8">
                         <div className="flex flex-col items-center justify-center text-center mb-8">

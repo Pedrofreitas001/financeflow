@@ -172,29 +172,42 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
 
     const reader = new FileReader();
     reader.onload = (evt) => {
-      const bstr = evt.target?.result;
-      const wb = XLSX.read(bstr, { type: 'binary' });
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      const data = XLSX.utils.sheet_to_json(ws);
+      try {
+        const bstr = evt.target?.result;
+        const wb = XLSX.read(bstr, { type: 'binary' });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        const data = XLSX.utils.sheet_to_json(ws);
 
-      // Converter dados para o formato correto
-      const convertedData = data.map((row: any) => ({
-        data: String(row['Data'] || row.data || row.Data || ''),
-        contaContabil: String(row['Conta Contábil'] || row.contaContabil || row.Conta_Contabil || ''),
-        nomeContaContabil: String(row['Nome Conta'] || row.nomeContaContabil || row.Nome_Conta || ''),
-        grupo: String(row['Grupo'] || row.grupo || row.Grupo || '') as 'Ativo' | 'Passivo' | 'PL',
-        subgrupo: String(row['Subgrupo'] || row.subgrupo || row.Subgrupo || '') as any,
-        tipoContaContabil: String(row['Tipo Conta'] || row.tipoContaContabil || row.Tipo_Conta || ''),
-        totalDebitos: Number(row['Total Débitos'] || row.totalDebitos || row.Total_Debitos || 0),
-        totalCreditos: Number(row['Total Créditos'] || row.totalCreditos || row.Total_Creditos || 0),
-        saldo: Number(row['Saldo'] || row.saldo || row.Saldo || 0),
-        status: String(row['Status'] || row.status || row.Status || 'Normal') as 'Normal' | 'Ajuste',
-        fonte: String(row['Fonte'] || row.fonte || row.Fonte || 'Balancete Manual'),
-        empresa: String(row['Empresa'] || row.empresa || row.Empresa || 'Alpha')
-      }));
+        // Converter dados para o formato correto
+        const convertedData = data.map((row: any) => {
+          // Debug: mostrar primeira linha
+          if (data.indexOf(row) === 0) {
+            console.log('Primeira linha do Excel:', row);
+          }
 
-      setBalanceteDados(convertedData);
+          return {
+            data: String(row['Data'] || row.data || row.Data || '2024-12-31'),
+            contaContabil: String(row['Conta Contábil'] || row['Conta_Contábil'] || row['conta_contabil'] || row.contaContabil || ''),
+            nomeContaContabil: String(row['Nome Conta'] || row['Nome_Conta'] || row['nome_conta'] || row.nomeContaContabil || ''),
+            grupo: String(row['Grupo'] || row.grupo || row.Grupo || '') as 'Ativo' | 'Passivo' | 'PL',
+            subgrupo: String(row['Subgrupo'] || row.subgrupo || row.Subgrupo || '') as any,
+            tipoContaContabil: String(row['Tipo Conta'] || row['Tipo_Conta'] || row['tipo_conta'] || row.tipoContaContabil || ''),
+            totalDebitos: Number(row['Total Débitos'] || row['Total_Débitos'] || row['total_debitos'] || row.totalDebitos || 0),
+            totalCreditos: Number(row['Total Créditos'] || row['Total_Créditos'] || row['total_creditos'] || row.totalCreditos || 0),
+            saldo: Number(row['Saldo'] || row.saldo || row.Saldo || 0),
+            status: String(row['Status'] || row.status || row.Status || 'Normal') as 'Normal' | 'Ajuste',
+            fonte: String(row['Fonte'] || row.fonte || row.Fonte || 'Balancete Manual'),
+            empresa: String(row['Empresa'] || row.empresa || row.Empresa || 'Alpha')
+          };
+        });
+
+        console.log('Dados convertidos:', convertedData.length, 'registros');
+        setBalanceteDados(convertedData);
+      } catch (error) {
+        console.error('Erro ao processar arquivo Balancete:', error);
+        alert('Erro ao processar arquivo. Verifique o formato do Excel.');
+      }
     };
     reader.readAsBinaryString(file);
   };
