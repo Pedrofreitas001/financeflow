@@ -129,62 +129,62 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
 
             {visualizacao === 'piramide' ? (
                 // Visualização em Pirâmide (CSS)
-                <div className="flex flex-col items-center justify-center py-8">
-                    <div className="w-full max-w-sm space-y-0">
+                <div className="flex flex-col items-center justify-center py-12">
+                    <div className="w-full max-w-md space-y-0">
                         {/* Topo: PL */}
                         <div
-                            className="mx-auto rounded-t-3xl text-white font-bold text-sm transition-all hover:shadow-lg"
+                            className="mx-auto rounded-t-3xl text-white font-bold transition-all hover:shadow-lg cursor-pointer"
                             style={{
                                 backgroundColor: camadas[0].cor,
-                                width: '60%',
-                                padding: '16px',
+                                width: '50%',
+                                padding: '20px 16px',
                                 textAlign: 'center',
                             }}
                         >
                             <div className="text-xs font-bold">Patrimônio Líquido</div>
-                            <div className="text-lg font-black">
+                            <div className="text-2xl font-black mt-2">
                                 {camadas[0].percentualAtivo.toFixed(0)}%
                             </div>
-                            <div className="text-xs text-white/80">R$ {(camadas[0].valor / 1000000).toFixed(2)}M</div>
+                            <div className="text-sm text-white/80 mt-1">R$ {(camadas[0].valor / 1000000).toFixed(2)}M</div>
                         </div>
 
                         {/* Meio: Passivo Não Circulante */}
                         <div
-                            className="mx-auto text-white font-bold text-sm transition-all hover:shadow-lg"
+                            className="mx-auto text-white font-bold transition-all hover:shadow-lg cursor-pointer"
                             style={{
                                 backgroundColor: camadas[1].cor,
-                                width: '75%',
-                                padding: '16px',
+                                width: '70%',
+                                padding: '20px 16px',
                                 textAlign: 'center',
                             }}
                         >
                             <div className="text-xs font-bold">Passivo Não Circulante</div>
-                            <div className="text-lg font-black">
+                            <div className="text-2xl font-black mt-2">
                                 {camadas[1].percentualAtivo.toFixed(0)}%
                             </div>
-                            <div className="text-xs text-white/80">R$ {(camadas[1].valor / 1000000).toFixed(2)}M</div>
+                            <div className="text-sm text-white/80 mt-1">R$ {(camadas[1].valor / 1000000).toFixed(2)}M</div>
                         </div>
 
                         {/* Base: Passivo Circulante */}
                         <div
-                            className="mx-auto rounded-b-3xl text-white font-bold text-sm transition-all hover:shadow-lg"
+                            className="mx-auto rounded-b-3xl text-white font-bold transition-all hover:shadow-lg cursor-pointer"
                             style={{
                                 backgroundColor: camadas[2].cor,
                                 width: '100%',
-                                padding: '16px',
+                                padding: '20px 16px',
                                 textAlign: 'center',
                             }}
                         >
                             <div className="text-xs font-bold">Passivo Circulante</div>
-                            <div className="text-lg font-black">
+                            <div className="text-2xl font-black mt-2">
                                 {camadas[2].percentualAtivo.toFixed(0)}%
                             </div>
-                            <div className="text-xs text-white/80">R$ {(camadas[2].valor / 1000000).toFixed(2)}M</div>
+                            <div className="text-sm text-white/80 mt-1">R$ {(camadas[2].valor / 1000000).toFixed(2)}M</div>
                         </div>
                     </div>
 
                     {/* Legenda interpretativa */}
-                    <div className={`mt-8 p-4 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'} w-full`}>
+                    <div className={`mt-12 p-4 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'} w-full`}>
                         <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                             <span className="font-bold">Interpretação:</span> Uma pirâmide mais larga na base e estreita no topo indica maior endividamento. Uma estrutura mais balanceada reflete menos risco financeiro.
                         </p>
@@ -192,7 +192,7 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                 </div>
             ) : (
                 // Visualização em Barras Horizontais
-                <div className="w-full h-[300px]">
+                <div className="w-full h-[350px] flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                             layout="vertical"

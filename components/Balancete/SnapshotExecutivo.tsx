@@ -27,6 +27,7 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [empresaSelecionada, setEmpresaSelecionada] = useState<string>(empresas.length > 0 ? empresas[0] : '');
+    const [expandido, setExpandido] = useState<boolean>(false);
 
     // Filtrar dados pela empresa
     const dadosFiltrados = empresaSelecionada
@@ -185,66 +186,89 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
     };
 
     return (
-        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6`}>
-            <div className="flex items-center justify-between mb-6">
-                <div>
-                    <h3 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        Snapshot Executivo
-                    </h3>
-                    <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} mt-1`}>
-                        Interpretação dinâmica da posição patrimonial
-                    </p>
+        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
+            {/* Header Colapsível */}
+            <button
+                onClick={() => setExpandido(!expandido)}
+                className={`w-full p-6 flex items-center justify-between transition-colors ${expandido ? (isDark ? 'bg-surface-dark' : 'bg-white') : (isDark ? 'hover:bg-background-dark' : 'hover:bg-gray-50')}`}
+            >
+                <div className="flex items-center gap-4 flex-1">
+                    <div className={`text-2xl flex-shrink-0 ${expandido ? 'text-primary' : 'text-gray-400'}`}>
+                        📊
+                    </div>
+                    <div className="text-left">
+                        <h3 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Snapshot Executivo
+                        </h3>
+                        <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} mt-0.5`}>
+                            {expandido ? 'Clique para fechar' : 'Interpretação dinâmica da posição patrimonial — clique para expandir'}
+                        </p>
+                    </div>
                 </div>
 
-                {empresas.length > 1 && (
-                    <select
-                        value={empresaSelecionada}
-                        onChange={(e) => setEmpresaSelecionada(e.target.value)}
-                        className={`px-3 py-2 rounded border text-xs ${isDark
-                            ? 'bg-background-dark border-border-dark text-white'
-                            : 'bg-white border-gray-300 text-gray-900'
-                            } focus:outline-none focus:border-primary`}
-                    >
-                        {empresas.map(emp => (
-                            <option key={emp} value={emp}>{emp}</option>
-                        ))}
-                    </select>
-                )}
-            </div>
+                <div className={`text-2xl transition-transform duration-300 flex-shrink-0 ${expandido ? 'rotate-180' : ''}`}>
+                    ▼
+                </div>
+            </button>
 
-            {/* Grid de Insights */}
-            <div className="space-y-3">
-                {insights.map((insight, idx) => {
-                    const style = typeStyles[insight.tipo];
-                    return (
-                        <div
-                            key={idx}
-                            className={`rounded-lg border p-4 transition-all hover:shadow-md ${style.bg}`}
-                        >
-                            <div className="flex gap-3">
-                                <div className={`text-xl flex-shrink-0 ${style.icone}`}>
-                                    {insight.icone}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className={`text-xs font-bold ${style.titulo} mb-1`}>
-                                        {insight.titulo}
-                                    </h4>
-                                    <p className={`text-xs leading-relaxed ${style.desc}`}>
-                                        {insight.descricao}
-                                    </p>
-                                </div>
-                            </div>
+            {/* Conteúdo Expandível */}
+            {expandido && (
+                <div className={`border-t ${isDark ? 'border-border-dark' : 'border-gray-200'} p-6`}>
+                    {empresas.length > 1 && (
+                        <div className="mb-6">
+                            <label className={`text-xs font-semibold block mb-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                Empresa
+                            </label>
+                            <select
+                                value={empresaSelecionada}
+                                onChange={(e) => setEmpresaSelecionada(e.target.value)}
+                                className={`w-full px-3 py-2 rounded border text-xs ${isDark
+                                    ? 'bg-background-dark border-border-dark text-white'
+                                    : 'bg-white border-gray-300 text-gray-900'
+                                    } focus:outline-none focus:border-primary`}
+                            >
+                                {empresas.map(emp => (
+                                    <option key={emp} value={emp}>{emp}</option>
+                                ))}
+                            </select>
                         </div>
-                    );
-                })}
-            </div>
+                    )}
 
-            {/* Dica de Interpretação */}
-            <div className={`mt-4 p-3 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
-                <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <span className="font-semibold">💡 Nota:</span> Os insights acima traduzem a contabilidade em linguagem executiva e devem ser complementados pela análise detalhada dos dados na tabela de balancete.
-                </p>
-            </div>
+                    {/* Grid de Insights */}
+                    <div className="space-y-3">
+                        {insights.map((insight, idx) => {
+                            const style = typeStyles[insight.tipo];
+                            return (
+                                <div
+                                    key={idx}
+                                    className={`rounded-lg border p-4 transition-all hover:shadow-md ${style.bg}`}
+                                >
+                                    <div className="flex gap-3">
+                                        <div className={`text-xl flex-shrink-0 ${style.icone}`}>
+                                            {insight.icone}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className={`text-xs font-bold ${style.titulo} mb-1`}>
+                                                {insight.titulo}
+                                            </h4>
+                                            <p className={`text-xs leading-relaxed ${style.desc}`}>
+                                                {insight.descricao}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Dica de Interpretação */}
+                    <div className={`mt-4 p-3 rounded-lg text-xs ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+                        <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                            <span className="font-semibold">💡 Nota:</span> Os insights acima traduzem a contabilidade em linguagem executiva e devem ser complementados pela análise detalhada dos dados na tabela de balancete.
+                        </p>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

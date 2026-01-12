@@ -157,7 +157,7 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
             </div>
 
             {/* Gráfico */}
-            <div className="w-full h-[350px]">
+            <div className="w-full h-[480px] -mx-6 -mb-6 px-6 pb-6">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         layout="vertical"

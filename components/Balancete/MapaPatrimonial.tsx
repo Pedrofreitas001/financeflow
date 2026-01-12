@@ -40,18 +40,27 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas }) =>
     const totalPatrimonial = dadosFiltrados.reduce((acc, d) => acc + Math.abs(d.saldo), 0);
 
     // Preparar dados para treemap: agrupar por grupo e depois por subgrupo
-    const treemapData: TreemapNode[] = dadosFiltrados.map(conta => ({
-        name: conta.nomeContaContabil,
-        value: Math.abs(conta.saldo),
-        fill: colorsByGrupo[conta.grupo] || '#6366f1',
-        conta: conta.contaContabil,
-        grupo: conta.grupo,
-        subgrupo: conta.subgrupo,
-        percentual: (Math.abs(conta.saldo) / totalPatrimonial) * 100,
-    }));
-
-    // Ordenar por valor decrescente
-    treemapData.sort((a, b) => (b.value || 0) - (a.value || 0));
+    const treemapData: TreemapNode[] = dadosFiltrados
+        .map(conta => ({
+            name: conta.nomeContaContabil,
+            value: Math.abs(conta.saldo),
+            fill: colorsByGrupo[conta.grupo] || '#6366f1',
+            conta: conta.contaContabil,
+            grupo: conta.grupo,
+            subgrupo: conta.subgrupo,
+            percentual: (Math.abs(conta.saldo) / totalPatrimonial) * 100,
+        }))
+        .sort((a, b) => {
+            // Ordenar por grupo primeiro
+            const grupoOrder: { [key: string]: number } = { 'Ativo': 1, 'Passivo': 2, 'PL': 3 };
+            const grupoA = grupoOrder[a.grupo!] || 999;
+            const grupoB = grupoOrder[b.grupo!] || 999;
+            
+            if (grupoA !== grupoB) return grupoA - grupoB;
+            
+            // Depois por valor decrescente
+            return (b.value || 0) - (a.value || 0);
+        });
 
     const handleCustomTooltip = (props: any) => {
         if (props.active && props.payload && props.payload.length > 0) {
@@ -117,12 +126,12 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas }) =>
             </div>
 
             {/* Treemap */}
-            <div className="w-full h-[400px]">
+            <div className="w-full h-[420px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <Treemap
                         data={treemapData}
                         dataKey="value"
-                        stroke={isDark ? '#1f2937' : '#e5e7eb'}
+                        stroke={isDark ? '#374151' : '#d1d5db'}
                         fill="#8884d8"
                         onMouseEnter={(state: any) => setHoveredNode(state.name)}
                         onMouseLeave={() => setHoveredNode(null)}
