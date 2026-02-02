@@ -1,6 +1,141 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+interface GalleryImage {
+    src: string;
+    alt: string;
+}
+
+const VideoCarousel: React.FC = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const features = [
+        {
+            title: 'Dashboard Principal',
+            description: 'Visualize todos os dados financeiros em um painel intuitivo e personalizável com gráficos dinâmicos que se atualizam em tempo real.'
+        },
+        {
+            title: 'Análise de Despesas',
+            description: 'Controle detalhado de todas as despesas com categorização automática e insights de IA para otimizar gastos.'
+        },
+        {
+            title: 'DRE Completo',
+            description: 'Demonstrativo de Resultados do Exercício com análises comparativas mensais, trimestrais e anuais automáticas.'
+        },
+        {
+            title: 'Fluxo de Caixa',
+            description: 'Projeções precisas e análises de fluxo de caixa para melhor planejamento financeiro da sua empresa.'
+        },
+        {
+            title: 'Indicadores e KPIs',
+            description: 'Acompanhe os principais indicadores financeiros com dashboards executivos prontos para apresentações.'
+        },
+        {
+            title: 'Relatórios em PDF',
+            description: 'Gere relatórios profissionais e personalizáveis em PDF com um clique, prontos para stakeholders.'
+        }
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % features.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+
+    return (
+        <div className="bg-gradient-to-r from-blue-600/20 to-blue-500/10 rounded-lg border border-blue-500/30 p-6 min-h-48">
+            <div>
+                <h3 className="text-2xl font-semibold text-white mb-4">
+                    {features[currentIndex].title}
+                </h3>
+                <p className="text-white/70 text-base leading-relaxed mb-6">
+                    {features[currentIndex].description}
+                </p>
+            </div>
+
+            <div className="mt-6">
+                <div className="flex gap-2">
+                    {features.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => setCurrentIndex(index)}
+                            className={`h-2 rounded-full transition-all ${index === currentIndex ? 'bg-blue-400 w-6' : 'bg-white/20 w-3'
+                                }`}
+                        />
+                    ))}
+                </div>
+                <span className="text-sm text-white/50 mt-3 inline-block">{currentIndex + 1} de {features.length}</span>
+            </div>
+        </div>
+    );
+};
+
+const GalleryGrid: React.FC = () => {
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    const images: GalleryImage[] = [
+        { src: '/dashboard financeiro.png', alt: 'Dashboard Financeiro' },
+        { src: '/dashboard fiannceiro 2.png', alt: 'Dashboard Financeiro 2' },
+        { src: '/analise de despesas.png', alt: 'Análise de Despesas' },
+        { src: '/analise de despesas 2.png', alt: 'Análise de Despesas 2' },
+        { src: '/DRE.png', alt: 'DRE' },
+        { src: '/balancete .png', alt: 'Balancete' }
+    ];
+
+    return (
+        <>
+            <div className="grid md:grid-cols-3 gap-6">
+                {images.map((image, index) => (
+                    <div
+                        key={index}
+                        onClick={() => setSelectedImage(image.src)}
+                        className="cursor-pointer group relative overflow-hidden rounded-md border border-white/10 hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/20"
+                    >
+                        <img
+                            src={image.src}
+                            alt={image.alt}
+                            loading="lazy"
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                            <span className="material-symbols-outlined text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity">
+                                zoom_in
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Modal */}
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <div
+                        className="relative max-w-4xl max-h-[90vh] bg-[#162944] rounded-lg overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <img
+                            src={selectedImage}
+                            alt="Expandida"
+                            className="w-full h-full object-contain"
+                        />
+                        <button
+                            onClick={() => setSelectedImage(null)}
+                            className="absolute top-4 right-4 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors"
+                        >
+                            <span className="material-symbols-outlined text-white">close</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
+
 const Home: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -142,20 +277,52 @@ const Home: React.FC = () => {
 
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center overflow-hidden">
-                {/* Background Base - Lighter blue */}
-                <div className="absolute inset-0 bg-[#0f1d32]"></div>
+                {/* Background Base - Medium navy blue */}
+                <div className="absolute inset-0 bg-[#142038]"></div>
 
-                {/* Gradient Overlay - Blue glow from top-left */}
+                {/* Subtle gradient - darker on left, slightly lighter on right */}
                 <div className="absolute inset-0" style={{
-                    background: 'radial-gradient(ellipse 80% 60% at 20% 30%, rgba(59, 130, 246, 0.45) 0%, rgba(37, 99, 235, 0.25) 40%, transparent 70%)'
+                    background: 'linear-gradient(110deg, rgba(15, 30, 55, 0.6) 0%, rgba(22, 37, 68, 0.3) 40%, rgba(30, 58, 95, 0.25) 70%, rgba(37, 78, 130, 0.2) 100%)'
                 }}></div>
+
+                {/* Soft blue accent top-right - subtle */}
                 <div className="absolute inset-0" style={{
-                    background: 'radial-gradient(ellipse 60% 50% at 0% 0%, rgba(96, 165, 250, 0.35) 0%, transparent 50%)'
+                    background: 'radial-gradient(ellipse 70% 60% at 90% 20%, rgba(59, 130, 200, 0.2) 0%, transparent 60%)'
+                }}></div>
+
+                {/* Very subtle glow behind dashboard */}
+                <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(ellipse 60% 70% at 75% 50%, rgba(45, 90, 150, 0.15) 0%, transparent 60%)'
+                }}></div>
+
+                {/* Laminated vibrant circle - top center-left (main bright) */}
+                <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(circle at 42% 22%, rgba(56, 182, 255, 0.16) 0%, rgba(80, 200, 255, 0.08) 20%, transparent 42%)'
+                }}></div>
+
+                {/* Laminated vibrant circle - upper center */}
+                <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(circle at 55% 30%, rgba(80, 190, 255, 0.13) 0%, rgba(100, 210, 255, 0.065) 22%, transparent 45%)'
+                }}></div>
+
+                {/* Laminated vibrant circle - center-left */}
+                <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(circle at 48% 46%, rgba(70, 185, 255, 0.11) 0%, rgba(90, 200, 255, 0.06) 24%, transparent 46%)'
+                }}></div>
+
+                {/* Laminated vibrant circle - right side */}
+                <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(circle at 72% 35%, rgba(60, 180, 255, 0.12) 0%, transparent 30%)'
+                }}></div>
+
+                {/* Laminated vibrant circle - lower center */}
+                <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(circle at 58% 52%, rgba(90, 195, 255, 0.1) 0%, transparent 28%)'
                 }}></div>
 
                 {/* Dot Grid Pattern */}
                 <div className="absolute inset-0" style={{
-                    backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)`,
+                    backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
                     backgroundSize: '24px 24px'
                 }}></div>
 
@@ -168,9 +335,8 @@ const Home: React.FC = () => {
                                 <span className="text-white/90 text-sm font-medium">Novo: Insights com IA Generativa</span>
                             </div>
 
-                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-[1.1]">
-                                Dashboard<br />
-                                Contábil<br />
+                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-[1.1]">
+                                Dashboard Contábil<br />
                                 <span className="text-blue-400">Inteligente</span>
                             </h1>
 
@@ -405,6 +571,22 @@ const Home: React.FC = () => {
                 </div>
             </section>
 
+            {/* Gallery Section */}
+            <section className="py-24 bg-[#0f1d32]">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                            Galeria do Dashboard
+                        </h2>
+                        <p className="text-white/60 text-lg max-w-2xl mx-auto">
+                            Confira as capturas de tela dos principais módulos do FinanceFlow
+                        </p>
+                    </div>
+
+                    <GalleryGrid />
+                </div>
+            </section>
+
             {/* Testimonials */}
             <section className="py-24 bg-[#0f1d32]">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -562,10 +744,10 @@ const Home: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="bg-[#162944] rounded-2xl border border-white/10 overflow-hidden">
-                        <div className="grid grid-cols-3 bg-[#0c1929] p-4">
-                            <div className="text-white/60 text-sm font-medium">Recurso</div>
-                            <div className="text-center text-white/60 text-sm font-medium">Planilhas Manuais</div>
+                    <div className="bg-[#1a3452] rounded-2xl border border-white/10 overflow-hidden">
+                        <div className="grid grid-cols-3 bg-[#162944] p-4">
+                            <div className="text-white/70 text-sm font-medium">Recurso</div>
+                            <div className="text-center text-white/70 text-sm font-medium">Planilhas Manuais</div>
                             <div className="text-center text-blue-400 text-sm font-bold">FinanceFlow</div>
                         </div>
                         {[
@@ -578,9 +760,9 @@ const Home: React.FC = () => {
                             { feature: 'Suporte técnico', manual: '❌', ff: '24/7' },
                             { feature: 'Atualizações', manual: 'Manual', ff: 'Automáticas' }
                         ].map((row, index) => (
-                            <div key={index} className={`grid grid-cols-3 p-4 ${index % 2 === 0 ? 'bg-white/5' : ''}`}>
-                                <div className="text-white/80 text-sm">{row.feature}</div>
-                                <div className="text-center text-white/40 text-sm">{row.manual}</div>
+                            <div key={index} className={`grid grid-cols-3 p-4 ${index % 2 === 0 ? 'bg-white/10' : ''}`}>
+                                <div className="text-white/90 text-sm">{row.feature}</div>
+                                <div className="text-center text-white/60 text-sm">{row.manual}</div>
                                 <div className="text-center text-emerald-400 text-sm font-medium">{row.ff}</div>
                             </div>
                         ))}
