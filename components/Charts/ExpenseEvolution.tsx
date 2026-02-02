@@ -84,8 +84,8 @@ const ExpenseEvolution: React.FC = () => {
               key={metric.key}
               onClick={() => setSelectedMetric(metric.key)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedMetric === metric.key
-                  ? `${isDark ? 'bg-primary/20 text-primary border-primary' : 'bg-primary/10 text-primary border-primary'} border`
-                  : `${isDark ? 'bg-[#111814] text-[#9db9a8] border-[#3b5445] hover:border-primary/50' : 'bg-gray-100 text-gray-600 border-gray-200 hover:border-primary/50'} border`
+                ? `${isDark ? 'bg-primary/20 text-primary border-primary' : 'bg-primary/10 text-primary border-primary'} border`
+                : `${isDark ? 'bg-[#1c2720] text-[#9db9a8] border-[#3b5445] hover:border-primary/50' : 'bg-gray-100 text-gray-600 border-gray-200 hover:border-primary/50'} border`
                 }`}
             >
               {metric.label}

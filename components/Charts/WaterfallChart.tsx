@@ -11,7 +11,7 @@ const WaterfallChart: React.FC = () => {
   const processedData = WATERFALL_DATA.reduce((acc: any[], item, index) => {
     const prevTotal = index === 0 ? 0 : acc[index - 1].absoluteTotal;
     const currentTotal = prevTotal + item.value;
-    
+
     acc.push({
       ...item,
       // The start value of the bar (transparent base)
@@ -41,8 +41,8 @@ const WaterfallChart: React.FC = () => {
             <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: colors.tickFill, fontSize: 12 }} dy={10} />
             <YAxis axisLine={false} tickLine={false} tick={{ fill: colors.tickFill, fontSize: 12 }} />
             <Tooltip
-               contentStyle={{ backgroundColor: colors.tooltipBg, border: `1px solid ${colors.tooltipBorder}`, borderRadius: '8px' }}
-               formatter={(value: any, name: any, props: any) => [props.payload.value, 'Valor']}
+              contentStyle={{ backgroundColor: colors.tooltipBg, border: `1px solid ${colors.tooltipBorder}`, borderRadius: '8px' }}
+              formatter={(value: any, name: any, props: any) => [props.payload.value, 'Valor']}
             />
             {/* The transparent spacer bar */}
             <Bar dataKey="start" stackId="a" fill="transparent" />
@@ -52,9 +52,9 @@ const WaterfallChart: React.FC = () => {
                 let color = '#0ebe54'; // Positive
                 if (entry.isTotal) color = '#054d22'; // Final Result
                 else if (entry.value < 0) {
-                    if (entry.name === 'CMV') color = '#ef4444';
-                    else if (entry.name === 'Desp. Ops') color = '#fb923c';
-                    else color = '#eab308';
+                  if (entry.name === 'CMV') color = '#ef4444';
+                  else if (entry.name === 'Desp. Ops') color = '#fb923c';
+                  else color = '#eab308';
                 }
                 return <Cell key={`cell-${index}`} fill={color} />;
               })}

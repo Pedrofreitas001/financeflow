@@ -21,7 +21,7 @@ const KPIBalanceteCard: React.FC<KPIBalanceteCardProps> = ({ titulo, valor, unid
     const { theme } = useTheme();
     const isDarkCard = theme === 'dark';
 
-    const statusColor = status === 'ok' ? 'bg-green-500/20 text-green-400' : status === 'alerta' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400';
+    const statusColor = status === 'ok' ? 'bg-blue-500/20 text-blue-400' : status === 'alerta' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400';
     const statusIcon = status === 'ok' ? '✓' : status === 'alerta' ? '⚠' : '✕';
 
     return (
@@ -50,34 +50,38 @@ const DashboardBalancete: React.FC = () => {
     // Se não houver dados, mostrar disclaimer
     if (!dados || dados.length === 0) {
         return (
-            <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
-                <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center ${isDark ? 'bg-background-dark' : 'bg-gray-50'}`}>
+            <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
+                <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center relative`} style={{
+                    backgroundColor: '#0f1d32',
+                    backgroundImage: `radial-gradient(ellipse 80% 60% at 20% 30%, rgba(59, 130, 246, 0.45) 0%, rgba(37, 99, 235, 0.25) 40%, transparent 70%), radial-gradient(ellipse 60% 50% at 0% 0%, rgba(96, 165, 250, 0.35) 0%, transparent 50%), radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px)`,
+                    backgroundSize: '100% 100%, 100% 100%, 24px 24px'
+                }}>
                     <div className="max-w-2xl w-full mx-auto px-8">
                         <div className="flex flex-col items-center justify-center text-center mb-8">
-                            <h2 className={`text-2xl font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            <h2 data-cta-header style={{ color: '#ffffff !important', fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>
                                 Nenhum dado carregado
                             </h2>
-                            <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
+                            <p data-cta-text style={{ color: '#d1d5db !important' }}>
                                 Importe um arquivo Excel com dados de balancete para visualizar
                             </p>
                         </div>
 
                         {/* Informações do Formato */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6`}>
-                            <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        <div className="rounded-2xl border border-gray-300 shadow-lg p-6 bg-white">
+                            <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-900">
                                 <span className="material-symbols-outlined text-primary">description</span>
                                 Formato Esperado: Balancete_exemplo.xlsx
                             </h3>
-                            <div className={`${isDark ? 'bg-background-dark' : 'bg-gray-50'} rounded-lg p-4 mb-4 overflow-x-auto`}>
+                            <div className="rounded-lg p-4 mb-4 overflow-x-auto bg-gray-50">
                                 <table className="text-xs w-full">
                                     <thead>
-                                        <tr className={`${isDark ? 'text-text-muted border-b border-border-dark' : 'text-gray-600 border-b border-gray-300'}`}>
+                                        <tr className="text-gray-600 border-b border-gray-300">
                                             <th className="text-left py-2">Coluna</th>
                                             <th className="text-left py-2">Tipo</th>
                                             <th className="text-left py-2">Exemplo</th>
                                         </tr>
                                     </thead>
-                                    <tbody className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                                    <tbody className="text-gray-700">
                                         <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">Data</td>
                                             <td>data</td>
@@ -106,10 +110,10 @@ const DashboardBalancete: React.FC = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <p className={`text-xs mb-4 ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Arquivo: <span className={`${isDark ? 'text-primary' : 'text-primary'} font-mono`}>Balancete_exemplo.xlsx</span></p>
+                            <p className="text-xs mb-4 text-gray-600">Arquivo: <span className="text-primary font-mono">Balancete_exemplo.xlsx</span></p>
 
                             {/* Botão Download */}
-                            <a href="https://docs.google.com/spreadsheets/d/1WI-CCHrZF0jHoT6wbnj5jvOQ1wqr1zIU57X_5_v2dKI/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors w-full">
+                            <a data-cta-button href="https://docs.google.com/spreadsheets/d/1WI-CCHrZF0jHoT6wbnj5jvOQ1wqr1zIU57X_5_v2dKI/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
                                 <span className="material-symbols-outlined text-base">download</span>
                                 Baixar Arquivo
                             </a>
@@ -258,18 +262,18 @@ const DashboardBalancete: React.FC = () => {
                         <KPIBalanceteCard
                             titulo="Patrimônio Líquido"
                             valor={totalPL}
-                            cor="text-cyan-400"
+                            cor="text-blue-400"
                             status="ok"
                         />
                         <KPIBalanceteCard
                             titulo="Ativo Circulante"
                             valor={ativoCirculante}
-                            cor="text-green-400"
+                            cor="text-blue-400"
                             status="ok"
                         />
                         <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm flex flex-col justify-center items-center text-center`}>
                             <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-2`}>Status Balancete</p>
-                            <div className={`px-3 py-2 rounded-full font-bold text-sm ${balanceteOk ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                            <div className={`px-3 py-2 rounded-full font-bold text-sm ${balanceteOk ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}`}>
                                 {balanceteOk ? '✓ Balanceado' : '✕ Desequilibrado'}
                             </div>
                         </div>
@@ -613,7 +617,7 @@ const DashboardBalancete: React.FC = () => {
                                                 ? 'bg-blue-500/20 text-blue-400'
                                                 : conta.grupo === 'Passivo'
                                                     ? 'bg-red-500/20 text-red-400'
-                                                    : 'bg-cyan-500/20 text-cyan-400'
+                                                    : 'bg-blue-500/20 text-blue-400'
                                                 }`}>
                                                 {conta.grupo}
                                             </span>
@@ -624,7 +628,7 @@ const DashboardBalancete: React.FC = () => {
                                         <td className={`px-6 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                                             R$ {conta.totalCreditos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                         </td>
-                                        <td className={`px-6 py-3 text-right font-semibold ${conta.saldo >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                        <td className={`px-6 py-3 text-right font-semibold ${conta.saldo >= 0 ? 'text-blue-400' : 'text-red-400'}`}>
                                             R$ {conta.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                         </td>
                                     </tr>

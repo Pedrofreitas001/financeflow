@@ -56,7 +56,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [dados]);
 
   const dadosFiltrados = useMemo(() => {
-    return dados.filter(d => 
+    return dados.filter(d =>
       (filtros.empresa === 'Todas' || d.empresa === filtros.empresa) &&
       (filtros.meses.length === 0 || filtros.meses.includes(d.mes))
     );
@@ -76,7 +76,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const agregadoCategoria = useMemo(() => {
     const categorias = ["Custo Variável", "Custo Fixo (R$)", "Imposto Variável", "Marketing", "Pessoal"];
     const cores = ["#ef4444", "#f97316", "#ec4899", "#3b82f6", "#0ebe54"];
-    
+
     const result = categorias.map((cat, i) => {
       const valor = Math.abs(dadosFiltrados.filter(d => d.categoria.toUpperCase().includes(cat.toUpperCase())).reduce((acc, curr) => acc + curr.valor, 0));
       return { name: cat, value: valor, color: cores[i % cores.length] };
@@ -89,7 +89,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const agregadoEmpresa = useMemo(() => {
     const emps = Array.from(new Set(dadosFiltrados.map(d => d.empresa)));
     const maxVal = Math.max(...emps.map(e => dadosFiltrados.filter(d => d.empresa === e && d.categoria.toUpperCase().includes("FATURAMENTO")).reduce((acc, curr) => acc + curr.valor, 0)), 1);
-    
+
     return emps.map(e => {
       const receita = dadosFiltrados.filter(d => d.empresa === e && d.categoria.toUpperCase().includes("FATURAMENTO")).reduce((acc, curr) => acc + curr.valor, 0);
       return { name: e, performance: Math.round((receita / maxVal) * 100) };

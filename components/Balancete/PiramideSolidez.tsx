@@ -81,7 +81,7 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
 
     const statusSolidez = solidezPL > 50 ? 'forte' : solidezPL > 30 ? 'moderada' : 'fraca';
     const statusSolidezTexto = {
-        forte: { texto: 'Estrutura Forte', cor: 'text-green-400', bg: 'bg-green-500/20' },
+        forte: { texto: 'Estrutura Forte', cor: 'text-blue-400', bg: 'bg-blue-500/20' },
         moderada: { texto: 'Estrutura Moderada', cor: 'text-yellow-400', bg: 'bg-yellow-500/20' },
         fraca: { texto: 'Estrutura Fraca', cor: 'text-red-400', bg: 'bg-red-500/20' },
     };
@@ -217,12 +217,12 @@ const PiramideSolidez: React.FC<PiramideSolidezProps> = ({ empresas, totais }) =
                             data={dadosBarras}
                             margin={{ top: 5, right: 30, left: 5, bottom: 5 }}
                         >
-                            <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
+                            <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#3b5445' : '#e5e7eb'} />
                             <XAxis type="number" tickFormatter={formatYAxis} />
                             <YAxis
                                 type="category"
                                 dataKey="nome"
-                                tick={{ fontSize: 12, fill: isDark ? '#9ca3af' : '#6b7280' }}
+                                tick={{ fontSize: 12, fill: isDark ? '#9db9a8' : '#6b7280' }}
                                 width={calcularLarguraYAxis(dadosBarras)}
                             />
                             <Tooltip content={handleCustomTooltip} />

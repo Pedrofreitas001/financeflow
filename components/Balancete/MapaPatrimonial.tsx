@@ -124,9 +124,9 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas, tota
                         data={waterfallData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
                     >
-                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
-                        <XAxis dataKey="name" tick={{ fontSize: 12, fill: isDark ? '#9ca3af' : '#6b7280' }} />
-                        <YAxis tick={{ fontSize: 12, fill: isDark ? '#9ca3af' : '#6b7280' }} tickFormatter={formatYAxis} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#3b5445' : '#e5e7eb'} />
+                        <XAxis dataKey="name" tick={{ fontSize: 12, fill: isDark ? '#9db9a8' : '#6b7280' }} />
+                        <YAxis tick={{ fontSize: 12, fill: isDark ? '#9db9a8' : '#6b7280' }} tickFormatter={formatYAxis} />
                         <Tooltip content={handleCustomTooltip} />
                         <Bar
                             dataKey="value"
@@ -187,7 +187,7 @@ const MapaPatrimonial: React.FC<MapaPatrimonialProps> = ({ dados, empresas, tota
                 <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                     <span className="font-semibold">📊 Validação:</span> Ativo ({formatarValor(ativoTotal)}) = Passivo ({formatarValor(passivoTotal)}) + PL ({formatarValor(plTotal)})
                     <br />
-                    <span className={`text-xs mt-2 block ${Math.abs(ativoTotal - (passivoTotal + plTotal)) < 1 ? 'text-green-400' : 'text-yellow-400'}`}>
+                    <span className={`text-xs mt-2 block ${Math.abs(ativoTotal - (passivoTotal + plTotal)) < 1 ? 'text-blue-400' : 'text-yellow-400'}`}>
                         {Math.abs(ativoTotal - (passivoTotal + plTotal)) < 1 ? '✓ Balancete validado' : '⚠ Diferença detectada'}
                     </span>
                 </p>

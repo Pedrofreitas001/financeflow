@@ -13,7 +13,7 @@ const ExecutiveDRE: React.FC = () => {
     { label: 'Faturamento Bruto', value: kpis.faturamentoBruto, color: 'bg-primary' },
     { label: 'Custo Variável', value: Math.abs(kpis.custoVariavel), color: 'bg-red-500/80' },
     { label: 'Margem Contribuição', value: kpis.margemContribuicao, color: 'bg-[#3b82f6]' },
-    { label: 'Resultado Final', value: kpis.resultado, color: kpis.resultado >= 0 ? 'bg-emerald-600' : 'bg-red-500' },
+    { label: 'Resultado Final', value: kpis.resultado, color: kpis.resultado >= 0 ? 'bg-blue-600' : 'bg-red-500' },
   ];
 
   const maxValue = Math.max(...dreItems.map(i => Math.abs(i.value)), 1);
@@ -36,7 +36,7 @@ const ExecutiveDRE: React.FC = () => {
                 <span className={`text-[11px] font-black ${isDark ? 'text-white' : 'text-gray-900'} whitespace-nowrap`}>{formatBRL(item.value)}</span>
               </div>
 
-              <div className={`w-full ${isDark ? 'bg-[#111814] border-[#3b5445]' : 'bg-gray-100 border-gray-300'} rounded-full h-4 overflow-hidden border`}>
+              <div className={`w-full ${isDark ? 'bg-[#1c2720] border-[#3b5445]' : 'bg-gray-100 border-gray-300'} rounded-full h-4 overflow-hidden border`}>
                 <div
                   className={`${item.color} h-full rounded-full transition-all duration-1000 ease-out`}
                   style={{ width: `${percentage}%` }}

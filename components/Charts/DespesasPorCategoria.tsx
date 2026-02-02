@@ -46,16 +46,16 @@ const DespesasPorCategoria: React.FC = () => {
             <div className="h-[400px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={agregadoDespesasCategoria} margin={{ top: 20, right: 30, left: 50, bottom: 80 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1f2937' : '#e5e7eb'} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1c2720' : '#e5e7eb'} />
                         <XAxis
                             dataKey="name"
                             angle={-45}
                             textAnchor="end"
                             height={100}
-                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+                            tick={{ fill: isDark ? '#9db9a8' : '#6b7280', fontSize: 12 }}
                         />
                         <YAxis
-                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+                            tick={{ fill: isDark ? '#9db9a8' : '#6b7280', fontSize: 12 }}
                             tickFormatter={(value) => `R$ ${(value / 1000000).toFixed(1)}M`}
                             width={75}
                         />

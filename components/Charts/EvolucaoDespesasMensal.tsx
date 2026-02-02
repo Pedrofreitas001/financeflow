@@ -68,10 +68,10 @@ const EvolucaoDespesasMensal: React.FC = () => {
                 <div className="bg-background-dark rounded-xl p-4">
                     <p className="text-text-muted text-xs mb-1">Variação MoM</p>
                     <div className="flex items-center gap-2">
-                        <p className={`text-lg font-bold ${variacao >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                        <p className={`text-lg font-bold ${variacao >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {variacao >= 0 ? '+' : ''}{variacao.toFixed(1)}%
                         </p>
-                        <span className={`material-symbols-outlined text-sm ${variacao >= 0 ? 'text-red-500' : 'text-green-500'}`}>
+                        <span className={`material-symbols-outlined text-sm ${variacao >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {variacao >= 0 ? 'arrow_upward' : 'arrow_downward'}
                         </span>
                     </div>
@@ -81,16 +81,16 @@ const EvolucaoDespesasMensal: React.FC = () => {
             <div className="h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={agregadoDespesasMensal} margin={{ top: 20, right: 30, left: 70, bottom: 20 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1f2937' : '#e5e7eb'} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1c2720' : '#e5e7eb'} />
                         <XAxis
                             dataKey="month"
-                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280' }}
+                            tick={{ fill: isDark ? '#9db9a8' : '#6b7280' }}
                             angle={-45}
                             textAnchor="end"
                             height={80}
                         />
                         <YAxis
-                            tick={{ fill: isDark ? '#9ca3af' : '#6b7280', fontSize: 12 }}
+                            tick={{ fill: isDark ? '#9db9a8' : '#6b7280', fontSize: 12 }}
                             tickFormatter={(value) => `R$ ${(value / 1000000).toFixed(1)}M`}
                             width={75}
                         />

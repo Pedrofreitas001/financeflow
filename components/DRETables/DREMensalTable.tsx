@@ -17,7 +17,7 @@ const DREMensalTable: React.FC = () => {
 
   if (!dreData) {
     return (
-      <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
+      <div className={`${isDark ? 'bg-[#1f2937] border-[#374151] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
         <span className="material-symbols-outlined text-4xl text-text-muted mb-2">table_chart</span>
         <p className="text-sm">Carregue um arquivo DRE Mensal para visualizar</p>
       </div>
@@ -79,7 +79,7 @@ const DREMensalTable: React.FC = () => {
                   <td className={`px-2 py-2 text-xs text-right font-medium tabular-nums whitespace-nowrap ${isNegativo ? 'text-red-500' : textColor}`}>
                     {linha.linha.isPercentual ? linha.real.toFixed(0) + '%' : formatValor(linha.real)}
                   </td>
-                  <td className={`px-2 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${isVariacaoNegativa ? 'text-red-600 font-bold' : 'text-green-600 font-bold'}`}>
+                  <td className={`px-2 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${isVariacaoNegativa ? 'text-red-600 font-bold' : 'text-blue-600 font-bold'}`}>
                     {linha.variacao}
                   </td>
                   <td className={`px-3 py-2 text-xs text-right font-semibold tabular-nums whitespace-nowrap ${isDark ? 'text-text-muted' : 'text-gray-600'} bg-primary/10`}>

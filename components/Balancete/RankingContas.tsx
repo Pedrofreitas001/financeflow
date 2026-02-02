@@ -164,12 +164,12 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
                         data={ranking}
                         margin={{ top: 5, right: 30, left: -10, bottom: 5 }}
                     >
-                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#374151' : '#e5e7eb'} />
-                        <XAxis type="number" tickFormatter={formatYAxis} tick={{ fontSize: 12, fill: isDark ? '#9ca3af' : '#6b7280' }} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#3b5445' : '#e5e7eb'} />
+                        <XAxis type="number" tickFormatter={formatYAxis} tick={{ fontSize: 12, fill: isDark ? '#9db9a8' : '#6b7280' }} />
                         <YAxis
                             type="category"
                             dataKey="nome"
-                            tick={{ fontSize: 11, fill: isDark ? '#9ca3af' : '#6b7280' }}
+                            tick={{ fontSize: 11, fill: isDark ? '#9db9a8' : '#6b7280' }}
                             width={calcularLarguraYAxis(ranking)}
                         />
                         <Tooltip content={handleCustomTooltip} />
@@ -259,7 +259,7 @@ const RankingContas: React.FC<RankingContasProps> = ({ dados, empresas }) => {
                                         ? 'bg-blue-500/20 text-blue-400'
                                         : conta.grupo === 'Passivo'
                                             ? 'bg-red-500/20 text-red-400'
-                                            : 'bg-cyan-500/20 text-cyan-400'
+                                            : 'bg-blue-500/20 text-blue-400'
                                         }`}>
                                         {conta.grupo}
                                     </span>

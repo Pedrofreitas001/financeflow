@@ -18,7 +18,7 @@ const CompanyPerformance: React.FC = () => {
               <span className={`${isDark ? 'text-[#9db9a8]' : 'text-gray-600'} font-bold uppercase ${isDark ? 'group-hover:text-white' : 'group-hover:text-gray-900'} transition-colors`}>{company.name}</span>
               <span className="text-primary font-bold">{company.performance}%</span>
             </div>
-            <div className={`w-full ${isDark ? 'bg-[#111814] border-[#3b5445]/20' : 'bg-gray-100 border-gray-300/50'} rounded-full h-2 overflow-hidden border`}>
+            <div className={`w-full ${isDark ? 'bg-[#1c2720] border-[#3b5445]/20' : 'bg-gray-100 border-gray-300/50'} rounded-full h-2 overflow-hidden border`}>
               <div
                 className="bg-gradient-to-r from-primary/60 to-primary h-full rounded-full transition-all duration-1000 ease-out"
                 style={{

@@ -14,18 +14,18 @@ const ReportCover: React.FC<ReportCoverProps> = ({ empresa, periodo, kpis }) => 
   const isDark = theme === 'dark';
 
   return (
-    <div id="pdf-cover" className={`w-[210mm] h-[297mm] ${isDark ? 'bg-[#111814] text-white' : 'bg-[#f5f5f5] text-gray-900'} p-20 flex flex-col justify-between absolute -left-[9999px] top-0`}>
+    <div id="pdf-cover" className={`w-[210mm] h-[297mm] ${isDark ? 'bg-[#111827] text-white' : 'bg-[#f5f5f5] text-gray-900'} p-20 flex flex-col justify-between absolute -left-[9999px] top-0`}>
       <div className="flex flex-col items-center mt-12">
-        <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-[#0ebe54] to-[#054d22] flex items-center justify-center mb-6 shadow-2xl shadow-primary/40">
+        <div className="h-24 w-24 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center mb-6 shadow-2xl shadow-blue-600/40">
           <span className="material-symbols-outlined text-white text-5xl">bar_chart</span>
         </div>
         <h1 className={`text-5xl font-black tracking-tight mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>FinanceFlow</h1>
-        <p className="text-primary text-base font-medium tracking-[0.3em] uppercase opacity-80">Executive Financial Analysis</p>
+        <p className="text-blue-600 text-base font-medium tracking-[0.3em] uppercase opacity-80">Executive Financial Analysis</p>
       </div>
 
       <div className="flex-1 flex flex-col justify-center max-w-xl mx-auto w-full">
         <div className="space-y-4">
-          <div className="h-1 w-16 bg-primary mb-8"></div>
+          <div className="h-1 w-16 bg-blue-600 mb-8"></div>
           <h2 className={`text-4xl font-bold leading-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>Consolidação de Resultados</h2>
           <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-base leading-relaxed`}>Relatório gerencial detalhado com indicadores de performance, fluxo de caixa e análise estratégica de margens operacionais.</p>
 

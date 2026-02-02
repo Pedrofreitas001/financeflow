@@ -175,10 +175,10 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
             desc: isDark ? 'text-amber-200/80' : 'text-amber-600',
         },
         oportunidade: {
-            bg: isDark ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-emerald-50 border-emerald-200',
-            icone: 'text-emerald-500',
-            titulo: isDark ? 'text-emerald-300' : 'text-emerald-700',
-            desc: isDark ? 'text-emerald-200/80' : 'text-emerald-600',
+            bg: isDark ? 'bg-blue-500/10 border-blue-500/30' : 'bg-blue-50 border-blue-200',
+            icone: 'text-blue-500',
+            titulo: isDark ? 'text-blue-300' : 'text-blue-700',
+            desc: isDark ? 'text-blue-200/80' : 'text-blue-600',
         },
     };
 

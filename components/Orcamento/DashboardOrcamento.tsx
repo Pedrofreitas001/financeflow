@@ -27,7 +27,7 @@ const KPIOrcamentoCard: React.FC<KPIOrcamentoCardProps> = ({ titulo, valor, perc
                 {unidade === '%' ? `${valorValido.toFixed(1)}%` : `R$ ${(valorValido / 1000).toFixed(1)}k`}
             </p>
             {percentualValido !== undefined && (
-                <p className={`text-xs font-semibold mt-1 ${percentualValido > 0 ? 'text-red-400' : 'text-green-400'
+                <p className={`text-xs font-semibold mt-1 ${percentualValido > 0 ? 'text-red-400' : 'text-blue-400'}
                     }`}>
                     {percentualValido > 0 ? '↑' : '↓'} {Math.abs(percentualValido).toFixed(1)}% vs Orçado
                 </p>
@@ -98,55 +98,64 @@ const DashboardOrcamento: React.FC = () => {
 
     if (dados.length === 0) {
         return (
-            <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'} min-h-screen`}>
-                <div className="max-w-[1400px] mx-auto">
-                    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+            <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
+                <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center relative`} style={{
+                    backgroundColor: '#0f1d32',
+                    backgroundImage: `radial-gradient(ellipse 80% 60% at 20% 30%, rgba(59, 130, 246, 0.45) 0%, rgba(37, 99, 235, 0.25) 40%, transparent 70%), radial-gradient(ellipse 60% 50% at 0% 0%, rgba(96, 165, 250, 0.35) 0%, transparent 50%), radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px)`,
+                    backgroundSize: '100% 100%, 100% 100%, 24px 24px'
+                }}>
+                    <div className="max-w-2xl w-full mx-auto px-8">
+                        <div className="flex flex-col items-center justify-center text-center mb-8">
+                            <h2 data-cta-header style={{ color: '#ffffff !important', fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>
+                                Nenhum dado carregado
+                            </h2>
+                            <p data-cta-text style={{ color: '#d1d5db !important' }}>
+                                Importe um arquivo Excel com dados de orçamento para visualizar
+                            </p>
+                        </div>
 
-                        <h2 className={`${isDark ? 'text-white' : 'text-gray-900'} text-2xl font-bold mb-4`}>Nenhum dado carregado</h2>
-                        <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} mb-8`}>Baixe o arquivo Excel modelo e carregue na barra lateral para visualização</p>
-
-                        {/* Formato Esperado */}
-                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-xl border p-6 w-full max-w-2xl`}>
-                            <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} font-bold mb-4 flex items-center gap-2`}>
+                        {/* Informações do Formato */}
+                        <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6`}>
+                            <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                                 <span className="material-symbols-outlined text-primary">description</span>
-                                Formato Esperado: orcamento_template.xlsx
+                                Formato Esperado: Orcamento_Exemplo.xlsx
                             </h3>
                             <div className={`${isDark ? 'bg-background-dark' : 'bg-gray-50'} rounded-lg p-4 mb-4 overflow-x-auto`}>
-                                <table className={`text-xs w-full ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                <table className="text-xs w-full">
                                     <thead>
-                                        <tr className={`${isDark ? 'text-text-muted border-border-dark' : 'text-gray-600 border-gray-300'} border-b`}>
+                                        <tr className={`${isDark ? 'text-text-muted border-b border-border-dark' : 'text-gray-600 border-b border-gray-300'}`}>
                                             <th className="text-left py-2">Coluna</th>
                                             <th className="text-left py-2">Tipo</th>
                                             <th className="text-left py-2">Exemplo</th>
                                         </tr>
                                     </thead>
                                     <tbody className={isDark ? 'text-gray-300' : 'text-gray-700'}>
-                                        <tr className={`${isDark ? 'border-border-dark/50' : 'border-gray-300/50'} border-b`}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">mes</td>
                                             <td>número</td>
                                             <td>1, 2, 3...</td>
                                         </tr>
-                                        <tr className={`${isDark ? 'border-border-dark/50' : 'border-gray-300/50'} border-b`}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">empresa</td>
                                             <td>texto</td>
                                             <td>Alpha, Beta, Gamma...</td>
                                         </tr>
-                                        <tr className={`${isDark ? 'border-border-dark/50' : 'border-gray-300/50'} border-b`}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">categoria</td>
                                             <td>texto</td>
                                             <td>Folha, Aluguel, Fornecedores...</td>
                                         </tr>
-                                        <tr className={`${isDark ? 'border-border-dark/50' : 'border-gray-300/50'} border-b`}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">orcado</td>
                                             <td>número (R$)</td>
                                             <td>80000, 120000...</td>
                                         </tr>
-                                        <tr className={`${isDark ? 'border-border-dark/50' : 'border-gray-300/50'} border-b`}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">realizado</td>
                                             <td>número (R$)</td>
                                             <td>82000, 118000...</td>
                                         </tr>
-                                        <tr className={`${isDark ? 'border-border-dark/50' : 'border-gray-300/50'} border-b`}>
+                                        <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">responsavel</td>
                                             <td>texto (opcional)</td>
                                             <td>RH, Compras, Admin...</td>
@@ -159,17 +168,17 @@ const DashboardOrcamento: React.FC = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <p className={`text-xs ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-4`}>Arquivo: <span className="text-primary font-mono">Orcamento_Exemplo.xlsx</span></p>
+                            <p className="text-xs mb-4 text-gray-600">Arquivo: <span className="text-primary font-mono">Orcamento_Exemplo.xlsx</span></p>
 
                             {/* Botão Download */}
-                            <a href="https://docs.google.com/spreadsheets/d/1pjEyn5Jy43kC3og11hjU1Co7peBn11EH8EwfuEHxk_M/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-semibold transition-colors w-full">
+                            <a data-cta-button href="https://docs.google.com/spreadsheets/d/1pjEyn5Jy43kC3og11hjU1Co7peBn11EH8EwfuEHxk_M/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
                                 <span className="material-symbols-outlined text-base">download</span>
                                 Baixar Arquivo
                             </a>
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
         );
     }
 
@@ -194,14 +203,14 @@ const DashboardOrcamento: React.FC = () => {
                         titulo="Total Realizado"
                         valor={totalRealizadoFiltrado}
                         unidade="R$"
-                        cor={totalRealizadoFiltrado > totalOrcadoFiltrado ? "text-red-400" : "text-green-400"}
+                        cor={totalRealizadoFiltrado > totalOrcadoFiltrado ? "text-red-400" : "text-blue-400"}
                         status={totalRealizadoFiltrado > totalOrcadoFiltrado ? "negativo" : "positivo"}
                     />
                     <KPIOrcamentoCard
                         titulo="Variância Total"
                         valor={varianciaFiltrадa}
                         unidade="R$"
-                        cor={varianciaFiltrадa > 0 ? "text-red-400" : "text-green-400"}
+                        cor={varianciaFiltrадa > 0 ? "text-red-400" : "text-blue-400"}
                         status={varianciaFiltrадa > 0 ? "negativo" : "positivo"}
                     />
                     <KPIOrcamentoCard
@@ -209,14 +218,14 @@ const DashboardOrcamento: React.FC = () => {
                         valor={Math.abs(varianciaPercentualFiltrada)}
                         percentual={varianciaPercentualFiltrada}
                         unidade="%"
-                        cor={varianciaPercentualFiltrada > 0 ? "text-red-400" : "text-green-400"}
+                        cor={varianciaPercentualFiltrada > 0 ? "text-red-400" : "text-blue-400"}
                         status={statusVarianciaFiltrada}
                     />
                     <KPIOrcamentoCard
                         titulo="Status"
                         valor={Math.abs(varianciaPercentualFiltrada)}
                         unidade="%"
-                        cor={Math.abs(varianciaPercentualFiltrada) > 5 ? "text-red-400" : "text-green-400"}
+                        cor={Math.abs(varianciaPercentualFiltrada) > 5 ? "text-red-400" : "text-blue-400"}
                         status={statusVarianciaFiltrada}
                     />
                 </div>
@@ -278,7 +287,7 @@ const DashboardOrcamento: React.FC = () => {
                                             <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.realizado)}</td>
                                             <td className={`px-4 py-3 text-right font-semibold ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.variancia)}</td>
                                             <td className="px-4 py-3 text-right">
-                                                <span className={`font-bold ${item.variancia > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                                                <span className={`font-bold ${item.variancia > 0 ? 'text-red-400' : 'text-blue-400'}`}>
                                                     {item.percentual > 0 ? '+' : ''}{item.percentual.toFixed(1)}%
                                                 </span>
                                             </td>
@@ -319,7 +328,7 @@ const DashboardOrcamento: React.FC = () => {
                                         <td className={`px-4 py-3 text-right ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.realizado)}</td>
                                         <td className={`px-4 py-3 text-right font-semibold ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>{formatCurrency(item.variancia)}</td>
                                         <td className="px-4 py-3 text-right">
-                                            <span className={`font-bold ${item.variancia > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                                            <span className={`font-bold ${item.variancia > 0 ? 'text-red-400' : 'text-blue-400'}`}>
                                                 {item.percentual > 0 ? '+' : ''}{item.percentual.toFixed(1)}%
                                             </span>
                                         </td>

@@ -44,7 +44,7 @@ const DREAcumuladoTable: React.FC = () => {
 
   if (!dreData || dreData.regimeCaixa.acumulado.length === 0) {
     return (
-      <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
+      <div className={`${isDark ? 'bg-[#1f2937] border-[#374151] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
         <span className="material-symbols-outlined text-4xl text-text-muted mb-2">table_chart</span>
         <p className="text-sm">Carregue um arquivo DRE Acumulado para visualizar</p>
       </div>

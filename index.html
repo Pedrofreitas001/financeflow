@@ -1,115 +1,292 @@
-
 <!DOCTYPE html>
 <html class="dark" lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>FinanceFlow Dashboard Pro</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230ebe54'/><rect x='30' y='50' width='12' height='30' fill='%23fff' rx='2'/><rect x='44' y='35' width='12' height='45' fill='%23fff' rx='2'/><rect x='58' y='25' width='12' height='55' fill='%23fff' rx='2'/></svg>"/>
-    <!-- Shim do process.env deve vir antes de qualquer script de módulo -->
-    <script>
-      window.process = window.process || {};
-      window.process.env = window.process.env || {};
-    </script>
-    
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <script>
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "primary": "#0ebe54",
-              "background-dark": "#0a0f0c",
-              "surface-dark": "#141d18",
-              "border-dark": "#2d3d34",
-              "text-muted": "#8fa79a",
-            },
-            fontFamily: {
-              "sans": ["Inter", "sans-serif"]
-            },
-            borderRadius: {"DEFAULT": "0.75rem", "lg": "1.25rem", "xl": "2rem", "full": "9999px"},
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>FinanceFlow Dashboard Pro</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232563eb'/><rect x='30' y='50' width='12' height='30' fill='%23fff' rx='2'/><rect x='44' y='35' width='12' height='45' fill='%23fff' rx='2'/><rect x='58' y='25' width='12' height='55' fill='%23fff' rx='2'/></svg>" />
+  <!-- Shim do process.env deve vir antes de qualquer script de módulo -->
+  <script>
+    window.process = window.process || {};
+    window.process.env = window.process.env || {};
+  </script>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#2563eb",
+            "background-dark": "#0a0c14",
+            "surface-dark": "#111827",
+            "border-dark": "#1f2937",
+            "text-muted": "#9ca3af",
           },
+          fontFamily: {
+            "sans": ["Inter", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.75rem", "lg": "1.25rem", "xl": "2rem", "full": "9999px" },
         },
+      },
+    }
+  </script>
+  <style>
+    /* Otimização - Forçar carregamento imediato de fontes brancas */
+    .text-white,
+    [class*="text-white"] {
+      color: #ffffff;
+    }
+
+    /* Dark Theme (default) */
+    html.dark body {
+      background-color: #0a0c14;
+      color: white;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    html.dark .bg-background-dark {
+      background-color: #0a0c14 !important;
+    }
+
+    html.dark .bg-surface-dark {
+      background-color: #111827 !important;
+    }
+
+    html.dark .border-border-dark {
+      border-color: #1f2937 !important;
+    }
+
+    html.dark .text-text-muted {
+      color: #9ca3af !important;
+    }
+
+    html.dark .text-white {
+      color: white !important;
+    }
+
+    /* Light Theme - Base */
+    html.light body {
+      background-color: #f5f7f6;
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Light Theme - Backgrounds */
+    html.light .bg-background-dark {
+      background-color: #f5f7f6 !important;
+    }
+
+    html.light .bg-surface-dark {
+      background-color: #ffffff !important;
+    }
+
+    html.light .bg-\[#1c2720\] {
+      background-color: #ffffff !important;
+    }
+
+    html.light .bg-\[#111814\] {
+      background-color: #f0f2f1 !important;
+    }
+
+    html.light .bg-\[#0a0f0c\] {
+      background-color: #f5f7f6 !important;
+    }
+
+    html.light .bg-\[#141d18\] {
+      background-color: #ffffff !important;
+    }
+
+    /* Light Theme - Borders */
+    html.light .border-border-dark {
+      border-color: #d1d9d5 !important;
+    }
+
+    html.light .border-\[#3b5445\] {
+      border-color: #d1d9d5 !important;
+    }
+
+    html.light .border-\[#2d3d34\] {
+      border-color: #d1d9d5 !important;
+    }
+
+    html.light .border-r {
+      border-color: #d1d9d5 !important;
+    }
+
+    /* Light Theme - Text Colors */
+    html.light .text-text-muted {
+      color: #1a1a1a !important;
+    }
+
+    html.light .text-\[#9db9a8\] {
+      color: #1a1a1a !important;
+    }
+
+    html.light .text-white {
+      color: #1a1a1a !important;
+    }
+
+    html.light h1,
+    html.light h2:not([data-cta-header]),
+    html.light h3,
+    html.light h4,
+    html.light h5,
+    html.light h6 {
+      color: #1a1a1a !important;
+    }
+
+    html.light p:not([data-cta-text]) {
+      color: #1a1a1a !important;
+    }
+
+    /* CTA Headers sempre brancos */
+    h2[data-cta-header] {
+      color: #ffffff !important;
+    }
+
+    p[data-cta-text] {
+      color: #d1d5db !important;
+    }
+
+    /* Botões CTA sempre com cores corretas */
+    a[data-cta-button],
+    html.light a[data-cta-button],
+    html.dark a[data-cta-button] {
+      color: #ffffff !important;
+    }
+
+    a[data-cta-button] span,
+    html.light a[data-cta-button] span,
+    html.dark a[data-cta-button] span {
+      color: #ffffff !important;
+    }
+
+    html.light a[data-cta-button] * {
+      color: #ffffff !important;
+    }
+
+    html.light span:not(.material-symbols-outlined) {
+      color: #1a1a1a !important;
+    }
+
+    html.light label {
+      color: #1a1a1a !important;
+    }
+
+    /* Light Theme - Form Elements */
+    html.light select {
+      background-color: #ffffff !important;
+      color: #1a1a1a !important;
+      border-color: #d1d9d5 !important;
+    }
+
+    html.light option {
+      background-color: #ffffff !important;
+      color: #1a1a1a !important;
+    }
+
+    html.light input {
+      background-color: #ffffff !important;
+      color: #1a1a1a !important;
+    }
+
+    html.light button {
+      color: #1a1a1a !important;
+    }
+
+    html.light button .text-white {
+      color: white !important;
+    }
+
+    /* Light Theme - SVG/Recharts Elements */
+    html.light .recharts-text {
+      fill: #1a1a1a !important;
+    }
+
+    html.light .recharts-cartesian-axis-tick text {
+      fill: #1a1a1a !important;
+    }
+
+    html.light .recharts-legend-item-text {
+      color: #1a1a1a !important;
+    }
+
+    html.light tspan {
+      fill: #1a1a1a !important;
+    }
+
+    html.light .recharts-layer text {
+      fill: #1a1a1a !important;
+    }
+
+    /* Light Theme - CartesianGrid */
+    html.light .recharts-cartesian-grid line {
+      stroke: #e5e7eb !important;
+    }
+
+    /* Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    html.dark .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0a0c14;
+    }
+
+    html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #1f2937;
+      border-radius: 10px;
+    }
+
+    html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #2563eb;
+    }
+
+    html.light .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f5f7f6;
+    }
+
+    html.light .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d1d9d5;
+      border-radius: 10px;
+    }
+
+    html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #2563eb;
+    }
+
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(31, 41, 55, 0.5);
+    }
+
+    @keyframes subtle-pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
       }
-    </script>
-    <style>
-        /* Dark Theme (default) */
-        html.dark body { background-color: #0a0f0c; color: white; -webkit-font-smoothing: antialiased; }
-        html.dark .bg-background-dark { background-color: #0a0f0c !important; }
-        html.dark .bg-surface-dark { background-color: #141d18 !important; }
-        html.dark .border-border-dark { border-color: #2d3d34 !important; }
-        html.dark .text-text-muted { color: #8fa79a !important; }
-        html.dark .text-white { color: white !important; }
 
-        /* Light Theme - Base */
-        html.light body { background-color: #f5f7f6; color: #1a1a1a; -webkit-font-smoothing: antialiased; }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+      }
+    }
 
-        /* Light Theme - Backgrounds */
-        html.light .bg-background-dark { background-color: #f5f7f6 !important; }
-        html.light .bg-surface-dark { background-color: #ffffff !important; }
-        html.light .bg-\[#1c2720\] { background-color: #ffffff !important; }
-        html.light .bg-\[#111814\] { background-color: #f0f2f1 !important; }
-        html.light .bg-\[#0a0f0c\] { background-color: #f5f7f6 !important; }
-        html.light .bg-\[#141d18\] { background-color: #ffffff !important; }
-
-        /* Light Theme - Borders */
-        html.light .border-border-dark { border-color: #d1d9d5 !important; }
-        html.light .border-\[#3b5445\] { border-color: #d1d9d5 !important; }
-        html.light .border-\[#2d3d34\] { border-color: #d1d9d5 !important; }
-        html.light .border-r { border-color: #d1d9d5 !important; }
-
-        /* Light Theme - Text Colors */
-        html.light .text-text-muted { color: #1a1a1a !important; }
-        html.light .text-\[#9db9a8\] { color: #1a1a1a !important; }
-        html.light .text-white { color: #1a1a1a !important; }
-        html.light h1, html.light h2, html.light h3, html.light h4, html.light h5, html.light h6 { color: #1a1a1a !important; }
-        html.light p { color: #1a1a1a !important; }
-        html.light span:not(.material-symbols-outlined) { color: #1a1a1a !important; }
-        html.light label { color: #1a1a1a !important; }
-
-        /* Light Theme - Form Elements */
-        html.light select { background-color: #ffffff !important; color: #1a1a1a !important; border-color: #d1d9d5 !important; }
-        html.light option { background-color: #ffffff !important; color: #1a1a1a !important; }
-        html.light input { background-color: #ffffff !important; color: #1a1a1a !important; }
-        html.light button { color: #1a1a1a !important; }
-        html.light button .text-white { color: white !important; }
-
-        /* Light Theme - SVG/Recharts Elements */
-        html.light .recharts-text { fill: #1a1a1a !important; }
-        html.light .recharts-cartesian-axis-tick text { fill: #1a1a1a !important; }
-        html.light .recharts-legend-item-text { color: #1a1a1a !important; }
-        html.light tspan { fill: #1a1a1a !important; }
-        html.light .recharts-layer text { fill: #1a1a1a !important; }
-
-        /* Light Theme - CartesianGrid */
-        html.light .recharts-cartesian-grid line { stroke: #e5e7eb !important; }
-
-        /* Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        html.dark .custom-scrollbar::-webkit-scrollbar-track { background: #0a0f0c; }
-        html.dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #2d3d34; border-radius: 10px; }
-        html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #0ebe54; }
-        html.light .custom-scrollbar::-webkit-scrollbar-track { background: #f5f7f6; }
-        html.light .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d9d5; border-radius: 10px; }
-        html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #0ebe54; }
-
-        .glass-panel {
-          background: rgba(20, 29, 24, 0.7);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(45, 61, 52, 0.5);
-        }
-
-        @keyframes subtle-pulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.02); }
-        }
-        .ai-glow {
-          box-shadow: 0 0 20px rgba(14, 190, 84, 0.3);
-        }
-    </style>
-<script type="importmap">
+    .ai-glow {
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+    }
+  </style>
+  <script type="importmap">
 {
   "imports": {
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
@@ -124,9 +301,11 @@
 }
 </script>
 </head>
-<body class="overflow-hidden">
-    <div id="root"></div>
-    <!-- Ponto de entrada relativo COM './' para garantir o rastreamento pelo Vite -->
-    <script type="module" src="./index.tsx"></script>
+
+<body>
+  <div id="root"></div>
+  <!-- Ponto de entrada relativo COM './' para garantir o rastreamento pelo Vite -->
+  <script type="module" src="./index.tsx"></script>
 </body>
+
 </html>

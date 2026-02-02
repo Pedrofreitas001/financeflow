@@ -16,7 +16,7 @@ const DREComparativoTable: React.FC = () => {
 
   if (!dreData || dreData.regimeCaixa.mensal.length === 0 || dreData.regimeCompetencia.mensal.length === 0) {
     return (
-      <div className={`${isDark ? 'bg-[#1c2720] border-[#3b5445] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
+      <div className={`${isDark ? 'bg-[#1f2937] border-[#374151] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
         <span className="material-symbols-outlined text-4xl text-text-muted mb-2">compare</span>
         <p className="text-sm">Carregue os dados de ambos os regimes para comparação</p>
       </div>
@@ -90,7 +90,7 @@ const DREComparativoTable: React.FC = () => {
                   <td className={`px-2 py-2 text-xs text-right font-medium tabular-nums whitespace-nowrap bg-purple-500/8 ${linhaCompetencia.real < 0 ? 'text-red-500' : textColor}`}>
                     {linhaCompetencia.linha.isPercentual ? linhaCompetencia.real.toFixed(0) + '%' : formatValor(linhaCompetencia.real)}
                   </td>
-                  <td className={`px-2 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap bg-primary/10 ${diferenca < 0 ? 'text-red-600 font-bold' : diferenca > 0 ? 'text-green-600 font-bold' : textColor}`}>
+                  <td className={`px-2 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap bg-primary/10 ${diferenca < 0 ? 'text-red-600 font-bold' : diferenca > 0 ? 'text-blue-600 font-bold' : textColor}`}>
                     {linhaCaixa.linha.isPercentual ? diferenca.toFixed(0) + '%' : formatValor(diferenca)}
                   </td>
                   <td className={`px-3 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${diferencaSignificativa ? 'text-orange-600 font-bold' : (isDark ? 'text-text-muted' : 'text-gray-600')} bg-primary/10`}>

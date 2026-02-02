@@ -234,7 +234,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
     <aside className={`w-80 flex-shrink-0 flex flex-col border-r border-border-dark bg-background-dark h-screen overflow-hidden transition-all duration-300 ${visible ? 'ml-0' : '-ml-80'}`}>
       <div className="p-6 pb-2">
         <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-[#054d22] flex items-center justify-center shrink-0">
+          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-white text-2xl">bar_chart</span>
           </div>
           <div>
@@ -329,50 +329,44 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
 
         {/* Upload sections - positioned above Aparência */}
         {currentPage === 'dashboard' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
             <input type="file" onChange={handleFileUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-white mb-2 transition-colors">cloud_upload</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel Financeiro</p>
+            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Financeiro</p>
           </div>
         )}
 
         {currentPage === 'despesas' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
             <input type="file" onChange={handleFileUploadDespesas} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-white mb-2 transition-colors">cloud_upload</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel de Despesas</p>
+            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />de Despesas</p>
           </div>
         )}
 
         {currentPage === 'dre' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
             <input type="file" onChange={handleDREUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-white mb-2 transition-colors">table_chart</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors leading-tight">Carregar Excel DRE<br />(4 abas completas)</p>
+            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel DRE<br />(4 abas completas)</p>
           </div>
         )}
 
         {currentPage === 'indicadores' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
             <input type="file" onChange={handleIndicadoresUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-white mb-2 transition-colors">cloud_upload</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel Indicadores</p>
+            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Indicadores</p>
           </div>
         )}
 
         {currentPage === 'orcamento' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
             <input type="file" onChange={handleOrcamentoUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-white mb-2 transition-colors">cloud_upload</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel Orçamento</p>
+            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Orçamento</p>
           </div>
         )}
 
         {currentPage === 'balancete' && (
-          <div className="relative border border-dashed border-border-dark rounded-xl p-6 flex flex-col items-center justify-center bg-surface-dark/50 hover:bg-surface-dark transition-colors cursor-pointer group">
+          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
             <input type="file" onChange={handleBalanceteUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <span className="material-symbols-outlined text-border-dark group-hover:text-white mb-2 transition-colors">cloud_upload</span>
-            <p className="text-xs text-center text-text-muted group-hover:text-white transition-colors">Carregar Excel Balancete</p>
+            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Balancete</p>
           </div>
         )}
 
@@ -433,7 +427,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
       <div className="p-4 border-t border-border-dark">
         <button
           onClick={onExport}
-          className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-[#0ca348] text-white font-medium py-3 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] group"
+          className={`w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 font-medium py-3 rounded-xl shadow-lg shadow-blue-600/20 transition-all active:scale-[0.98] group ${theme === 'dark' ? 'text-white' : 'text-white'
+            }`}
         >
           <span className="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">picture_as_pdf</span>
           <span>Exportar Relatório</span>
