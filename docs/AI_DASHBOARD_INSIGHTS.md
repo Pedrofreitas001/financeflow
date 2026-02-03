@@ -118,8 +118,9 @@ Confiança da Análise: 87%
 
 ### Configuração (`.env`):
 ```bash
-VITE_GEMINI_API_KEY=AIzaSyAjOM-KDaf_7I2gYLmYAcb48fq8NMC50rQ
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
 ```
+**NOTA**: Obtenha sua chave em [Google AI Studio](https://aistudio.google.com/app/apikey) e adicione ao `.env` (não commitado)
 
 ### Arquivos de Análise:
 - `utils/dashboardAIAnalysis.ts` - 7 tipos de análise especializada
