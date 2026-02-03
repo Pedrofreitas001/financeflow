@@ -39,6 +39,7 @@ interface DashboardTab {
 const DataPreparation: React.FC = () => {
     const { user } = useAuth();
     const [expandedTab, setExpandedTab] = useState<string | null>(null);
+    // Modal de validação com design premium glass effect
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
     const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
     const [isValidating, setIsValidating] = useState(false);
