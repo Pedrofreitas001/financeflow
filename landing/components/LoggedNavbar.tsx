@@ -43,22 +43,25 @@ const LoggedNavbar: React.FC = () => {
 
                     {/* Centered Navigation Links */}
                     <div className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
-                        <a href="#" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        <a href="/#home" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
                             Home
                         </a>
-                        <a href="#features" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        <a href="/#features" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
                             Recursos
                         </a>
-                        <a href="#how-it-works" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        <Link to="/preparar-dados" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                            Preparar Dados
+                        </Link>
+                        <a href="/#how-it-works" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
                             Como Funciona
                         </a>
-                        <a href="#pricing" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        <a href="/#pricing" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
                             Preços
                         </a>
-                        <a href="#faq" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        <a href="/#faq" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
                             FAQ
                         </a>
-                        <a href="#contact" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                        <a href="/#contact" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
                             Contato
                         </a>
                     </div>

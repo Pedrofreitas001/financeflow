@@ -230,19 +230,22 @@ const Home: React.FC = () => {
                             </Link>
 
                             <div className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
-                                <a href="#" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                <a href="#home" onClick={(e) => { e.preventDefault(); document.getElementById('home')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer">
                                     Home
                                 </a>
-                                <a href="#features" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                <a href="#features" onClick={(e) => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer">
                                     Recursos
                                 </a>
-                                <a href="#how-it-works" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                <Link to="/preparar-dados" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Preparar Dados
+                                </Link>
+                                <a href="#how-it-works" onClick={(e) => { e.preventDefault(); document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer">
                                     Como Funciona
                                 </a>
-                                <a href="#pricing" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                <a href="#pricing" onClick={(e) => { e.preventDefault(); document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer">
                                     Preços
                                 </a>
-                                <a href="#faq" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                <a href="#faq" onClick={(e) => { e.preventDefault(); document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' }); }} className="text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer">
                                     FAQ
                                 </a>
                                 <a href="#contact" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
@@ -278,6 +281,7 @@ const Home: React.FC = () => {
                             <div className="px-6 py-4 space-y-3">
                                 <a href="#" className="block py-2 text-white/80 font-medium">Home</a>
                                 <a href="#features" className="block py-2 text-white/80 font-medium">Recursos</a>
+                                <Link to="/preparar-dados" className="block py-2 text-white/80 font-medium">Preparar Dados</Link>
                                 <a href="#how-it-works" className="block py-2 text-white/80 font-medium">Como Funciona</a>
                                 <a href="#pricing" className="block py-2 text-white/80 font-medium">Preços</a>
                                 <a href="#faq" className="block py-2 text-white/80 font-medium">FAQ</a>
@@ -550,6 +554,98 @@ const Home: React.FC = () => {
                                 <p className="text-slate-500 leading-relaxed">{feature.description}</p>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Data Preparation CTA Section */}
+            <section className="py-24 bg-white border-y border-slate-200">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <div className="inline-flex items-center gap-2 bg-blue-100 rounded-full px-4 py-2 mb-6">
+                                <span className="material-symbols-outlined text-blue-600 text-sm">auto_awesome</span>
+                                <span className="text-blue-600 text-sm font-semibold">Validação com IA</span>
+                            </div>
+                            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                                Prepare seus dados em <span className="text-blue-600">minutos</span>
+                            </h2>
+                            <p className="text-slate-600 text-lg leading-relaxed mb-8">
+                                Não sabe como organizar seus dados? Use nossos modelos Excel prontos ou valide seu próprio arquivo com nossa IA antes de importar. Garantimos que tudo estará correto!
+                            </p>
+                            <div className="space-y-4 mb-8">
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <span className="material-symbols-outlined text-green-600 text-lg">download</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-slate-900 mb-1">Modelos prontos para uso</h3>
+                                        <p className="text-slate-600 text-sm">Download gratuito de templates Excel para cada tipo de dashboard</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                        <span className="material-symbols-outlined text-blue-600 text-lg">verified</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-slate-900 mb-1">Validação automática com IA</h3>
+                                        <p className="text-slate-600 text-sm">Gemini AI verifica seus dados e indica exatamente o que precisa ser ajustado</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                        <span className="material-symbols-outlined text-purple-600 text-lg">table_chart</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-slate-900 mb-1">Tabelas detalhadas por aba</h3>
+                                        <p className="text-slate-600 text-sm">Veja exatamente quais colunas são necessárias para cada seção do dashboard</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <Link
+                                to="/preparar-dados"
+                                className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-blue-700 transition-all"
+                            >
+                                <span className="material-symbols-outlined">folder_open</span>
+                                Ver Guia de Preparação
+                            </Link>
+                        </div>
+                        <div className="relative">
+                            <div className="relative bg-gradient-to-br from-blue-50 to-slate-50 rounded-2xl p-8 border-2 border-blue-200">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-white text-xl">auto_awesome</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-semibold text-slate-900">Validação em Tempo Real</h3>
+                                        <p className="text-slate-600 text-sm">Powered by Google Gemini AI</p>
+                                    </div>
+                                </div>
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3 bg-green-100 border border-green-300 rounded-lg p-3">
+                                        <span className="material-symbols-outlined text-green-600">check_circle</span>
+                                        <span className="text-slate-700 text-sm font-medium">Datas validadas ✓</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-green-100 border border-green-300 rounded-lg p-3">
+                                        <span className="material-symbols-outlined text-green-600">check_circle</span>
+                                        <span className="text-slate-700 text-sm font-medium">Colunas obrigatórias presentes ✓</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 bg-yellow-100 border border-yellow-300 rounded-lg p-3">
+                                        <span className="material-symbols-outlined text-yellow-600">warning</span>
+                                        <span className="text-slate-700 text-sm font-medium">Poucos registros (recomendado: adicionar mais)</span>
+                                    </div>
+                                </div>
+                                <div className="mt-6 p-4 bg-blue-100 border border-blue-300 rounded-lg">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className="material-symbols-outlined text-blue-600">trending_up</span>
+                                        <span className="text-slate-900 font-semibold text-sm">Pronto para importar</span>
+                                    </div>
+                                    <p className="text-slate-600 text-xs">3 de 5 abas prontas para gerar dashboard</p>
+                                </div>
+                            </div>
+                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-200 rounded-full blur-3xl opacity-50"></div>
+                            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-200 rounded-full blur-3xl opacity-50"></div>
+                        </div>
                     </div>
                 </div>
             </section>

@@ -6,7 +6,7 @@ const DashboardSettings: React.FC = () => {
     const { theme } = useTheme();
     const { user, signOut } = useAuth();
     const isDark = theme === 'dark';
-    const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'preferences'>('profile');
+    const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'preferences' | 'business'>('profile');
 
     // Estados para o perfil
     const [profileData, setProfileData] = useState({
@@ -16,6 +16,26 @@ const DashboardSettings: React.FC = () => {
         phone: '',
         avatar: ''
     });
+
+    // Estados para contexto empresarial (usado nas análises de IA)
+    const [businessContext, setBusinessContext] = useState({
+        segmento: localStorage.getItem('business_segment') || '',
+        localizacao: localStorage.getItem('business_location') || '',
+        porteEmpresa: localStorage.getItem('business_size') || '',
+        anoFundacao: localStorage.getItem('business_year') || '',
+        numeroFuncionarios: localStorage.getItem('business_employees') || '',
+        observacoes: localStorage.getItem('business_notes') || ''
+    });
+
+    const saveBusinessContext = () => {
+        localStorage.setItem('business_segment', businessContext.segmento);
+        localStorage.setItem('business_location', businessContext.localizacao);
+        localStorage.setItem('business_size', businessContext.porteEmpresa);
+        localStorage.setItem('business_year', businessContext.anoFundacao);
+        localStorage.setItem('business_employees', businessContext.numeroFuncionarios);
+        localStorage.setItem('business_notes', businessContext.observacoes);
+        alert('Contexto empresarial salvo! Será usado nas análises de IA.');
+    };
 
     // Dados de assinatura (mockado)
     const [subscriptionData] = useState({
@@ -45,6 +65,7 @@ const DashboardSettings: React.FC = () => {
                 <div className={`flex gap-2 mb-6 border-b ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
                     {[
                         { id: 'profile', label: 'Perfil', icon: 'person' },
+                        { id: 'business', label: 'Contexto Empresarial', icon: 'business' },
                         { id: 'subscription', label: 'Assinatura', icon: 'workspace_premium' },
                         { id: 'preferences', label: 'Preferências', icon: 'settings' }
                     ].map((tab) => (
@@ -52,8 +73,8 @@ const DashboardSettings: React.FC = () => {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
                             className={`flex items-center gap-2 px-4 py-3 font-semibold transition-colors border-b-2 ${activeTab === tab.id
-                                    ? 'border-blue-500 text-blue-500'
-                                    : `border-transparent ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`
+                                ? 'border-blue-500 text-blue-500'
+                                : `border-transparent ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`
                                 }`}
                         >
                             <span className="material-symbols-outlined text-xl">{tab.icon}</span>
@@ -98,8 +119,8 @@ const DashboardSettings: React.FC = () => {
                                         value={profileData.name}
                                         onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
                                         className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
-                                                ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
-                                                : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
                                             } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                                     />
                                 </div>
@@ -112,8 +133,8 @@ const DashboardSettings: React.FC = () => {
                                         value={profileData.email}
                                         disabled
                                         className={`w-full px-4 py-3 rounded-lg border transition-colors opacity-60 ${isDark
-                                                ? 'bg-background-dark/50 border-border-dark text-gray-400'
-                                                : 'bg-gray-100 border-gray-300 text-gray-600'
+                                            ? 'bg-background-dark/50 border-border-dark text-gray-400'
+                                            : 'bg-gray-100 border-gray-300 text-gray-600'
                                             }`}
                                     />
                                 </div>
@@ -126,8 +147,8 @@ const DashboardSettings: React.FC = () => {
                                         value={profileData.company}
                                         onChange={(e) => setProfileData({ ...profileData, company: e.target.value })}
                                         className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
-                                                ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
-                                                : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
                                             } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                                     />
                                 </div>
@@ -141,8 +162,8 @@ const DashboardSettings: React.FC = () => {
                                         onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                                         placeholder="(11) 99999-9999"
                                         className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
-                                                ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
-                                                : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
                                             } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                                     />
                                 </div>
@@ -156,11 +177,170 @@ const DashboardSettings: React.FC = () => {
                                 <button
                                     onClick={signOut}
                                     className={`px-6 py-3 rounded-lg font-semibold transition-colors ${isDark
-                                            ? 'bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-900/50'
-                                            : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
+                                        ? 'bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-900/50'
+                                        : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
                                         }`}
                                 >
                                     Sair da Conta
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Business Context Tab */}
+                    {activeTab === 'business' && (
+                        <div className="space-y-6">
+                            <div className="mb-6">
+                                <h2 className={`text-2xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                                    Contexto Empresarial
+                                </h2>
+                                <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    🤖 Essas informações ajudam a IA a gerar análises mais precisas e personalizadas
+                                </p>
+                            </div>
+
+                            {/* Form */}
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        Segmento de Negócio *
+                                    </label>
+                                    <select
+                                        value={businessContext.segmento}
+                                        onChange={(e) => setBusinessContext({ ...businessContext, segmento: e.target.value })}
+                                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                                    >
+                                        <option value="">Selecione...</option>
+                                        <option value="Tecnologia">Tecnologia / SaaS</option>
+                                        <option value="Varejo">Varejo</option>
+                                        <option value="Serviços">Serviços</option>
+                                        <option value="Indústria">Indústria</option>
+                                        <option value="Alimentos">Alimentos & Bebidas</option>
+                                        <option value="Educação">Educação</option>
+                                        <option value="Saúde">Saúde</option>
+                                        <option value="Construção">Construção</option>
+                                        <option value="Outro">Outro</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        Localização (Cidade/Estado) *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={businessContext.localizacao}
+                                        onChange={(e) => setBusinessContext({ ...businessContext, localizacao: e.target.value })}
+                                        placeholder="Ex: São Paulo, SP"
+                                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        Porte da Empresa
+                                    </label>
+                                    <select
+                                        value={businessContext.porteEmpresa}
+                                        onChange={(e) => setBusinessContext({ ...businessContext, porteEmpresa: e.target.value })}
+                                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                                    >
+                                        <option value="">Selecione...</option>
+                                        <option value="MEI">MEI</option>
+                                        <option value="Microempresa">Microempresa (até 9 funcionários)</option>
+                                        <option value="Pequena">Pequena (10-49 funcionários)</option>
+                                        <option value="Média">Média (50-249 funcionários)</option>
+                                        <option value="Grande">Grande (250+ funcionários)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        Ano de Fundação
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={businessContext.anoFundacao}
+                                        onChange={(e) => setBusinessContext({ ...businessContext, anoFundacao: e.target.value })}
+                                        placeholder="2020"
+                                        min="1900"
+                                        max="2026"
+                                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        Número de Funcionários
+                                    </label>
+                                    <input
+                                        type="number"
+                                        value={businessContext.numeroFuncionarios}
+                                        onChange={(e) => setBusinessContext({ ...businessContext, numeroFuncionarios: e.target.value })}
+                                        placeholder="Ex: 25"
+                                        min="0"
+                                        className={`w-full px-4 py-3 rounded-lg border transition-colors ${isDark
+                                            ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                            : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                            } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={`block text-sm font-semibold mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    Observações / Contexto Adicional
+                                </label>
+                                <textarea
+                                    value={businessContext.observacoes}
+                                    onChange={(e) => setBusinessContext({ ...businessContext, observacoes: e.target.value })}
+                                    placeholder="Ex: Empresa em fase de expansão, foco em vendas B2B, sazonalidade em dezembro..."
+                                    rows={4}
+                                    className={`w-full px-4 py-3 rounded-lg border transition-colors resize-none ${isDark
+                                        ? 'bg-background-dark border-border-dark text-white focus:border-blue-500'
+                                        : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                                />
+                                <p className={`text-xs mt-2 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                                    Adicione informações relevantes que podem ajudar a IA a entender melhor seu negócio
+                                </p>
+                            </div>
+
+                            {/* Info Box */}
+                            <div className={`p-4 rounded-xl border ${isDark ? 'bg-blue-900/20 border-blue-900/50' : 'bg-blue-50 border-blue-200'}`}>
+                                <div className="flex gap-3">
+                                    <span className="material-symbols-outlined text-blue-500">info</span>
+                                    <div>
+                                        <p className={`text-sm font-semibold mb-1 ${isDark ? 'text-blue-300' : 'text-blue-800'}`}>
+                                            Por que esses dados são importantes?
+                                        </p>
+                                        <p className={`text-sm ${isDark ? 'text-blue-400' : 'text-blue-700'}`}>
+                                            A IA usa essas informações para contextualizar análises, comparar com benchmarks do setor,
+                                            e dar recomendações específicas para o seu tipo de negócio e localização.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Save Button */}
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    onClick={saveBusinessContext}
+                                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                                >
+                                    💾 Salvar Configurações
                                 </button>
                             </div>
                         </div>
@@ -175,10 +355,10 @@ const DashboardSettings: React.FC = () => {
 
                             {/* Current Plan */}
                             <div className={`rounded-xl p-6 border-2 ${isPremium
-                                    ? 'bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-500'
-                                    : isDark
-                                        ? 'bg-background-dark border-border-dark'
-                                        : 'bg-gray-50 border-gray-200'
+                                ? 'bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border-blue-500'
+                                : isDark
+                                    ? 'bg-background-dark border-border-dark'
+                                    : 'bg-gray-50 border-gray-200'
                                 }`}>
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
@@ -258,8 +438,8 @@ const DashboardSettings: React.FC = () => {
                                     <button
                                         disabled={!isPremium}
                                         className={`w-full px-4 py-3 rounded-lg font-semibold transition-colors ${!isPremium
-                                                ? isDark ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                                                : 'bg-gray-600 hover:bg-gray-700 text-white'
+                                            ? isDark ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                            : 'bg-gray-600 hover:bg-gray-700 text-white'
                                             }`}
                                     >
                                         {!isPremium ? 'Plano Atual' : 'Downgrade'}
@@ -268,8 +448,8 @@ const DashboardSettings: React.FC = () => {
 
                                 {/* Premium Plan */}
                                 <div className={`rounded-xl p-6 border-2 bg-gradient-to-br ${isDark
-                                        ? 'from-blue-900/40 to-indigo-900/40 border-blue-500'
-                                        : 'from-blue-50 to-indigo-50 border-blue-400'
+                                    ? 'from-blue-900/40 to-indigo-900/40 border-blue-500'
+                                    : 'from-blue-50 to-indigo-50 border-blue-400'
                                     }`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <h4 className={`font-bold text-lg ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -416,8 +596,8 @@ const DashboardSettings: React.FC = () => {
                                 </h3>
                                 <div className="space-y-3">
                                     <button className={`w-full px-4 py-3 rounded-lg font-semibold text-left flex items-center justify-between transition-colors ${isDark
-                                            ? 'bg-background-dark hover:bg-gray-800 text-white border border-border-dark'
-                                            : 'bg-gray-50 hover:bg-gray-100 text-gray-900 border border-gray-200'
+                                        ? 'bg-background-dark hover:bg-gray-800 text-white border border-border-dark'
+                                        : 'bg-gray-50 hover:bg-gray-100 text-gray-900 border border-gray-200'
                                         }`}>
                                         <div className="flex items-center gap-3">
                                             <span className="material-symbols-outlined text-blue-500">download</span>
@@ -430,8 +610,8 @@ const DashboardSettings: React.FC = () => {
                                     </button>
 
                                     <button className={`w-full px-4 py-3 rounded-lg font-semibold text-left flex items-center justify-between transition-colors ${isDark
-                                            ? 'bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-900/50'
-                                            : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
+                                        ? 'bg-red-900/20 hover:bg-red-900/30 text-red-400 border border-red-900/50'
+                                        : 'bg-red-50 hover:bg-red-100 text-red-600 border border-red-200'
                                         }`}>
                                         <div className="flex items-center gap-3">
                                             <span className="material-symbols-outlined">delete_forever</span>

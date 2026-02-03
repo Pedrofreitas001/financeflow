@@ -383,6 +383,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           {/* Divider */}
           <div className="my-2 border-t border-border-dark"></div>
 
+          <a
+            href="/preparar-dados"
+            className="flex items-center gap-3 rounded-xl border p-3 transition-all bg-transparent border-border-dark text-text-muted hover:border-primary/50"
+          >
+            <span className="material-symbols-outlined">upload_file</span>
+            <p className="text-sm font-medium">Preparar Dados</p>
+          </a>
+
           <button
             onClick={() => onNavigate?.('ai-insights')}
             className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'ai-insights'

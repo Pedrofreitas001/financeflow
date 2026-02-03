@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './ProtectedRoute';
 import Home from './landing/pages/Home';
 import Login from './landing/pages/Login';
+import DataPreparation from './landing/pages/DataPreparation';
 import DashboardApp from './DashboardApp';
 
 const App: React.FC = () => {
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/preparar-dados" element={<DataPreparation />} />
           <Route
             path="/dashboard"
             element={
