@@ -118,7 +118,7 @@ Confiança da Análise: 87%
 
 ### Configuração (`.env`):
 ```bash
-VITE_GEMINI_API_KEY=AIzaSyAjOM-KDaf_7I2gYLmYAcb48fq8NMC50rQ
+VITE_GEMINI_API_KEY=
 ```
 
 ### Arquivos de Análise:
