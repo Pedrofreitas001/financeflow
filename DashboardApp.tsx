@@ -8,6 +8,9 @@ import DashboardCashFlow from './components/CashFlow/DashboardCashFlow.tsx';
 import DashboardIndicadores from './components/Indicadores/DashboardIndicadores.tsx';
 import DashboardOrcamento from './components/Orcamento/DashboardOrcamento.tsx';
 import DashboardBalancete from './components/Balancete/DashboardBalancete.tsx';
+import DashboardSettings from './components/Settings/DashboardSettings.tsx';
+import DashboardAIInsights from './components/AIInsights/DashboardAIInsights.tsx';
+import PremiumModal from './components/PremiumModal.tsx';
 import ReportCover from './components/ReportCover.tsx';
 import AIChat from './components/AIChat.tsx';
 import { FinanceProvider, useFinance } from './context/FinanceContext.tsx';
@@ -18,21 +21,41 @@ import { IndicadoresProvider } from './context/IndicadoresContext/IndicadoresCon
 import { OrcamentoProvider } from './context/OrcamentoContext/OrcamentoContext.tsx';
 import { BalanceteProvider } from './context/BalanceteContext.tsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.tsx';
+import { useExampleData } from './utils/useExampleData.ts';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
-type PageType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete';
+type PageType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete' | 'settings' | 'ai-insights';
 
 const AppContent: React.FC = () => {
   const { filtros, kpis } = useFinance();
   const { filtrosDespesas } = useDespesas();
   const { theme } = useTheme();
+  const { isLoadingExamples, examplesLoaded } = useExampleData();
   const [isExporting, setIsExporting] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [premiumFeature, setPremiumFeature] = useState<{ feature: string; description: string }>({
+    feature: '',
+    description: ''
+  });
   const isDark = theme === 'dark';
 
+  // Mock - substituir por dados reais do Supabase
+  const isPremium = false; // Alterar para true para testar como premium
+
   const handleExportPDF = async () => {
+    // Verificar se é premium
+    if (!isPremium) {
+      setPremiumFeature({
+        feature: 'Exportação de PDF',
+        description: 'Exporte relatórios profissionais em PDF com todos os gráficos e análises do seu dashboard.'
+      });
+      setShowPremiumModal(true);
+      return;
+    }
+
     setIsExporting(true);
 
     await new Promise(resolve => setTimeout(resolve, 800));
@@ -120,7 +143,7 @@ const AppContent: React.FC = () => {
         onNavigate={setCurrentPage}
       />
       <div className="flex-1 flex flex-col min-w-0">
-        <Header onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} sidebarVisible={sidebarVisible} />
+        <Header onToggleSidebar={() => setSidebarVisible(!sidebarVisible)} sidebarVisible={sidebarVisible} examplesLoaded={examplesLoaded} />
 
         {currentPage === 'dashboard' && <Dashboard />}
         {currentPage === 'despesas' && <DashboardDespesas />}
@@ -129,6 +152,8 @@ const AppContent: React.FC = () => {
         {currentPage === 'indicadores' && <DashboardIndicadores />}
         {currentPage === 'orcamento' && <DashboardOrcamento />}
         {currentPage === 'balancete' && <DashboardBalancete />}
+        {currentPage === 'settings' && <DashboardSettings />}
+        {currentPage === 'ai-insights' && <DashboardAIInsights />}
 
         {/* Hidden Cover Component for Capture */}
         <ReportCover
@@ -143,6 +168,14 @@ const AppContent: React.FC = () => {
 
         {/* IA Chat Component */}
         <AIChat />
+
+        {/* Premium Modal */}
+        <PremiumModal
+          isOpen={showPremiumModal}
+          onClose={() => setShowPremiumModal(false)}
+          feature={premiumFeature.feature}
+          description={premiumFeature.description}
+        />
 
         {/* Export Loading Overlay */}
         {isExporting && (

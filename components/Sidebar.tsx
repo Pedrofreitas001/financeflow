@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useFinance } from '../context/FinanceContext';
 import { useDespesas } from '../context/DespesasContext';
 import { useDRE } from '../context/DREContext';
@@ -8,16 +8,21 @@ import { useIndicadores } from '../context/IndicadoresContext/IndicadoresContext
 import { useOrcamento } from '../context/OrcamentoContext/OrcamentoContext';
 import { useBalancete } from '../context/BalanceteContext';
 import { useTheme } from '../context/ThemeContext';
+import PremiumModal from './PremiumModal';
 import * as XLSX from 'xlsx';
 
 interface SidebarProps {
   onExport?: () => void;
   visible?: boolean;
-  currentPage?: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete';
-  onNavigate?: (page: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete') => void;
+  currentPage?: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete' | 'settings' | 'ai-insights';
+  onNavigate?: (page: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete' | 'settings' | 'ai-insights') => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage = 'dashboard', onNavigate }) => {
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [premiumFeature, setPremiumFeature] = useState('');
+  const isPremium = false; // Mock - substituir por lógica real de assinatura
+
   const { empresas, mesesDisponiveis, filtros, setFiltroEmpresa, setFiltroMeses, carregarDados } = useFinance();
   const {
     empresasDespesas,
@@ -35,6 +40,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   const { theme, toggleTheme } = useTheme();
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -51,6 +63,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   };
 
   const handleFileUploadDespesas = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -67,6 +86,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   };
 
   const handleDREUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (file) {
       carregarDREMensal(file);
@@ -74,6 +100,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   };
 
   const handleCashFlowUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -105,6 +138,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   };
 
   const handleIndicadoresUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -139,6 +179,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   };
 
   const handleOrcamentoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -167,6 +214,13 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
   };
 
   const handleBalanceteUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isPremium) {
+      setPremiumFeature('Upload de Excel');
+      setShowPremiumModal(true);
+      e.target.value = ''; // Reset input
+      return;
+    }
+
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -325,6 +379,37 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             </span>
             <p className="text-sm font-medium">Balancete</p>
           </button>
+
+          {/* Divider */}
+          <div className="my-2 border-t border-border-dark"></div>
+
+          <button
+            onClick={() => onNavigate?.('ai-insights')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'ai-insights'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'ai-insights' ? 'text-primary' : ''}`}>
+              auto_awesome
+            </span>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium">Insights de IA</p>
+              <span className="text-xs bg-gradient-to-r from-purple-500 to-blue-500 text-white px-2 py-0.5 rounded-full font-semibold">PREMIUM</span>
+            </div>
+          </button>
+          <button
+            onClick={() => onNavigate?.('settings')}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-all ${currentPage === 'settings'
+              ? 'bg-surface-dark border-primary text-white'
+              : 'bg-transparent border-border-dark text-text-muted hover:border-primary/50'
+              }`}
+          >
+            <span className={`material-symbols-outlined ${currentPage === 'settings' ? 'text-primary' : ''}`}>
+              settings
+            </span>
+            <p className="text-sm font-medium">Configurações</p>
+          </button>
         </nav>
 
         {/* Upload sections - positioned above Aparência */}
@@ -434,6 +519,14 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           <span>Exportar Relatório</span>
         </button>
       </div>
+
+      {/* Premium Modal */}
+      <PremiumModal
+        isOpen={showPremiumModal}
+        onClose={() => setShowPremiumModal(false)}
+        feature={premiumFeature}
+        description="Faça upgrade para Premium e tenha acesso ilimitado ao upload de arquivos Excel, além de todas as funcionalidades avançadas."
+      />
     </aside >
   );
 };

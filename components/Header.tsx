@@ -7,9 +7,10 @@ import { useFinance } from '../context/FinanceContext';
 interface HeaderProps {
   onToggleSidebar: () => void;
   sidebarVisible: boolean;
+  examplesLoaded?: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible }) => {
+const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, examplesLoaded = false }) => {
   const { theme } = useTheme();
   const { uploadDate } = useFinance();
   const isDark = theme === 'dark';
@@ -35,6 +36,14 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible }) => {
           <h1 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} leading-tight`}>Relatório financeiro consolidado</h1>
           <div className="flex items-center gap-2 mt-1">
             <span className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Visão Geral</span>
+            {examplesLoaded && (
+              <>
+                <span className={`h-1 w-1 rounded-full ${isDark ? 'bg-text-muted' : 'bg-gray-400'}`}></span>
+                <span className="px-2 py-0.5 bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/30 text-amber-400 text-xs font-semibold rounded-full">
+                  Dados de Exemplo
+                </span>
+              </>
+            )}
             {uploadDate && (
               <>
                 <span className={`h-1 w-1 rounded-full ${isDark ? 'bg-text-muted' : 'bg-gray-400'}`}></span>

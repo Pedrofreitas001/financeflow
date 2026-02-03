@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import LoggedNavbar from '../components/LoggedNavbar';
+import QuickSignupModal from '../components/QuickSignupModal';
 
 interface GalleryImage {
     src: string;
@@ -139,6 +142,8 @@ const GalleryGrid: React.FC = () => {
 const Home: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [showSignupModal, setShowSignupModal] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -210,70 +215,88 @@ const Home: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#0f1d32]">
-            {/* Navbar */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#0f1d32]/95 backdrop-blur-lg shadow-lg' : 'bg-transparent'
-                }`}>
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-20">
-                        <Link to="/" className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
-                                <span className="text-white font-bold text-xl">F</span>
+            {/* Navbar - Conditional */}
+            {user ? (
+                <LoggedNavbar />
+            ) : (
+                <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0f1d32]/95 backdrop-blur-lg shadow-lg">
+                    <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                        <div className="flex items-center justify-between h-20">
+                            <Link to="/" className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+                                    <span className="text-white font-bold text-xl">F</span>
+                                </div>
+                                <span className="text-xl font-bold text-white">FinanceFlow</span>
+                            </Link>
+
+                            <div className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
+                                <a href="#" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Home
+                                </a>
+                                <a href="#features" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Recursos
+                                </a>
+                                <a href="#how-it-works" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Como Funciona
+                                </a>
+                                <a href="#pricing" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Preços
+                                </a>
+                                <a href="#faq" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    FAQ
+                                </a>
+                                <a href="#contact" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Contato
+                                </a>
                             </div>
-                            <span className="text-xl font-bold text-white">FinanceFlow</span>
-                        </Link>
 
-                        <div className="hidden md:flex items-center gap-6">
-                            <a href="#" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                Home
-                            </a>
-                            <a href="#features" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                Recursos
-                            </a>
-                            <a href="#how-it-works" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                Como Funciona
-                            </a>
-                            <a href="#pricing" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                Preços
-                            </a>
-                            <a href="#faq" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                FAQ
-                            </a>
-                            <a href="#contact" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                Contato
-                            </a>
-                            <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
-                                Login
-                            </Link>
-                            <Link to="/dashboard" className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-500 transition-all">
-                                Acessar Dashboard
-                            </Link>
-                        </div>
+                            <div className="hidden md:flex items-center gap-4">
+                                <Link to="/login" className="text-sm font-medium text-white/80 hover:text-white transition-colors">
+                                    Login
+                                </Link>
+                                {user ? (
+                                    <Link to="/dashboard" className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-500 transition-all">
+                                        Acessar Dashboard
+                                    </Link>
+                                ) : (
+                                    <button onClick={() => setShowSignupModal(true)} className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-500 transition-all">
+                                        Acessar Dashboard
+                                    </button>
+                                )}
+                            </div>
 
-                        <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                            <span className="material-symbols-outlined text-white">
-                                {isMobileMenuOpen ? 'close' : 'menu'}
-                            </span>
-                        </button>
-                    </div>
-                </div>
-
-                {isMobileMenuOpen && (
-                    <div className="md:hidden bg-[#0f1d32] border-t border-white/10">
-                        <div className="px-6 py-4 space-y-3">
-                            <a href="#" className="block py-2 text-white/80 font-medium">Home</a>
-                            <a href="#features" className="block py-2 text-white/80 font-medium">Recursos</a>
-                            <a href="#how-it-works" className="block py-2 text-white/80 font-medium">Como Funciona</a>
-                            <a href="#pricing" className="block py-2 text-white/80 font-medium">Preços</a>
-                            <a href="#faq" className="block py-2 text-white/80 font-medium">FAQ</a>
-                            <a href="#contact" className="block py-2 text-white/80 font-medium">Contato</a>
-                            <Link to="/login" className="block py-2 text-white/80 font-medium">Login</Link>
-                            <Link to="/dashboard" className="block py-3 px-6 bg-blue-600 text-white text-center font-semibold rounded-lg">
-                                Acessar Dashboard
-                            </Link>
+                            <button className="md:hidden p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                                <span className="material-symbols-outlined text-white">
+                                    {isMobileMenuOpen ? 'close' : 'menu'}
+                                </span>
+                            </button>
                         </div>
                     </div>
-                )}
-            </nav>
+
+                    {isMobileMenuOpen && (
+                        <div className="md:hidden bg-[#0f1d32] border-t border-white/10">
+                            <div className="px-6 py-4 space-y-3">
+                                <a href="#" className="block py-2 text-white/80 font-medium">Home</a>
+                                <a href="#features" className="block py-2 text-white/80 font-medium">Recursos</a>
+                                <a href="#how-it-works" className="block py-2 text-white/80 font-medium">Como Funciona</a>
+                                <a href="#pricing" className="block py-2 text-white/80 font-medium">Preços</a>
+                                <a href="#faq" className="block py-2 text-white/80 font-medium">FAQ</a>
+                                <a href="#contact" className="block py-2 text-white/80 font-medium">Contato</a>
+                                <Link to="/login" className="block py-2 text-white/80 font-medium">Login</Link>
+                                {user ? (
+                                    <Link to="/dashboard" className="block py-3 px-6 bg-blue-600 text-white text-center font-semibold rounded-lg">
+                                        Acessar Dashboard
+                                    </Link>
+                                ) : (
+                                    <button onClick={() => setShowSignupModal(true)} className="block w-full py-3 px-6 bg-blue-600 text-white text-center font-semibold rounded-lg">
+                                        Acessar Dashboard
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </nav>
+            )}
 
             {/* Hero Section */}
             <section className="relative min-h-screen flex items-center overflow-hidden">
@@ -345,13 +368,23 @@ const Home: React.FC = () => {
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-                                <Link
-                                    to="/dashboard"
-                                    className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-blue-500 transition-all"
-                                >
-                                    <span className="material-symbols-outlined text-xl">rocket_launch</span>
-                                    Acessar Dashboard
-                                </Link>
+                                {user ? (
+                                    <Link
+                                        to="/dashboard"
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-blue-500 transition-all"
+                                    >
+                                        <span className="material-symbols-outlined text-xl">rocket_launch</span>
+                                        Acessar Dashboard
+                                    </Link>
+                                ) : (
+                                    <button
+                                        onClick={() => setShowSignupModal(true)}
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-blue-500 transition-all"
+                                    >
+                                        <span className="material-symbols-outlined text-xl">rocket_launch</span>
+                                        Acessar Dashboard
+                                    </button>
+                                )}
                                 <a
                                     href="#demo"
                                     className="inline-flex items-center justify-center gap-2 bg-white/5 border border-white/20 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
@@ -1014,6 +1047,12 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </footer>
+
+            {/* Quick Signup Modal */}
+            <QuickSignupModal
+                isOpen={showSignupModal}
+                onClose={() => setShowSignupModal(false)}
+            />
         </div>
     );
 };

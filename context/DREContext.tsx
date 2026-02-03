@@ -18,11 +18,12 @@ interface DREContextType {
   setPeriodoFim: (mes: number) => void;
   carregarDREMensal: (file: File) => Promise<void>;
   carregarDREAcumulado: (file: File) => Promise<void>;
+  setDados: (data: DREData) => void;
 }
 
 const DREContext = createContext<DREContextType | undefined>(undefined);
 
-const mesMap: {[key: string]: number} = {
+const mesMap: { [key: string]: number } = {
   'JAN': 1, 'FEV': 2, 'MAR': 3, 'ABR': 4, 'MAI': 5, 'JUN': 6,
   'JUL': 7, 'AGO': 8, 'SET': 9, 'OUT': 10, 'NOV': 11, 'DEZ': 12
 };
@@ -154,6 +155,10 @@ export const DREProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const carregarDREMensal = carregarDRECompleto;
   const carregarDREAcumulado = carregarDRECompleto;
 
+  const setDados = (data: DREData) => {
+    setDreData(data);
+  };
+
   return (
     <DREContext.Provider value={{
       dreData,
@@ -170,7 +175,8 @@ export const DREProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setPeriodoInicio,
       setPeriodoFim,
       carregarDREMensal,
-      carregarDREAcumulado
+      carregarDREAcumulado,
+      setDados
     }}>
       {children}
     </DREContext.Provider>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const Login: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -9,11 +10,42 @@ const Login: React.FC = () => {
         name: '',
         confirmPassword: ''
     });
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const { signIn, signUp } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // TODO: Integrar com Supabase
-        console.log('Form submitted:', formData);
+        setError('');
+        setSuccess('');
+        setLoading(true);
+
+        try {
+            if (isLogin) {
+                // Login
+                await signIn(formData.email, formData.password);
+                navigate('/dashboard');
+            } else {
+                // Cadastro
+                if (formData.password !== formData.confirmPassword) {
+                    throw new Error('As senhas não coincidem');
+                }
+                if (formData.password.length < 6) {
+                    throw new Error('A senha deve ter no mínimo 6 caracteres');
+                }
+                await signUp(formData.email, formData.password, formData.name);
+                // Fazer login automático após cadastro
+                await signIn(formData.email, formData.password);
+                navigate('/dashboard');
+            }
+        } catch (err: any) {
+            setError(err.message || 'Erro ao processar solicitação');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +77,8 @@ const Login: React.FC = () => {
                         <button
                             onClick={() => setIsLogin(true)}
                             className={`pb-3 px-4 font-semibold transition-all ${isLogin
-                                    ? 'text-blue-600 border-b-2 border-blue-600'
-                                    : 'text-slate-400 hover:text-slate-600'
+                                ? 'text-blue-600 border-b-2 border-blue-600'
+                                : 'text-slate-400 hover:text-slate-600'
                                 }`}
                         >
                             Login
@@ -54,13 +86,27 @@ const Login: React.FC = () => {
                         <button
                             onClick={() => setIsLogin(false)}
                             className={`pb-3 px-4 font-semibold transition-all ${!isLogin
-                                    ? 'text-blue-600 border-b-2 border-blue-600'
-                                    : 'text-slate-400 hover:text-slate-600'
+                                ? 'text-blue-600 border-b-2 border-blue-600'
+                                : 'text-slate-400 hover:text-slate-600'
                                 }`}
                         >
                             Criar Conta
                         </button>
                     </div>
+
+                    {/* Error Alert */}
+                    {error && (
+                        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <p className="text-red-600 text-sm">{error}</p>
+                        </div>
+                    )}
+
+                    {/* Success Alert */}
+                    {success && (
+                        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <p className="text-green-600 text-sm">{success}</p>
+                        </div>
+                    )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -142,9 +188,10 @@ const Login: React.FC = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl"
+                            disabled={loading}
+                            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {isLogin ? 'Entrar' : 'Criar Conta'}
+                            {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Criar Conta')}
                         </button>
 
                         {!isLogin && (
