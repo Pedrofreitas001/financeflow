@@ -20,11 +20,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         // Verificar sessão atual
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setSession(session);
-            setUser(session?.user ?? null);
-            setLoading(false);
-        });
+        supabase.auth.getSession()
+            .then(({ data: { session } }) => {
+                setSession(session);
+                setUser(session?.user ?? null);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.warn('Supabase não configurado, modo exemplo ativado:', error);
+                setLoading(false);
+            });
 
         // Listener para mudanças de autenticação
         const {
@@ -39,24 +44,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        try {
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+        } catch (error) {
+            console.error('Erro no login:', error);
+            throw error;
+        }
     };
 
     const signUp = async (email: string, password: string, name: string) => {
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: { name },
-            },
-        });
-        if (error) throw error;
+        try {
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { name },
+                },
+            });
+            if (error) throw error;
+        } catch (error) {
+            console.error('Erro no cadastro:', error);
+            throw error;
+        }
     };
 
     const signOut = async () => {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
+        try {
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+        } catch (error) {
+            console.error('Erro no logout:', error);
+            throw error;
+        }
     };
 
     return (
