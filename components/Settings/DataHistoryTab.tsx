@@ -2,7 +2,6 @@
 // Aba de histórico de dados com últimos 3 Excel + Google Sheets
 
 import { useEffect, useState } from 'react';
-import { getExcelHistory, reuploadExcelFromHistory, deleteExcelUpload, ExcelUpload } from '@/utils/excelUploadManager';
 import { supabase } from '@/lib/supabase';
 import GoogleSheetConnector from '@/components/GoogleSheetConnector';
 
@@ -23,10 +22,8 @@ interface GoogleSheetConnection {
 
 export default function DataHistoryTab({ userId, dashboardType, variant = 'dark' }: DataHistoryTabProps) {
     const isLight = variant === 'light';
-    const [excelHistory, setExcelHistory] = useState<ExcelUpload[]>([]);
     const [googleConnection, setGoogleConnection] = useState<GoogleSheetConnection | null>(null);
     const [loading, setLoading] = useState(true);
-    const [deleting, setDeleting] = useState<string | null>(null);
     const [syncing, setSyncing] = useState(false);
     const [toggling, setToggling] = useState(false);
     const [showConnector, setShowConnector] = useState(false);
@@ -38,10 +35,6 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
     async function loadHistory() {
         try {
             setLoading(true);
-
-            // Buscar últimos 3 uploads de Excel
-            const excelData = await getExcelHistory(userId, dashboardType);
-            setExcelHistory(excelData);
 
             // Buscar conexão Google Sheets se houver
             const { data: googleData } = await supabase
@@ -66,29 +59,6 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
             console.error('Erro ao carregar histórico:', error);
         } finally {
             setLoading(false);
-        }
-    }
-
-    async function handleReupload(fileId: string) {
-        const result = await reuploadExcelFromHistory(userId, fileId);
-        if (result.success) {
-            alert('Dados recuperados! Agora você pode processar no dashboard.');
-            // Aqui você pode emitir evento ou callback para carregar os dados
-        }
-    }
-
-    async function handleDelete(fileId: string) {
-        if (!confirm('Tem certeza que deseja deletar este arquivo?')) return;
-
-        try {
-            setDeleting(fileId);
-            const success = await deleteExcelUpload(userId, fileId);
-            if (success) {
-                setExcelHistory(excelHistory.filter(f => f.id !== fileId));
-                alert('Arquivo deletado com sucesso');
-            }
-        } finally {
-            setDeleting(null);
         }
     }
 
@@ -231,39 +201,6 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                 </div>
             )}
 
-            {/* Excel Uploads History */}
-            <div>
-                <h3 className={`font-semibold text-sm mb-2 ${isLight ? 'text-gray-900' : 'text-slate-100'}`}>Arquivos Excel (Ultimos 3)</h3>
-
-                {excelHistory.length === 0 ? (
-                    <div className={`${isLight ? 'bg-white border border-gray-200 text-gray-500' : 'bg-slate-800/30 border border-slate-700 text-slate-400'} rounded p-3 text-center text-xs`}>
-                        Nenhum arquivo
-                    </div>
-                ) : (
-                    <div className="space-y-2">
-                        {excelHistory.map((file, index) => (
-                            <div
-                                key={file.id}
-                                className={`${isLight ? 'bg-white border border-gray-200 hover:bg-gray-50' : 'bg-slate-800/50 border border-slate-700 hover:bg-slate-800/70'} rounded p-2 transition flex items-start justify-between gap-2`}
-                            >
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="inline-flex w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold items-center justify-center flex-shrink-0">
-                                            {index + 1}
-                                        </span>
-                                        <p className={`font-medium text-xs truncate ${isLight ? 'text-gray-900' : 'text-slate-100'}`}>{file.fileName}</p>
-                                    </div>
-                                    <p className={`text-xs ${isLight ? 'text-gray-500' : 'text-slate-400'}`}>📊 {file.rowCount} linhas • 💾 {(file.fileSize / 1024).toFixed(2)} KB • {new Date(file.uploadDate).toLocaleDateString('pt-BR')}</p>
-                                </div>
-                                <div className="flex gap-1 flex-shrink-0">
-                                    <button onClick={() => handleReupload(file.id)} className={`${isLight ? 'text-blue-600 hover:bg-blue-50' : 'text-blue-400 hover:bg-blue-500/20'} p-1 rounded text-xs transition`}>↻</button>
-                                    <button onClick={() => handleDelete(file.id)} disabled={deleting === file.id} className={`${isLight ? 'text-red-600 hover:bg-red-50' : 'text-red-400 hover:bg-red-500/20'} p-1 rounded text-xs disabled:opacity-50 transition`}>✕</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
         </div>
     );
 }

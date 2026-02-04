@@ -148,6 +148,9 @@ export const useExampleData = () => {
                     } catch {
                         markDataSource('backup');
                     }
+                } else {
+                    // Sem backup: permite carregar dados fictícios
+                    markUsingExampleData();
                 }
             } catch (error) {
                 console.warn('Erro ao carregar dados salvos:', error);
