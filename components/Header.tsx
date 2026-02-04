@@ -28,6 +28,8 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, exampl
     return unsubscribe;
   }, []);
 
+  const effectiveSource = dataSource || (hasUserData ? 'backup' : 'example');
+
   return (
     <header className={`h-20 flex-shrink-0 px-8 flex items-center justify-between ${isDark ? 'bg-background-dark/80 border-border-dark' : 'bg-gray-100/80 border-gray-200'} border-b backdrop-blur-md z-10`}>
       <div className="flex items-center gap-6">
@@ -82,20 +84,20 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, exampl
           {userPlan.plan ? userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1) : 'Free'}
         </div>
 
-        {dataSource && (
-          <div className={`px-2 py-1 rounded-md text-[10px] font-medium ${dataSource === 'google_sheets'
+        {effectiveSource && (
+          <div className={`px-2 py-1 rounded-md text-[10px] font-medium ${effectiveSource === 'google_sheets'
             ? isDark ? 'bg-emerald-500/10 text-emerald-300' : 'bg-emerald-100 text-emerald-700'
-            : dataSource === 'backup'
+            : effectiveSource === 'backup'
               ? isDark ? 'bg-indigo-500/10 text-indigo-300' : 'bg-indigo-100 text-indigo-700'
-              : dataSource === 'manual'
+              : effectiveSource === 'manual'
                 ? isDark ? 'bg-slate-600/20 text-slate-200' : 'bg-gray-200 text-gray-700'
                 : isDark ? 'bg-amber-500/10 text-amber-300' : 'bg-amber-100 text-amber-700'
             }`}>
-            {dataSource === 'google_sheets'
+            {effectiveSource === 'google_sheets'
               ? 'Google Sheets'
-              : dataSource === 'backup'
+              : effectiveSource === 'backup'
                 ? 'Backup'
-                : dataSource === 'manual'
+                : effectiveSource === 'manual'
                   ? 'Manual'
                   : 'Fictício'}
           </div>

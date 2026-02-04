@@ -52,12 +52,24 @@ export const useExampleData = () => {
             try {
                 if (!syncAttempted) {
                     setSyncAttempted(true);
-                    try {
-                        // Atualização automática apenas ao login
-                        await supabase.functions.invoke('google-sheets-sync');
-                    } catch (syncError) {
-                        console.warn('Erro ao sincronizar Google Sheets no login:', syncError);
-                    }
+                    // Atualização automática apenas ao login (não bloqueia o carregamento)
+                    void supabase
+                        .from('google_sheets_connections')
+                        .select('id')
+                        .eq('user_id', user.id)
+                        .eq('is_active', true)
+                        .limit(1)
+                        .then(({ data }) => {
+                            if (data && data.length > 0) {
+                                supabase.functions.invoke('google-sheets-sync')
+                                    .catch((syncError) => {
+                                        console.warn('Erro ao sincronizar Google Sheets no login:', syncError);
+                                    });
+                            }
+                        })
+                        .catch((checkError) => {
+                            console.warn('Erro ao checar conexão Google Sheets:', checkError);
+                        });
                 }
 
                 const [

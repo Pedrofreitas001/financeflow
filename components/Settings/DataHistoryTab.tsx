@@ -164,7 +164,7 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                         >
                             {syncing ? 'Sincronizando...' : 'Sincronizar agora'}
                         </button>
-                        {googleConnection.isActive && (
+                        {googleConnection.isActive ? (
                             <button
                                 onClick={handleDisconnect}
                                 disabled={toggling}
@@ -172,12 +172,33 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                             >
                                 Encerrar conexão
                             </button>
+                        ) : (
+                            <button
+                                onClick={() => setShowConnector((prev) => !prev)}
+                                className={`${isLight ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500/20 text-blue-200 hover:bg-blue-500/30'} text-xs px-3 py-1.5 rounded font-semibold transition`}
+                            >
+                                {showConnector ? 'Fechar' : 'Reconectar'}
+                            </button>
                         )}
                     </div>
 
                     <p className={`mt-2 text-[11px] ${isLight ? 'text-gray-500' : 'text-slate-400'}`}>
                         Atualização automática: ao login
                     </p>
+
+                    {showConnector && (
+                        <div className="mt-3">
+                            <GoogleSheetConnector
+                                userId={userId}
+                                initialDashboardType={dashboardType as any}
+                                variant={isLight ? 'light' : 'dark'}
+                                onConnected={async () => {
+                                    setShowConnector(false);
+                                    await loadHistory();
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div className={`${isLight ? 'bg-white border border-gray-200' : 'bg-slate-800/30 border border-slate-700'} rounded p-3`}>
