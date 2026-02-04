@@ -332,6 +332,20 @@ export function useGoogleSheets() {
             }
 
             const primaryRange = resolveRange(range);
+
+            // Se o default "Sheet1" não existir, use a primeira aba real
+            if (primaryRange === "'Sheet1'!A1:Z1000" || primaryRange === "Sheet1!A1:Z1000") {
+                try {
+                    const metadata = await getSpreadsheetMetadata(spreadsheetId);
+                    const firstSheet = metadata?.sheets?.[0]?.title;
+                    if (firstSheet) {
+                        return await tryFetch(buildRangeWithSheet(firstSheet));
+                    }
+                } catch (fallbackErr) {
+                    console.error('Fallback de metadata falhou:', fallbackErr);
+                }
+            }
+
             return await tryFetch(primaryRange);
         } catch (err: any) {
             const message = err?.message || String(err);
