@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFinance } from '../context/FinanceContext';
 import { useDespesas } from '../context/DespesasContext';
 import { useDRE } from '../context/DREContext';
@@ -37,6 +37,7 @@ export const useExampleData = () => {
     const [examplesLoaded, setExamplesLoaded] = useState(false);
     const [savedLoaded, setSavedLoaded] = useState(false);
     const [syncAttempted, setSyncAttempted] = useState(false);
+    const exampleOnceRef = useRef(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -52,24 +53,6 @@ export const useExampleData = () => {
             try {
                 if (!syncAttempted) {
                     setSyncAttempted(true);
-                    // Atualização automática apenas ao login (não bloqueia o carregamento)
-                    void supabase
-                        .from('google_sheets_connections')
-                        .select('id')
-                        .eq('user_id', user.id)
-                        .eq('is_active', true)
-                        .limit(1)
-                        .then(({ data }) => {
-                            if (data && data.length > 0) {
-                                supabase.functions.invoke('google-sheets-sync')
-                                    .catch((syncError) => {
-                                        console.warn('Erro ao sincronizar Google Sheets no login:', syncError);
-                                    });
-                            }
-                        })
-                        .catch((checkError) => {
-                            console.warn('Erro ao checar conexão Google Sheets:', checkError);
-                        });
                 }
 
                 const [
@@ -184,14 +167,13 @@ export const useExampleData = () => {
                 return;
             }
 
-            // Verificar se já carregou exemplos ou se está carregando
-            if (isLoadingExamples) {
-                console.log('⏳ Exemplos já carregando, pulando...');
+            if (exampleOnceRef.current || isLoadingExamples) {
                 return;
             }
 
+            exampleOnceRef.current = true;
+
             console.log('🔄 Iniciando carregamento de dados fictícios...');
-            console.log('📊 Dados atuais - Finance:', dadosFinance.length, 'Despesas:', dadosDespesas.length, 'DRE:', dreData ? 'Sim' : 'Não', 'CashFlow:', dadosCashFlow.length, 'Indicadores:', dadosIndicadores.length, 'Orçamento:', dadosOrcamento.length, 'Balancete:', dadosBalancete.length);
 
             setIsLoadingExamples(true);
             let loadedAny = false;
@@ -254,10 +236,10 @@ export const useExampleData = () => {
                 }
 
                 console.log('✅ Processo de carregamento de dados fictícios concluído');
-            setExamplesLoaded(loadedAny || examplesLoaded);
-            if (loadedAny) {
-                markUsingExampleData();
-            }
+                setExamplesLoaded(loadedAny || examplesLoaded);
+                if (loadedAny) {
+                    markUsingExampleData();
+                }
             } catch (error) {
                 console.error('❌ Erro ao carregar dados fictícios:', error);
             } finally {
@@ -265,29 +247,9 @@ export const useExampleData = () => {
             }
         };
 
-        // Executar após um delay para garantir que os contextos estão prontos
-        console.log('⏰ Agendando carregamento de dados fictícios...');
-        const timer = setTimeout(loadExampleData, 500);
+        const timer = setTimeout(loadExampleData, 300);
         return () => clearTimeout(timer);
-    }, [
-        dadosFinance.length,
-        dadosDespesas.length,
-        dreData,
-        dadosCashFlow.length,
-        dadosIndicadores.length,
-        dadosOrcamento.length,
-        dadosBalancete.length,
-        carregarDados,
-        carregarDadosDespesas,
-        setDREDados,
-        setCashFlowDados,
-        setIndicadoresDados,
-        setOrcamentoDados,
-        setBalanceteDados,
-        savedLoaded,
-        examplesLoaded,
-        isLoadingExamples
-    ]);
+    }, [savedLoaded, isLoadingExamples]);
 
     return { isLoadingExamples, examplesLoaded };
 };
