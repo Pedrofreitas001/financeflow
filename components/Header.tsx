@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useFinance } from '../context/FinanceContext';
 import { useUserPlan } from '@/hooks/useUserPlan';
-import { getHasUserData, onUserDataChange } from '@/utils/userDataState';
+import { getDataSource, getHasUserData, onUserDataChange } from '@/utils/userDataState';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -18,10 +18,12 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, exampl
   const { userPlan } = useUserPlan();
   const isDark = theme === 'dark';
   const [hasUserData, setHasUserData] = useState(getHasUserData());
+  const [dataSource, setDataSource] = useState(getDataSource());
 
   useEffect(() => {
     const unsubscribe = onUserDataChange(() => {
       setHasUserData(getHasUserData());
+      setDataSource(getDataSource());
     });
     return unsubscribe;
   }, []);
@@ -79,6 +81,25 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, exampl
           }`}>
           {userPlan.plan ? userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1) : 'Free'}
         </div>
+
+        {dataSource && (
+          <div className={`px-2 py-1 rounded-md text-[10px] font-medium ${dataSource === 'google_sheets'
+            ? isDark ? 'bg-emerald-500/10 text-emerald-300' : 'bg-emerald-100 text-emerald-700'
+            : dataSource === 'backup'
+              ? isDark ? 'bg-indigo-500/10 text-indigo-300' : 'bg-indigo-100 text-indigo-700'
+              : dataSource === 'manual'
+                ? isDark ? 'bg-slate-600/20 text-slate-200' : 'bg-gray-200 text-gray-700'
+                : isDark ? 'bg-amber-500/10 text-amber-300' : 'bg-amber-100 text-amber-700'
+            }`}>
+            {dataSource === 'google_sheets'
+              ? 'Google Sheets'
+              : dataSource === 'backup'
+                ? 'Backup'
+                : dataSource === 'manual'
+                  ? 'Manual'
+                  : 'Fictício'}
+          </div>
+        )}
 
         <div className="relative group">
           <input

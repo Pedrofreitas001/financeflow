@@ -8,7 +8,8 @@ import { useOrcamento } from '../context/OrcamentoContext/OrcamentoContext';
 import { useBalancete } from '../context/BalanceteContext';
 import { useAuth } from '../context/AuthContext';
 import { loadSavedDashboard } from './savedDashboardManager';
-import { markUserDataLoaded, markUsingExampleData } from './userDataState';
+import { markDataSource, markUserDataLoaded, markUsingExampleData } from './userDataState';
+import { supabase } from '@/lib/supabase';
 import {
     dadosFinanceirosFicticios,
     dadosDespesasFicticios,
@@ -35,6 +36,7 @@ export const useExampleData = () => {
     const [isLoadingExamples, setIsLoadingExamples] = useState(false);
     const [examplesLoaded, setExamplesLoaded] = useState(false);
     const [savedLoaded, setSavedLoaded] = useState(false);
+    const [syncAttempted, setSyncAttempted] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -48,6 +50,16 @@ export const useExampleData = () => {
             }
 
             try {
+                if (!syncAttempted) {
+                    setSyncAttempted(true);
+                    try {
+                        // Atualização automática apenas ao login
+                        await supabase.functions.invoke('google-sheets-sync');
+                    } catch (syncError) {
+                        console.warn('Erro ao sincronizar Google Sheets no login:', syncError);
+                    }
+                }
+
                 const [
                     savedDashboard,
                     savedDespesas,
@@ -108,6 +120,22 @@ export const useExampleData = () => {
 
                 if (loadedAnySaved) {
                     markUserDataLoaded();
+                    try {
+                        const { data: activeConn } = await supabase
+                            .from('google_sheets_connections')
+                            .select('id')
+                            .eq('user_id', user.id)
+                            .eq('is_active', true)
+                            .limit(1);
+
+                        if (activeConn && activeConn.length > 0) {
+                            markDataSource('google_sheets');
+                        } else {
+                            markDataSource('backup');
+                        }
+                    } catch {
+                        markDataSource('backup');
+                    }
                 }
             } catch (error) {
                 console.warn('Erro ao carregar dados salvos:', error);
@@ -124,6 +152,7 @@ export const useExampleData = () => {
     }, [
         user?.id,
         savedLoaded,
+        syncAttempted,
         carregarDados,
         carregarDadosDespesas,
         setDREDados,

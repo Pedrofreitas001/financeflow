@@ -16,7 +16,7 @@ import { useTheme } from '../context/ThemeContext.tsx';
 import { useUserPlan } from '@/hooks/useUserPlan';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
-import { markUserDataLoaded } from '@/utils/userDataState';
+import { markDataSource, markUserDataLoaded } from '@/utils/userDataState';
 
 const DashboardDespesas: React.FC = () => {
     const { dadosDespesas, carregarDadosDespesas } = useDespesas();
@@ -181,6 +181,7 @@ const DashboardDespesas: React.FC = () => {
                                     // Carregar dados no contexto (NÃƒO salva automaticamente)
                                     carregarDadosDespesas(result.firstSheet);
                                     markUserDataLoaded();
+                                    markDataSource('manual');
 
                                     setToast({
                                         message: `âœ… ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
@@ -205,6 +206,7 @@ const DashboardDespesas: React.FC = () => {
                     onGoogleSheets={(data) => {
                         carregarDadosDespesas(data);
                         markUserDataLoaded();
+                        markDataSource('google_sheets');
                         setToast({
                             message: 'Dados do Google Sheets carregados com sucesso!',
                             type: 'success'

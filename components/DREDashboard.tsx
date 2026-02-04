@@ -13,7 +13,7 @@ import Toast from './Toast';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
 import { supabase } from '@/lib/supabase';
-import { markUserDataLoaded } from '@/utils/userDataState';
+import { markDataSource, markUserDataLoaded } from '@/utils/userDataState';
 
 type ViewType = 'mensal' | 'acumulado' | 'comparativo';
 
@@ -167,6 +167,7 @@ const DREDashboard: React.FC = () => {
                     // Carregar dados no contexto (NÃO salva automaticamente)
                     carregarDados(result.firstSheet);
                     markUserDataLoaded();
+                    markDataSource('manual');
 
                     setToast({
                       message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
@@ -192,6 +193,7 @@ const DREDashboard: React.FC = () => {
             onGoogleSheets={(data) => {
               carregarDados(data);
               markUserDataLoaded();
+              markDataSource('google_sheets');
               setToast({
                 message: 'Dados do Google Sheets carregados com sucesso!',
                 type: 'success'

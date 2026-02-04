@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { getExcelHistory, reuploadExcelFromHistory, deleteExcelUpload, ExcelUpload } from '@/utils/excelUploadManager';
 import { supabase } from '@/lib/supabase';
+import GoogleSheetConnector from '@/components/GoogleSheetConnector';
 
 interface DataHistoryTabProps {
     userId: string;
@@ -26,6 +27,9 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
     const [googleConnection, setGoogleConnection] = useState<GoogleSheetConnection | null>(null);
     const [loading, setLoading] = useState(true);
     const [deleting, setDeleting] = useState<string | null>(null);
+    const [syncing, setSyncing] = useState(false);
+    const [toggling, setToggling] = useState(false);
+    const [showConnector, setShowConnector] = useState(false);
 
     useEffect(() => {
         loadHistory();
@@ -88,6 +92,37 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
         }
     }
 
+    async function handleSyncNow() {
+        try {
+            setSyncing(true);
+            await supabase.functions.invoke('google-sheets-sync');
+            await loadHistory();
+        } catch (error) {
+            console.error('Erro ao sincronizar agora:', error);
+        } finally {
+            setSyncing(false);
+        }
+    }
+
+    async function handleDisconnect() {
+        if (!googleConnection) return;
+        if (!confirm('Deseja encerrar a conexão com o Google Sheets?')) return;
+
+        try {
+            setToggling(true);
+            const { error } = await supabase
+                .from('google_sheets_connections')
+                .update({ is_active: false })
+                .eq('id', googleConnection.id);
+
+            if (!error) {
+                setGoogleConnection({ ...googleConnection, isActive: false });
+            }
+        } finally {
+            setToggling(false);
+        }
+    }
+
     if (loading) {
         return (
             <div className={`${isLight ? 'text-gray-500' : 'text-slate-400'} text-sm py-3`}>Carregando...</div>
@@ -97,7 +132,7 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
     return (
         <div className="space-y-3">
             {/* Google Sheets Connection */}
-            {googleConnection && (
+            {googleConnection ? (
                 <div className={`${isLight ? 'bg-blue-50 border border-blue-200' : 'bg-blue-900/20 border border-blue-500/30'} rounded p-3`}>
                     <div className="flex items-start gap-2">
                         <div className={`${isLight ? 'text-blue-600' : 'text-blue-400'} mt-0.5`}>🔗</div>
@@ -120,6 +155,58 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                             {googleConnection.isActive ? 'Ativo' : 'Inativo'}
                         </span>
                     </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                        <button
+                            onClick={handleSyncNow}
+                            disabled={syncing}
+                            className={`${isLight ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30'} text-xs px-3 py-1.5 rounded font-semibold transition disabled:opacity-60`}
+                        >
+                            {syncing ? 'Sincronizando...' : 'Sincronizar agora'}
+                        </button>
+                        {googleConnection.isActive && (
+                            <button
+                                onClick={handleDisconnect}
+                                disabled={toggling}
+                                className={`${isLight ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-red-500/20 text-red-200 hover:bg-red-500/30'} text-xs px-3 py-1.5 rounded font-semibold transition disabled:opacity-60`}
+                            >
+                                Encerrar conexão
+                            </button>
+                        )}
+                    </div>
+
+                    <p className={`mt-2 text-[11px] ${isLight ? 'text-gray-500' : 'text-slate-400'}`}>
+                        Atualização automática: ao login
+                    </p>
+                </div>
+            ) : (
+                <div className={`${isLight ? 'bg-white border border-gray-200' : 'bg-slate-800/30 border border-slate-700'} rounded p-3`}>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className={`text-sm font-semibold ${isLight ? 'text-gray-900' : 'text-slate-100'}`}>Google Sheets</p>
+                            <p className={`text-xs ${isLight ? 'text-gray-500' : 'text-slate-400'}`}>Nenhuma conexão ativa</p>
+                        </div>
+                        <button
+                            onClick={() => setShowConnector((prev) => !prev)}
+                            className={`${isLight ? 'text-blue-600 hover:bg-blue-50' : 'text-blue-300 hover:bg-blue-500/20'} text-xs px-3 py-1.5 rounded font-semibold transition`}
+                        >
+                            {showConnector ? 'Fechar' : 'Conectar'}
+                        </button>
+                    </div>
+
+                    {showConnector && (
+                        <div className="mt-3">
+                            <GoogleSheetConnector
+                                userId={userId}
+                                initialDashboardType={dashboardType as any}
+                                variant={isLight ? 'light' : 'dark'}
+                                onConnected={async () => {
+                                    setShowConnector(false);
+                                    await loadHistory();
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
             )}
 

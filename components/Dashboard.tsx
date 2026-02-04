@@ -16,7 +16,7 @@ import { useFinance } from '../context/FinanceContext.tsx';
 import { useTheme } from '../context/ThemeContext.tsx';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
-import { markUserDataLoaded } from '@/utils/userDataState';
+import { markDataSource, markUserDataLoaded } from '@/utils/userDataState';
 
 const Dashboard: React.FC = () => {
   const { dados, carregarDados } = useFinance();
@@ -172,6 +172,7 @@ const Dashboard: React.FC = () => {
                   // Carregar dados no contexto (NÃO salva automaticamente)
                   carregarDados(result.firstSheet);
                   markUserDataLoaded();
+                  markDataSource('manual');
 
                   setToast({
                     message: `✅ ${result.rowCount} linhas carregadas com sucesso! Clique em "Salvar" para persistir.`,
@@ -198,6 +199,7 @@ const Dashboard: React.FC = () => {
             // Carregar dados do Google Sheets
             carregarDados(data);
             markUserDataLoaded();
+            markDataSource('google_sheets');
             setToast({
               message: `✅ Dados do Google Sheets carregados com sucesso!`,
               type: 'success'
