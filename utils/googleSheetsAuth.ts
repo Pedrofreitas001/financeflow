@@ -30,7 +30,17 @@ export async function getGoogleAuthUrl(state?: string) {
 }
 
 export async function exchangeCodeForToken(code: string, redirectUri?: string) {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData?.session?.access_token;
+
+    if (!accessToken) {
+        throw new Error('Usuário não autenticado no app');
+    }
+
     const { data, error } = await supabase.functions.invoke('google-sheets-oauth', {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
         body: {
             code,
             redirect_uri: redirectUri || REDIRECT_URI
