@@ -33,6 +33,10 @@ const ExpenseDonut: React.FC = () => {
                 outerRadius="95%"
                 paddingAngle={6}
                 dataKey="value"
+                isAnimationActive
+                animationBegin={100}
+                animationDuration={900}
+                animationEasing="ease-out"
                 stroke="none"
               >
                 {agregadoCategoria.map((entry, index) => (

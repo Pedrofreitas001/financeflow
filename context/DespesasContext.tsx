@@ -50,7 +50,12 @@ export const DespesasProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             // Filtrar dados inválidos e com campos faltantes
             const dadosValidos = json.filter(row => {
                 try {
-                    return row && row.Ano && row.Mes && row.Categoria && row.Empresa && row.Valor !== undefined;
+                    const ano = row?.Ano ?? row?.ano;
+                    const mes = row?.Mes ?? row?.mes;
+                    const categoria = row?.Categoria ?? row?.categoria;
+                    const empresa = row?.Empresa ?? row?.empresa;
+                    const valor = row?.Valor ?? row?.valor;
+                    return row && ano && mes && categoria && empresa && valor !== undefined;
                 } catch {
                     return false;
                 }
@@ -65,19 +70,25 @@ export const DespesasProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
             const processados: DadosDespesas[] = dadosValidos.map(row => {
                 try {
-                    const mesStr = String(row.Mes || "").trim();
+                    const mesValue = row?.Mes ?? row?.mes;
+                    const mesStr = String(mesValue || "").trim();
                     const mesNum = row.Mes_Num || getMesNumero(mesStr);
-                    const categoria = String(row.Categoria || "");
+                    const categoriaRaw = row?.Categoria ?? row?.categoria;
+                    const categoria = String(categoriaRaw ?? "");
+
+                    const anoRaw = row?.Ano ?? row?.ano;
+                    const anoParsed = parseInt(String(anoRaw));
+                    const anoFinal = Number.isNaN(anoParsed) ? 2024 : anoParsed;
 
                     return {
-                        ano: parseInt(row.Ano) || 2024,
+                        ano: anoFinal,
                         mes: mesStr,
                         mesNum: mesNum,
-                        empresa: String(row.Empresa || ""),
+                        empresa: String((row?.Empresa ?? row?.empresa) ?? ""),
                         categoria: categoria,
-                        subcategoria: String(row.Subcategoria || ""),
-                        valor: Math.abs(limparValor(row.Valor)),
-                        data: new Date(parseInt(row.Ano) || 2024, mesNum - 1, 1),
+                        subcategoria: String((row?.Subcategoria ?? row?.subcategoria) ?? ""),
+                        valor: Math.abs(limparValor(row?.Valor ?? row?.valor)),
+                        data: new Date(anoFinal, mesNum - 1, 1),
                         tipo: categoria?.toUpperCase().includes('FATURAMENTO') ? 'receita' : 'despesa'
                     };
                 } catch (err) {

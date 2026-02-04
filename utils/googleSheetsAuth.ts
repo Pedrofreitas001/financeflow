@@ -1,11 +1,12 @@
 // utils/googleSheetsAuth.ts
-// OAuth2 Flow para Google Sheets
+// OAuth2 Flow para Google Sheets (somente URL de consentimento)
+
+import { supabase } from '@/lib/supabase';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
 const REDIRECT_URI = `${window.location.origin}/auth/callback`;
 
-export async function getGoogleAuthUrl() {
+export async function getGoogleAuthUrl(state?: string) {
     const scopes = [
         'https://www.googleapis.com/auth/spreadsheets.readonly',
         'https://www.googleapis.com/auth/drive.readonly',
@@ -21,37 +22,24 @@ export async function getGoogleAuthUrl() {
         prompt: 'consent'
     });
 
+    if (state) {
+        params.set('state', state);
+    }
+
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 }
 
 export async function exchangeCodeForToken(code: string) {
-    const response = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            client_id: GOOGLE_CLIENT_ID,
-            client_secret: GOOGLE_CLIENT_SECRET,
+    const { data, error } = await supabase.functions.invoke('google-sheets-oauth', {
+        body: {
             code,
-            redirect_uri: REDIRECT_URI,
-            grant_type: 'authorization_code'
-        })
+            redirect_uri: REDIRECT_URI
+        }
     });
 
-    return response.json();
-}
+    if (error) {
+        throw error;
+    }
 
-export async function refreshAccessToken(refreshToken: string) {
-    const response = await fetch('https://oauth2.googleapis.com/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            client_id: GOOGLE_CLIENT_ID,
-            client_secret: GOOGLE_CLIENT_SECRET,
-            refresh_token: refreshToken,
-            grant_type: 'refresh_token'
-        })
-    });
-
-    const data = await response.json();
-    return data.access_token;
+    return data;
 }

@@ -1,8 +1,11 @@
 
 import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 import { KPIData } from '../types';
 
 const KPICard: React.FC<KPIData> = ({ label, value, trend, icon, iconColor }) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const isPositive = trend >= 0;
 
   return (
@@ -22,8 +25,8 @@ const KPICard: React.FC<KPIData> = ({ label, value, trend, icon, iconColor }) =>
         </span>
       </div>
       <div>
-        <p className="text-text-muted text-sm font-medium">{label}</p>
-        <h3 className="text-2xl font-bold text-white mt-1">{value}</h3>
+        <p className={`${isDark ? 'text-text-muted' : 'text-gray-900'} text-sm font-medium`}>{label}</p>
+        <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} text-2xl font-bold mt-1`}>{value}</h3>
       </div>
     </div>
   );

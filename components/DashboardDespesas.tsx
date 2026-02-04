@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState } from 'react';
 import KPIGridDespesas from './KPIGridDespesas.tsx';
 import DespesasPorCategoria from './Charts/DespesasPorCategoria.tsx';
@@ -10,11 +10,13 @@ import DataUploadModal from './DataUploadModal.tsx';
 import InsertDataButton from './InsertDataButton.tsx';
 import Toast from './Toast.tsx';
 import SaveDataButton from './SaveDataButton.tsx';
+import ClearDataButton from './ClearDataButton';
 import { useDespesas } from '../context/DespesasContext.tsx';
 import { useTheme } from '../context/ThemeContext.tsx';
 import { useUserPlan } from '@/hooks/useUserPlan';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
+import { markUserDataLoaded } from '@/utils/userDataState';
 
 const DashboardDespesas: React.FC = () => {
     const { dadosDespesas, carregarDadosDespesas } = useDespesas();
@@ -24,10 +26,10 @@ const DashboardDespesas: React.FC = () => {
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
 
-    // Hook para pegar o plano do usuário
+    // Hook para pegar o plano do usuÃ¡rio
     const { userPlan, loading: planLoading } = useUserPlan();
 
-    // Se não houver dados, mostrar mensagem
+    // Se nÃ£o houver dados, mostrar mensagem
     if (dadosDespesas.length === 0) {
         return (
             <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
@@ -46,7 +48,7 @@ const DashboardDespesas: React.FC = () => {
                             </p>
                         </div>
 
-                        {/* Informações do Formato */}
+                        {/* InformaÃ§Ãµes do Formato */}
                         <div className="rounded-2xl border border-gray-300 shadow-lg p-6 bg-white">
                             <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-900">
                                 <span className="material-symbols-outlined text-primary">description</span>
@@ -64,11 +66,11 @@ const DashboardDespesas: React.FC = () => {
                                     <tbody className="text-gray-700">
                                         <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">Ano</td>
-                                            <td>número</td>
+                                            <td>nÃºmero</td>
                                             <td>2025</td>
                                         </tr>
                                         <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
-                                            <td className="py-2 font-mono text-primary">Mês/Meses</td>
+                                            <td className="py-2 font-mono text-primary">MÃªs/Meses</td>
                                             <td>texto</td>
                                             <td>NOVEMBRO, JAN, FEV...</td>
                                         </tr>
@@ -79,21 +81,21 @@ const DashboardDespesas: React.FC = () => {
                                         </tr>
                                         <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">Projetado</td>
-                                            <td>número (R$)</td>
+                                            <td>nÃºmero (R$)</td>
                                             <td>3.500.000</td>
                                         </tr>
                                         <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
                                             <td className="py-2 font-mono text-primary">Real</td>
-                                            <td>número (R$)</td>
+                                            <td>nÃºmero (R$)</td>
                                             <td>2.322.419</td>
                                         </tr>
                                         <tr className={`${isDark ? 'border-b border-border-dark/50' : 'border-b border-gray-200'}`}>
-                                            <td className="py-2 font-mono text-primary">Variação</td>
+                                            <td className="py-2 font-mono text-primary">VariaÃ§Ã£o</td>
                                             <td>percentual</td>
                                             <td>-33,65%</td>
                                         </tr>
                                         <tr>
-                                            <td className="py-2 font-mono text-primary">Análise Vertical</td>
+                                            <td className="py-2 font-mono text-primary">AnÃ¡lise Vertical</td>
                                             <td>percentual</td>
                                             <td>46,55%</td>
                                         </tr>
@@ -102,7 +104,7 @@ const DashboardDespesas: React.FC = () => {
                             </div>
                             <p className="text-xs mb-4 text-gray-600">Arquivo: <span className="text-primary font-mono">Analise_despesas_Exemplo.xlsx</span></p>
 
-                            {/* Botão Download */}
+                            {/* BotÃ£o Download */}
                             <a data-cta-button href="https://docs.google.com/spreadsheets/d/10mrkv9tlvAXRoooNEu5NSMG5sai7gcOXFpIEh9VyR1M/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
                                 <span className="material-symbols-outlined text-base">download</span>
                                 Baixar Arquivo
@@ -117,15 +119,15 @@ const DashboardDespesas: React.FC = () => {
     return (
         <main id="dashboard-despesas-content" className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
             <div className="max-w-[1400px] mx-auto flex flex-col gap-6 w-full">
-                {/* Cabeçalho da página */}
+                {/* CabeÃ§alho da pÃ¡gina */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-white text-3xl font-bold mb-2">Análise de Despesas</h1>
-                        <p className="text-text-muted">
+                        <h1 className={`${isDark ? 'text-white' : 'text-gray-900'} text-3xl font-bold mb-2`}>Análise de Despesas</h1>
+                        <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
                             Visualize e compare as despesas da empresa ao longo do tempo
                         </p>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap gap-2">
                         <InsertDataButton
                             onClick={() => setShowUploadModal(true)}
                             disabled={planLoading}
@@ -136,14 +138,23 @@ const DashboardDespesas: React.FC = () => {
                             disabled={planLoading}
                             onSaveComplete={() => {
                                 setToast({
-                                    message: '✅ Dados salvos! Serão carregados automaticamente na próxima entrada.',
+                                    message: 'âœ… Dados salvos! SerÃ£o carregados automaticamente na prÃ³xima entrada.',
                                     type: 'success'
                                 });
                             }}
                             onError={(error) => {
                                 setToast({
-                                    message: `❌ Erro ao salvar: ${error}`,
+                                    message: `âŒ Erro ao salvar: ${error}`,
                                     type: 'error'
+                                });
+                            }}
+                        />
+                        <ClearDataButton
+                            onClear={() => {
+                                carregarDadosDespesas([]);
+                                setToast({
+                                    message: 'ðŸ§¹ Dados removidos da interface.',
+                                    type: 'info'
                                 });
                             }}
                         />
@@ -167,17 +178,18 @@ const DashboardDespesas: React.FC = () => {
                                 try {
                                     const result = await importFromExcel(file);
 
-                                    // Carregar dados no contexto (NÃO salva automaticamente)
+                                    // Carregar dados no contexto (NÃƒO salva automaticamente)
                                     carregarDadosDespesas(result.firstSheet);
+                                    markUserDataLoaded();
 
                                     setToast({
-                                        message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
+                                        message: `âœ… ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
                                         type: 'success'
                                     });
                                     setShowUploadModal(false);
                                 } catch (error: any) {
                                     setToast({
-                                        message: `Erro ao importar: ${error.message || 'Arquivo inválido'}`,
+                                        message: `Erro ao importar: ${error.message || 'Arquivo invÃ¡lido'}`,
                                         type: 'error'
                                     });
                                 }
@@ -192,6 +204,7 @@ const DashboardDespesas: React.FC = () => {
                     }}
                     onGoogleSheets={(data) => {
                         carregarDadosDespesas(data);
+                        markUserDataLoaded();
                         setToast({
                             message: 'Dados do Google Sheets carregados com sucesso!',
                             type: 'success'
@@ -199,7 +212,7 @@ const DashboardDespesas: React.FC = () => {
                     }}
                 />
 
-                {/* Toast de notificação */}
+                {/* Toast de notificaÃ§Ã£o */}
                 {toast && (
                     <Toast
                         message={toast.message}
@@ -208,18 +221,18 @@ const DashboardDespesas: React.FC = () => {
                     />
                 )}
 
-                {/* Modal de seleção de fonte de dados (antigo) */}
+                {/* Modal de seleÃ§Ã£o de fonte de dados (antigo) */}
                 {showDataInput && (
                     <DataInputSelector
                         userId={userPlan.userId || ''}
                         dashboardType="Despesas"
                         onManual={() => {
                             setShowDataInput(false);
-                            alert('Excel uploader será integrado aqui');
+                            alert('Excel uploader serÃ¡ integrado aqui');
                         }}
                         onGoogleSheets={() => {
                             setShowDataInput(false);
-                            alert('Google Sheets será integrado aqui');
+                            alert('Google Sheets serÃ¡ integrado aqui');
                         }}
                         onClose={() => setShowDataInput(false)}
                     />
@@ -228,13 +241,13 @@ const DashboardDespesas: React.FC = () => {
                 {/* KPIs */}
                 <KPIGridDespesas />
 
-                {/* Gráficos principais */}
+                {/* GrÃ¡ficos principais */}
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
                     <EvolucaoDespesasMensal />
                     <DespesasPorCategoria />
                 </div>
 
-                {/* Comparação de períodos - largura total */}
+                {/* ComparaÃ§Ã£o de perÃ­odos - largura total */}
                 <div className="w-full">
                     <ComparacaoPeriodos />
                 </div>
@@ -244,7 +257,7 @@ const DashboardDespesas: React.FC = () => {
                     <TabelaPlanoConta />
                 </div>
 
-                {/* Espaço para exportação PDF */}
+                {/* EspaÃ§o para exportaÃ§Ã£o PDF */}
                 <div className="pb-12"></div>
             </div>
         </main>
@@ -252,4 +265,5 @@ const DashboardDespesas: React.FC = () => {
 };
 
 export default DashboardDespesas;
+
 

@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 import { useDespesas } from '../../context/DespesasContext.tsx';
 import { useTheme } from '../../context/ThemeContext.tsx';
@@ -68,8 +68,8 @@ const TabelaPlanoConta: React.FC = () => {
         <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h3 className="text-white text-lg font-bold">Plano de Contas - Despesas</h3>
-                    <p className="text-text-muted text-sm mt-1">Resumo detalhado de despesas por categoria e mês</p>
+                    <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} text-lg font-bold`}>Plano de Contas - Despesas</h3>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-sm mt-1`}>Resumo detalhado de despesas por categoria e mês</p>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                     <span className="material-symbols-outlined text-primary text-2xl">table_chart</span>
@@ -81,15 +81,15 @@ const TabelaPlanoConta: React.FC = () => {
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="border-b border-border-dark">
-                            <th className="text-left py-3 px-4 text-text-muted font-bold uppercase text-xs sticky left-0 bg-surface-dark">
+                            <th className={`text-left py-3 px-4 ${isDark ? 'text-text-muted' : 'text-gray-600'} font-bold uppercase text-xs sticky left-0 bg-surface-dark`}>
                                 Categoria
                             </th>
                             {tabelaData.meses.map(mes => (
-                                <th key={mes} className="text-right py-3 px-3 text-text-muted font-bold uppercase text-xs whitespace-nowrap">
+                                <th key={mes} className={`text-right py-3 px-3 ${isDark ? 'text-text-muted' : 'text-gray-600'} font-bold uppercase text-xs whitespace-nowrap`}>
                                     {mes.substring(0, 3)}
                                 </th>
                             ))}
-                            <th className="text-right py-3 px-4 text-text-muted font-bold uppercase text-xs whitespace-nowrap bg-background-dark/50">
+                            <th className={`text-right py-3 px-4 ${isDark ? 'text-text-muted' : 'text-gray-600'} font-bold uppercase text-xs whitespace-nowrap bg-background-dark/50`}>
                                 Total
                             </th>
                         </tr>
@@ -106,19 +106,19 @@ const TabelaPlanoConta: React.FC = () => {
                                                 className="w-3 h-3 rounded-full"
                                                 style={{ backgroundColor: cor }}
                                             ></div>
-                                            <span className="text-white font-medium">{item.categoria}</span>
+                                            <span className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{item.categoria}</span>
                                         </div>
                                     </td>
                                     {tabelaData.meses.map(mes => (
                                         <td key={mes} className="text-right py-3 px-3 whitespace-nowrap">
                                             {item.meses[mes] > 0 ? (
-                                                <span className="text-white">{formatCurrency(item.meses[mes])}</span>
+                                                <span className={`${isDark ? 'text-white' : 'text-gray-900'}`}>{formatCurrency(item.meses[mes])}</span>
                                             ) : (
-                                                <span className="text-text-muted">-</span>
+                                                <span className={`${isDark ? 'text-text-muted' : 'text-gray-500'}`}>-</span>
                                             )}
                                         </td>
                                     ))}
-                                    <td className="text-right py-3 px-4 text-white font-bold bg-background-dark/50 whitespace-nowrap">
+                                    <td className={`text-right py-3 px-4 ${isDark ? 'text-white' : 'text-gray-900'} font-bold bg-background-dark/50 whitespace-nowrap`}>
                                         {formatCurrency(item.total)}
                                     </td>
                                 </tr>
@@ -128,7 +128,7 @@ const TabelaPlanoConta: React.FC = () => {
                     <tfoot>
                         <tr className="border-t-2 border-primary bg-background-dark">
                             <td className="py-4 px-4 sticky left-0 bg-background-dark">
-                                <span className="text-white font-bold">TOTAL GERAL</span>
+                                <span className={`${isDark ? 'text-white' : 'text-gray-900'} font-bold`}>TOTAL GERAL</span>
                             </td>
                             {tabelaData.meses.map(mes => (
                                 <td key={mes} className="text-right py-4 px-3 whitespace-nowrap">
@@ -153,7 +153,7 @@ const TabelaPlanoConta: React.FC = () => {
 
             {/* Legenda */}
             <div className="mt-6 pt-4 border-t border-border-dark">
-                <p className="text-text-muted text-xs mb-3">📊 Tabela com todos os meses selecionados</p>
+                <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-3`}>ðŸ“Š Tabela com todos os meses selecionados</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                     {tabelaData.dados.slice(0, 4).map(cat => (
                         <div key={cat.categoria} className="flex items-center gap-2">
@@ -161,7 +161,7 @@ const TabelaPlanoConta: React.FC = () => {
                                 className="w-2 h-2 rounded-full"
                                 style={{ backgroundColor: agregadoDespesasCategoria.find(c => c.name === cat.categoria)?.color }}
                             ></div>
-                            <span className="text-text-muted truncate">{cat.categoria}</span>
+                            <span className={`${isDark ? 'text-text-muted' : 'text-gray-600'} truncate`}>{cat.categoria}</span>
                         </div>
                     ))}
                 </div>
@@ -171,4 +171,6 @@ const TabelaPlanoConta: React.FC = () => {
 };
 
 export default TabelaPlanoConta;
+
+
 

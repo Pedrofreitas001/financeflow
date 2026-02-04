@@ -59,12 +59,17 @@ export function useUserPlan(userId?: string) {
 
                 if (data) {
                     console.log('[useUserPlan] Subscription encontrada:', data.plan);
-                    const isPremium = data.plan === 'premium' && data.status === 'active';
-                    const isDiamond = data.plan === 'diamond' && data.status === 'active';
+                    const rawPlan = String(data.plan || 'free').trim().toLowerCase();
+                    const rawStatus = String(data.status || 'active').trim().toLowerCase();
+                    const normalizedPlan = rawPlan === 'trial' ? 'premium' : rawPlan;
+                    const status = (rawStatus as UserPlan['status']) || 'active';
+                    const isPaidStatus = status === 'active' || status === 'trialing';
+                    const isPremium = normalizedPlan === 'premium' && isPaidStatus;
+                    const isDiamond = normalizedPlan === 'diamond' && status === 'active';
 
                     setUserPlan({
-                        plan: data.plan || 'free',
-                        status: data.status || 'active',
+                        plan: (normalizedPlan as UserPlan['plan']) || 'free',
+                        status,
                         isPremium,
                         isDiamond,
                         expiresAt: null,

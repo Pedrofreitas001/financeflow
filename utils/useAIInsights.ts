@@ -8,7 +8,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { supabase } from '../src/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import type { AnalysisResult, AnalysisType } from '../utils/dashboardAIAnalysis';
 

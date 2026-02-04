@@ -280,7 +280,7 @@ const DataPreparation: React.FC = () => {
             )}
 
             {/* Hero Section */}
-            <section className="relative min-h-[100vh] flex items-center overflow-hidden pt-20">
+            <section className="relative min-h-[100vh] flex items-center overflow-hidden pt-6">
                 <div className="absolute inset-0 bg-[#142038]"></div>
                 <div className="absolute inset-0" style={{
                     background: 'linear-gradient(110deg, rgba(15, 30, 55, 0.6) 0%, rgba(22, 37, 68, 0.3) 40%, rgba(30, 58, 95, 0.25) 70%, rgba(37, 78, 130, 0.2) 100%)'
@@ -293,7 +293,7 @@ const DataPreparation: React.FC = () => {
                     backgroundSize: '24px 24px'
                 }}></div>
 
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full py-20">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full py-8">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div>
                             <div className="inline-flex items-center gap-2 bg-[#1a2d4a] border border-blue-500/30 rounded-full px-4 py-2 mb-6">
@@ -301,7 +301,7 @@ const DataPreparation: React.FC = () => {
                                 <span className="text-white/90 text-sm font-medium">Validação com IA em tempo real</span>
                             </div>
 
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-[1.1]">
                                 Prepare seus dados <br />
                                 <span className="text-blue-400">em minutos</span>
                             </h1>
@@ -661,7 +661,7 @@ const DataPreparation: React.FC = () => {
                                                     setSelectedPages([...selectedPages, tab.id]);
                                                 }
                                             }}
-                                            className={`p-4 rounded-xl border-2 transition-all text-left ${selectedPages.includes(tab.id)
+                                            className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center text-center ${selectedPages.includes(tab.id)
                                                 ? 'bg-blue-600 border-blue-500 text-white'
                                                 : 'bg-white/10 border-white/20 text-white hover:bg-white/15'
                                                 }`}

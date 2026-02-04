@@ -26,8 +26,8 @@ const KPIBalanceteCard: React.FC<KPIBalanceteCardProps> = ({ titulo, valor, unid
 
     return (
         <div className={`${isDarkCard ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl p-5 border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all`}>
-            <p className={`${isDarkCard ? 'text-text-muted' : 'text-gray-600'} text-xs font-medium uppercase tracking-wide`}>{titulo}</p>
-            <p className={`text-2xl font-bold ${cor} mt-2 tracking-tight`}>
+            <p className={`${isDarkCard ? 'text-text-muted' : 'text-gray-900'} text-xs font-medium uppercase tracking-wide`}>{titulo}</p>
+            <p className={`text-2xl font-bold ${isDarkCard ? cor : 'text-gray-900'} mt-2 tracking-tight`}>
                 {unidade === 'R$' ? `R$ ${(valor / 1000000).toFixed(2)}M` : `${valor.toFixed(2)}%`}
             </p>
             <div className={`mt-3 px-3 py-1 rounded-full w-fit text-xs font-semibold flex items-center gap-1 ${statusColor}`}>
@@ -272,7 +272,7 @@ const DashboardBalancete: React.FC = () => {
                             status="ok"
                         />
                         <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm flex flex-col justify-center items-center text-center`}>
-                            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mb-2`}>Status Balancete</p>
+                            <p className={`${isDark ? 'text-gray-400' : 'text-gray-900'} text-sm mb-2`}>Status Balancete</p>
                             <div className={`px-3 py-2 rounded-full font-bold text-sm ${balanceteOk ? 'bg-blue-500/20 text-blue-400' : 'bg-red-500/20 text-red-400'}`}>
                                 {balanceteOk ? '✓ Balanceado' : '✕ Desequilibrado'}
                             </div>
@@ -299,6 +299,10 @@ const DashboardBalancete: React.FC = () => {
                                             outerRadius="90%"
                                             paddingAngle={5}
                                             dataKey="value"
+                                            isAnimationActive
+                                            animationBegin={100}
+                                            animationDuration={900}
+                                            animationEasing="ease-out"
                                             stroke="none"
                                         >
                                             {dataAtivoDistribuicao.map((entry, index) => (
@@ -354,6 +358,10 @@ const DashboardBalancete: React.FC = () => {
                                             outerRadius="90%"
                                             paddingAngle={5}
                                             dataKey="value"
+                                            isAnimationActive
+                                            animationBegin={120}
+                                            animationDuration={900}
+                                            animationEasing="ease-out"
                                             stroke="none"
                                         >
                                             {dataPassivoDistribuicao.map((entry, index) => (
@@ -409,6 +417,10 @@ const DashboardBalancete: React.FC = () => {
                                             outerRadius="90%"
                                             paddingAngle={5}
                                             dataKey="value"
+                                            isAnimationActive
+                                            animationBegin={140}
+                                            animationDuration={900}
+                                            animationEasing="ease-out"
                                             stroke="none"
                                         >
                                             {dataProportao.map((entry, index) => (

@@ -31,7 +31,8 @@ export async function saveDataToHistory(
     rowCount: number,
     columns: string[] = [],
     fileSize?: number,
-    metadata?: Record<string, any>
+    metadata?: Record<string, any>,
+    maxEntries: number = 3
 ): Promise<{ success: boolean; id?: string; error?: string }> {
     try {
         console.log(`[dataHistoryManager] Salvando histórico: ${dashboardType} via ${source}`);
@@ -57,6 +58,32 @@ export async function saveDataToHistory(
                 success: false,
                 error: error.message,
             };
+        }
+
+        // Manter apenas as últimas N entradas por dashboard
+        if (maxEntries > 0) {
+            const { data: entries, error: fetchError } = await supabase
+                .from('excel_uploads')
+                .select('id')
+                .eq('user_id', userId)
+                .eq('dashboard_type', dashboardType)
+                .order('created_at', { ascending: false });
+
+            if (fetchError) {
+                console.warn('[dataHistoryManager] Não foi possível listar entradas antigas:', fetchError);
+            } else if (entries && entries.length > maxEntries) {
+                const idsToDelete = entries.slice(maxEntries).map((e: any) => e.id);
+                if (idsToDelete.length > 0) {
+                    const { error: deleteError } = await supabase
+                        .from('excel_uploads')
+                        .delete()
+                        .in('id', idsToDelete);
+
+                    if (deleteError) {
+                        console.warn('[dataHistoryManager] Não foi possível remover entradas antigas:', deleteError);
+                    }
+                }
+            }
         }
 
         console.log('[dataHistoryManager] Histórico salvo com sucesso:', data.id);

@@ -3,105 +3,86 @@
 
 import { useState } from 'react';
 import { getGoogleAuthUrl } from '@/utils/googleSheetsAuth';
-import { startRealtimeSync } from '@/utils/googleSheetsSync';
-import { supabase } from '@/lib/supabase';
 import { Sparkles, Link2, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface GoogleSheetConnectorProps {
     userId: string;
+    initialDashboardType?: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete';
     onConnected?: () => void;
+    variant?: 'light' | 'dark';
 }
 
-export default function GoogleSheetConnector({ userId, onConnected }: GoogleSheetConnectorProps) {
+export default function GoogleSheetConnector({
+    userId,
+    initialDashboardType = 'dashboard',
+    onConnected,
+    variant = 'dark',
+}: GoogleSheetConnectorProps) {
     const [loading, setLoading] = useState(false);
+    const [dashboardType, setDashboardType] = useState(initialDashboardType);
     const [spreadsheetUrl, setSpreadsheetUrl] = useState('');
     const [sheetName, setSheetName] = useState('');
     const [range, setRange] = useState('A1:Z1000');
     const [syncInterval, setSyncInterval] = useState(120);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-    const handleConnectGoogle = async () => {
-        try {
-            setLoading(true);
-            const authUrl = await getGoogleAuthUrl();
-            window.location.href = authUrl;
-        } catch (error) {
-            setMessage({
-                type: 'error',
-                text: error instanceof Error ? error.message : 'Erro ao conectar Google'
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+    const isLight = variant === 'light';
 
     const extractSpreadsheetId = (url: string): string => {
         const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
         return match ? match[1] : '';
     };
 
-    const handleStartSync = async () => {
+    const handleConnectGoogle = async () => {
         try {
             setLoading(true);
             const spreadsheetId = extractSpreadsheetId(spreadsheetUrl);
-
             if (!spreadsheetId || !sheetName) {
-                throw new Error('URL da planilha e nome da aba são obrigatórios');
+                throw new Error('URL da planilha e nome da aba sao obrigatorios');
             }
 
-            // Buscar token de acesso
-            const { data: connection, error: fetchError } = await supabase
-                .from('google_sheets_connections')
-                .select('access_token')
-                .eq('user_id', userId)
-                .single();
-
-            if (fetchError || !connection) {
-                throw new Error('Nenhuma conexão Google encontrada. Conecte primeiro.');
-            }
-
-            // Iniciar sincronização em tempo real
-            const stopSync = startRealtimeSync(userId, {
+            const statePayload = {
+                userId,
+                dashboardType,
                 spreadsheetId,
                 sheetName,
                 range,
-                accessToken: connection.access_token
-            }, syncInterval);
+                syncIntervalSeconds: syncInterval,
+            };
 
-            // Salvar configuração
-            await supabase.from('google_sheets_connections').update({
-                spreadsheet_id: spreadsheetId,
-                sheet_names: [sheetName],
-                sync_interval_seconds: syncInterval,
-                last_sync: new Date().toISOString()
-            }).eq('user_id', userId);
-
-            setMessage({
-                type: 'success',
-                text: `✅ Sincronização iniciada! Dados atualizados a cada ${syncInterval} segundos.`
-            });
-
-            onConnected?.();
+            const encodedState = btoa(JSON.stringify(statePayload));
+            const authUrl = await getGoogleAuthUrl(encodedState);
+            window.location.href = authUrl;
         } catch (error) {
             setMessage({
                 type: 'error',
-                text: error instanceof Error ? error.message : 'Erro ao iniciar sincronização'
+                text: error instanceof Error ? error.message : 'Erro ao conectar Google',
             });
         } finally {
             setLoading(false);
         }
     };
 
+    const handleStartSync = async () => {
+        setMessage({
+            type: 'success',
+            text: 'Conexao criada. A sincronizacao automatica sera feita no backend 3x ao dia.',
+        });
+        onConnected?.();
+    };
+
     return (
-        <div className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 border border-emerald-500/20 rounded-xl p-8 backdrop-blur-sm">
+        <div
+            className={`${isLight ? 'bg-white border border-gray-200' : 'bg-gradient-to-br from-slate-900/50 to-slate-800/50 border border-emerald-500/20'
+                } rounded-xl p-8 shadow-sm`}
+        >
             <div className="flex items-center gap-3 mb-6">
-                <Sparkles className="w-6 h-6 text-emerald-500" />
-                <h3 className="text-xl font-semibold text-slate-100">Google Sheets Sync</h3>
+                <Sparkles className={`w-6 h-6 ${isLight ? 'text-emerald-600' : 'text-emerald-500'}`} />
+                <h3 className={`text-xl font-semibold ${isLight ? 'text-gray-900' : 'text-slate-100'}`}>Google Sheets Sync</h3>
             </div>
 
-            {/* Passo 1: Conectar Google */}
-            <div className="mb-6 pb-6 border-b border-slate-700">
-                <label className="block text-sm font-medium text-slate-300 mb-3">
+            <div className="mb-6 pb-6 border-b border-slate-700/30">
+                <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-slate-300'} mb-3`}>
                     1. Conectar Conta Google
                 </label>
                 <button
@@ -114,20 +95,42 @@ export default function GoogleSheetConnector({ userId, onConnected }: GoogleShee
                 </button>
             </div>
 
-            {/* Passo 2: Selecionar Planilha */}
-            <div className="space-y-4 mb-6 pb-6 border-b border-slate-700">
-                <label className="block text-sm font-medium text-slate-300">
-                    2. URL da Planilha Google
+            <div className="space-y-4 mb-6 pb-6 border-b border-slate-700/30">
+                <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-slate-300'}`}>
+                    2. Dashboard de Destino
+                </label>
+                <select
+                    value={dashboardType}
+                    onChange={(e) => setDashboardType(e.target.value as any)}
+                    className={`w-full rounded-lg px-4 py-2 ${isLight
+                        ? 'bg-white border border-gray-300 text-gray-900'
+                        : 'bg-slate-800/50 border border-slate-600 text-slate-100'
+                        }`}
+                >
+                    <option value="dashboard">Dashboard</option>
+                    <option value="despesas">Despesas</option>
+                    <option value="dre">DRE</option>
+                    <option value="cashflow">Cash Flow</option>
+                    <option value="indicadores">Indicadores</option>
+                    <option value="orcamento">Orcamento</option>
+                    <option value="balancete">Balancete</option>
+                </select>
+
+                <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-slate-300'}`}>
+                    3. URL da Planilha Google
                 </label>
                 <input
                     type="text"
                     placeholder="https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/..."
                     value={spreadsheetUrl}
                     onChange={(e) => setSpreadsheetUrl(e.target.value)}
-                    className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-slate-100 placeholder-slate-500"
+                    className={`w-full rounded-lg px-4 py-2 ${isLight
+                        ? 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
+                        : 'bg-slate-800/50 border border-slate-600 text-slate-100 placeholder-slate-500'
+                        }`}
                 />
 
-                <label className="block text-sm font-medium text-slate-300 mt-4">
+                <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-slate-300'} mt-4`}>
                     Nome da Aba (ex: Sheet1)
                 </label>
                 <input
@@ -135,10 +138,13 @@ export default function GoogleSheetConnector({ userId, onConnected }: GoogleShee
                     placeholder="Sheet1"
                     value={sheetName}
                     onChange={(e) => setSheetName(e.target.value)}
-                    className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-slate-100 placeholder-slate-500"
+                    className={`w-full rounded-lg px-4 py-2 ${isLight
+                        ? 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
+                        : 'bg-slate-800/50 border border-slate-600 text-slate-100 placeholder-slate-500'
+                        }`}
                 />
 
-                <label className="block text-sm font-medium text-slate-300 mt-4">
+                <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-slate-300'} mt-4`}>
                     Intervalo (Range)
                 </label>
                 <input
@@ -146,14 +152,16 @@ export default function GoogleSheetConnector({ userId, onConnected }: GoogleShee
                     placeholder="A1:Z1000"
                     value={range}
                     onChange={(e) => setRange(e.target.value)}
-                    className="w-full bg-slate-800/50 border border-slate-600 rounded-lg px-4 py-2 text-slate-100 placeholder-slate-500"
+                    className={`w-full rounded-lg px-4 py-2 ${isLight
+                        ? 'bg-white border border-gray-300 text-gray-900 placeholder-gray-400'
+                        : 'bg-slate-800/50 border border-slate-600 text-slate-100 placeholder-slate-500'
+                        }`}
                 />
             </div>
 
-            {/* Passo 3: Intervalo de Sincronização */}
-            <div className="mb-6 pb-6 border-b border-slate-700">
-                <label className="block text-sm font-medium text-slate-300 mb-3">
-                    3. Intervalo de Sincronização (segundos)
+            <div className="mb-6 pb-6 border-b border-slate-700/30">
+                <label className={`block text-sm font-medium ${isLight ? 'text-gray-700' : 'text-slate-300'} mb-3`}>
+                    3. Intervalo de Sincronizacao (segundos)
                 </label>
                 <div className="flex items-center gap-4">
                     <input
@@ -165,39 +173,37 @@ export default function GoogleSheetConnector({ userId, onConnected }: GoogleShee
                         onChange={(e) => setSyncInterval(Number(e.target.value))}
                         className="flex-1"
                     />
-                    <span className="text-emerald-400 font-semibold min-w-[80px]">
-                        {syncInterval < 60 ? syncInterval + 's' : (syncInterval / 60).toFixed(1) + 'min'}
+                    <span className={`${isLight ? 'text-emerald-600' : 'text-emerald-400'} font-semibold min-w-[80px]`}>
+                        {syncInterval < 60 ? `${syncInterval}s` : `${(syncInterval / 60).toFixed(1)}min`}
                     </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-2">
-                    ⚡ Recomendado: 60-300s (1-5 min) para melhor performance
+                <p className={`text-xs ${isLight ? 'text-gray-500' : 'text-slate-400'} mt-2`}>
+                    Recomendado: 60-300s (1-5 min) para melhor performance
                 </p>
             </div>
 
-            {/* Iniciar Sincronização */}
             <button
                 onClick={handleStartSync}
                 disabled={loading || !spreadsheetUrl || !sheetName}
                 className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 disabled:opacity-50 text-white font-medium py-3 rounded-lg transition flex items-center justify-center gap-2"
             >
                 <CheckCircle className="w-4 h-4" />
-                {loading ? 'Iniciando...' : 'Iniciar Sincronização em Tempo Real'}
+                {loading ? 'Iniciando...' : 'Iniciar Sincronizacao'}
             </button>
 
-            {/* Mensagem de Status */}
             {message && (
                 <div
                     className={`mt-4 p-4 rounded-lg flex items-start gap-3 ${message.type === 'success'
-                            ? 'bg-emerald-500/10 border border-emerald-500/30'
-                            : 'bg-red-500/10 border border-red-500/30'
+                        ? isLight ? 'bg-emerald-50 border border-emerald-200' : 'bg-emerald-500/10 border border-emerald-500/30'
+                        : isLight ? 'bg-red-50 border border-red-200' : 'bg-red-500/10 border border-red-500/30'
                         }`}
                 >
                     {message.type === 'success' ? (
-                        <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className={`w-5 h-5 ${isLight ? 'text-emerald-600' : 'text-emerald-500'} flex-shrink-0 mt-0.5`} />
                     ) : (
-                        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                        <AlertCircle className={`w-5 h-5 ${isLight ? 'text-red-600' : 'text-red-500'} flex-shrink-0 mt-0.5`} />
                     )}
-                    <p className={message.type === 'success' ? 'text-emerald-100' : 'text-red-100'}>
+                    <p className={message.type === 'success' ? (isLight ? 'text-emerald-700' : 'text-emerald-100') : (isLight ? 'text-red-700' : 'text-red-100')}>
                         {message.text}
                     </p>
                 </div>

@@ -41,7 +41,12 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       const dadosValidos = json.filter(row => {
         try {
-          return row && row.Ano && row.Mes && row.Categoria && row.Empresa && row.Valor !== undefined;
+          const ano = row?.Ano ?? row?.ano;
+          const mes = row?.Mes ?? row?.mes;
+          const categoria = row?.Categoria ?? row?.categoria;
+          const empresa = row?.Empresa ?? row?.empresa;
+          const valor = row?.Valor ?? row?.valor;
+          return row && ano && mes && categoria && empresa && valor !== undefined;
         } catch {
           return false;
         }
@@ -56,17 +61,22 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       const processados: DadosFinanceiros[] = dadosValidos.map(row => {
         try {
-          const mesStr = String(row.Mes).trim();
+          const mesValue = row?.Mes ?? row?.mes;
+          const mesStr = String(mesValue).trim();
           const mesNum = getMesNumero(mesStr);
 
+          const anoRaw = row?.Ano ?? row?.ano;
+          const anoParsed = parseInt(String(anoRaw));
+          const anoFinal = Number.isNaN(anoParsed) ? 2024 : anoParsed;
+
           return {
-            ano: parseInt(row.Ano),
+            ano: anoFinal,
             mes: mesStr,
             mesNum: mesNum,
-            categoria: String(row.Categoria || ""),
-            empresa: String(row.Empresa || ""),
-            valor: limparValor(row.Valor),
-            data: new Date(parseInt(row.Ano) || 2024, mesNum - 1, 1)
+            categoria: String((row?.Categoria ?? row?.categoria) ?? ""),
+            empresa: String((row?.Empresa ?? row?.empresa) ?? ""),
+            valor: limparValor(row?.Valor ?? row?.valor),
+            data: new Date(anoFinal, mesNum - 1, 1)
           };
         } catch (err) {
           console.error('[FinanceContext] Erro ao processar linha:', row, err);

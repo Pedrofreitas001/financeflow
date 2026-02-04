@@ -45,9 +45,24 @@ const WaterfallChart: React.FC = () => {
               formatter={(value: any, name: any, props: any) => [props.payload.value, 'Valor']}
             />
             {/* The transparent spacer bar */}
-            <Bar dataKey="start" stackId="a" fill="transparent" />
+            <Bar
+              dataKey="start"
+              stackId="a"
+              fill="transparent"
+              isAnimationActive
+              animationBegin={80}
+              animationDuration={700}
+              animationEasing="ease-out"
+            />
             {/* The actual colored bar */}
-            <Bar dataKey="displayValue" stackId="a">
+            <Bar
+              dataKey="displayValue"
+              stackId="a"
+              isAnimationActive
+              animationBegin={120}
+              animationDuration={900}
+              animationEasing="ease-out"
+            >
               {processedData.map((entry, index) => {
                 let color = '#0ebe54'; // Positive
                 if (entry.isTotal) color = '#054d22'; // Final Result

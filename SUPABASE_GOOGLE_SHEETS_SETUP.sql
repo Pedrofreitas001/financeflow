@@ -4,9 +4,12 @@
 CREATE TABLE google_sheets_connections (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  dashboard_type VARCHAR,
   spreadsheet_id VARCHAR NOT NULL,
   spreadsheet_name VARCHAR NOT NULL,
+  sheet_name VARCHAR,
   sheet_names VARCHAR[] NOT NULL, -- array de nomes das abas
+  range VARCHAR DEFAULT 'A1:Z1000',
   access_token TEXT NOT NULL, -- criptografado
   refresh_token TEXT NOT NULL, -- criptografado
   google_user_email VARCHAR,

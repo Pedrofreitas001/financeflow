@@ -10,11 +10,13 @@ import ExpenseEvolution from './Charts/ExpenseEvolution.tsx';
 import DataUploadModal from './DataUploadModal.tsx';
 import InsertDataButton from './InsertDataButton.tsx';
 import SaveDataButton from './SaveDataButton.tsx';
+import ClearDataButton from './ClearDataButton';
 import Toast from './Toast.tsx';
 import { useFinance } from '../context/FinanceContext.tsx';
 import { useTheme } from '../context/ThemeContext.tsx';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
+import { markUserDataLoaded } from '@/utils/userDataState';
 
 const Dashboard: React.FC = () => {
   const { dados, carregarDados } = useFinance();
@@ -105,12 +107,12 @@ const Dashboard: React.FC = () => {
         {/* Cabeçalho da página */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-white text-3xl font-bold mb-2">Dashboard Financeiro</h1>
-            <p className="text-text-muted">
+            <h1 className={`${isDark ? 'text-white' : 'text-gray-900'} text-3xl font-bold mb-2`}>Dashboard Financeiro</h1>
+            <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
               Acompanhe a performance financeira da sua empresa em tempo real
             </p>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap gap-2">
             <InsertDataButton
               onClick={() => setShowUploadModal(true)}
             />
@@ -127,6 +129,15 @@ const Dashboard: React.FC = () => {
                 setToast({
                   message: `❌ Erro ao salvar: ${error}`,
                   type: 'error'
+                });
+                }}
+              />
+            <ClearDataButton
+              onClear={() => {
+                carregarDados([]);
+                setToast({
+                  message: '🧹 Dados removidos da interface.',
+                  type: 'info'
                 });
               }}
             />
@@ -160,6 +171,7 @@ const Dashboard: React.FC = () => {
 
                   // Carregar dados no contexto (NÃO salva automaticamente)
                   carregarDados(result.firstSheet);
+                  markUserDataLoaded();
 
                   setToast({
                     message: `✅ ${result.rowCount} linhas carregadas com sucesso! Clique em "Salvar" para persistir.`,
@@ -185,6 +197,7 @@ const Dashboard: React.FC = () => {
           onGoogleSheets={(data) => {
             // Carregar dados do Google Sheets
             carregarDados(data);
+            markUserDataLoaded();
             setToast({
               message: `✅ Dados do Google Sheets carregados com sucesso!`,
               type: 'success'

@@ -294,8 +294,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             <span className="material-symbols-outlined text-white text-2xl">bar_chart</span>
           </div>
           <div>
-            <p className="text-white text-lg font-bold leading-tight">FinanceFlow</p>
-            <p className="text-text-muted text-xs">V3 WebApp</p>
+            <p className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-lg font-bold leading-tight`}>FinanceFlow</p>
+            <p className={`${theme === 'dark' ? 'text-text-muted' : 'text-gray-600'} text-xs`}>V3 WebApp</p>
           </div>
         </div>
       </div>
@@ -423,49 +423,6 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
           </button>
         </nav>
 
-        {/* Upload sections - positioned above Aparência */}
-        {currentPage === 'dashboard' && (
-          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
-            <input type="file" onChange={handleFileUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Financeiro</p>
-          </div>
-        )}
-
-        {currentPage === 'despesas' && (
-          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
-            <input type="file" onChange={handleFileUploadDespesas} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />de Despesas</p>
-          </div>
-        )}
-
-        {currentPage === 'dre' && (
-          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
-            <input type="file" onChange={handleDREUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel DRE<br />(4 abas completas)</p>
-          </div>
-        )}
-
-        {currentPage === 'indicadores' && (
-          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
-            <input type="file" onChange={handleIndicadoresUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Indicadores</p>
-          </div>
-        )}
-
-        {currentPage === 'orcamento' && (
-          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
-            <input type="file" onChange={handleOrcamentoUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Orçamento</p>
-          </div>
-        )}
-
-        {currentPage === 'balancete' && (
-          <div className="relative border-2 border-dashed border-green-500/70 rounded-xl p-6 flex flex-col items-center justify-center bg-gradient-to-br from-green-700/30 to-emerald-800/30 hover:from-green-700/40 hover:to-emerald-800/40 transition-all cursor-pointer group shadow-lg">
-            <input type="file" onChange={handleBalanceteUpload} className="absolute inset-0 opacity-0 cursor-pointer" accept=".xlsx,.xls" />
-            <p className="text-sm font-bold text-center text-green-100 group-hover:text-white transition-colors leading-tight">Carregar Excel<br />Balancete</p>
-          </div>
-        )}
-
         <div className="flex flex-col gap-2">
           <p className="px-2 text-xs font-bold text-text-muted uppercase">Aparência</p>
           <button
@@ -494,7 +451,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
                   setFiltroDespesasEmpresa(e.target.value);
                 }
               }}
-              className="w-full rounded-xl bg-surface-dark border border-border-dark text-white p-3 text-sm focus:ring-primary"
+              className={`w-full rounded-xl bg-surface-dark border border-border-dark ${theme === 'dark' ? 'text-white' : 'text-gray-900'} p-3 text-sm focus:ring-primary`}
             >
               {(currentPage === 'dashboard' ? empresas : empresasDespesas).map(emp => <option key={emp} value={emp}>{emp}</option>)}
             </select>
@@ -509,7 +466,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
                   onClick={() => toggleMonth(month)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${(currentPage === 'dashboard' ? filtros.meses : filtrosDespesas.meses).includes(month)
                     ? 'bg-primary text-white border-primary'
-                    : 'bg-surface-dark text-text-muted border-border-dark'
+                    : theme === 'dark'
+                      ? 'bg-surface-dark text-text-muted border-border-dark'
+                      : 'bg-blue-500/30 text-white border-blue-500/40'
                     }`}
                 >
                   {month}
@@ -527,7 +486,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
             }`}
         >
           <span className="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">picture_as_pdf</span>
-          <span>Exportar Relatório</span>
+          <span className="text-white">Exportar Relatório</span>
         </button>
       </div>
 

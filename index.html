@@ -149,19 +149,19 @@
     }
 
     html.light .text-white {
+      color: #ffffff !important;
+    }
+
+    html.light h1:not(.text-white):not([class*="text-white"]),
+    html.light h2:not([data-cta-header]):not(.text-white):not([class*="text-white"]),
+    html.light h3:not(.text-white):not([class*="text-white"]),
+    html.light h4:not(.text-white):not([class*="text-white"]),
+    html.light h5:not(.text-white):not([class*="text-white"]),
+    html.light h6:not(.text-white):not([class*="text-white"]) {
       color: #1a1a1a !important;
     }
 
-    html.light h1,
-    html.light h2:not([data-cta-header]),
-    html.light h3,
-    html.light h4,
-    html.light h5,
-    html.light h6 {
-      color: #1a1a1a !important;
-    }
-
-    html.light p:not([data-cta-text]) {
+    html.light p:not([data-cta-text]):not(.text-white):not([class*="text-white"]) {
       color: #1a1a1a !important;
     }
 
@@ -191,7 +191,7 @@
       color: #ffffff !important;
     }
 
-    html.light span:not(.material-symbols-outlined) {
+    html.light span:not(.material-symbols-outlined):not(.text-white):not([class*="text-white"]) {
       color: #1a1a1a !important;
     }
 
@@ -220,8 +220,14 @@
       color: #1a1a1a !important;
     }
 
+    html.light button.text-white,
+    html.light button[class*="text-white"],
     html.light button .text-white {
-      color: white !important;
+      color: #ffffff !important;
+    }
+
+    html.light button span {
+      color: inherit !important;
     }
 
     /* Light Theme - SVG/Recharts Elements */

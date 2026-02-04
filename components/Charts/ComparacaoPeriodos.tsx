@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useDespesas } from '../../context/DespesasContext.tsx';
 import { useTheme } from '../../context/ThemeContext.tsx';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -101,7 +101,7 @@ const ComparacaoPeriodos: React.FC = () => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-surface-dark border border-border-dark rounded-xl p-4 shadow-2xl">
-                    <p className="text-white font-bold mb-2">{label}</p>
+                    <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-bold mb-2`}>{label}</p>
                     {payload.map((entry: any, index: number) => (
                         <div key={index} className="flex items-center justify-between gap-4">
                             <span className="text-text-muted text-sm">{entry.name}:</span>
@@ -126,8 +126,8 @@ const ComparacaoPeriodos: React.FC = () => {
             <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h3 className="text-white text-lg font-bold">Comparação de Períodos</h3>
-                        <p className="text-text-muted text-sm mt-1">Compare despesas entre diferentes períodos</p>
+                        <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} text-lg font-bold`}>Comparação de Períodos</h3>
+                        <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-sm mt-1`}>Compare despesas entre diferentes períodos</p>
                     </div>
                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                         <span className="material-symbols-outlined text-primary text-2xl">compare_arrows</span>
@@ -136,7 +136,7 @@ const ComparacaoPeriodos: React.FC = () => {
                 <div className="flex items-center justify-center h-64 bg-background-dark rounded-xl">
                     <div className="text-center">
                         <span className="material-symbols-outlined text-text-muted text-5xl mb-3">tune</span>
-                        <p className="text-text-muted">Configure os filtros para visualizar a comparação</p>
+                        <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'}`}>Configure os filtros para visualizar a comparação</p>
                     </div>
                 </div>
             </div>
@@ -147,7 +147,7 @@ const ComparacaoPeriodos: React.FC = () => {
         <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h3 className="text-white text-lg font-bold">Comparação de Períodos</h3>
+                    <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} text-lg font-bold`}>Comparação de Períodos</h3>
                     <p className="text-text-muted text-sm mt-1">
                         {tipoComparacao === 'anos'
                             ? `${ano1} vs ${ano2} - ${categoriaComparacao}`
@@ -162,7 +162,7 @@ const ComparacaoPeriodos: React.FC = () => {
 
             {/* Tipo de Comparação */}
             <div className="mb-6 p-4 bg-background-dark rounded-xl">
-                <label className="text-sm text-text-muted mb-3 block font-medium">Tipo de Comparação</label>
+                <label className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-3 block font-medium`}>Tipo de Comparação</label>
                 <div className="flex gap-4 mb-4">
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -172,7 +172,7 @@ const ComparacaoPeriodos: React.FC = () => {
                             onChange={(e) => setTipoComparacao(e.target.value as 'anos' | 'empresas')}
                             className="w-4 h-4"
                         />
-                        <span className="text-white text-sm">Comparar Anos</span>
+                        <span className={`${isDark ? 'text-white' : 'text-gray-900'} text-sm`}>Comparar Anos</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -182,17 +182,17 @@ const ComparacaoPeriodos: React.FC = () => {
                             onChange={(e) => setTipoComparacao(e.target.value as 'anos' | 'empresas')}
                             className="w-4 h-4"
                         />
-                        <span className="text-white text-sm">Comparar Empresas</span>
+                        <span className={`${isDark ? 'text-white' : 'text-gray-900'} text-sm`}>Comparar Empresas</span>
                     </label>
                 </div>
 
                 {/* Selecionar Categoria */}
                 <div className="mb-4">
-                    <label className="text-sm text-text-muted mb-2 block">Categoria</label>
+                    <label className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-2 block`}>Categoria</label>
                     <select
                         value={categoriaComparacao}
                         onChange={(e) => setCategoriaComparacao(e.target.value)}
-                        className="w-full rounded-lg bg-surface-dark border border-border-dark text-white p-2 text-sm"
+                        className={`w-full rounded-lg bg-surface-dark border border-border-dark ${isDark ? 'text-white' : 'text-gray-900'} p-2 text-sm`}
                     >
                         {categoriasDisponiveis.map(cat => (
                             <option key={cat} value={cat}>{cat}</option>
@@ -204,11 +204,11 @@ const ComparacaoPeriodos: React.FC = () => {
                 {tipoComparacao === 'anos' ? (
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-sm text-text-muted mb-2 block">Ano 1</label>
+                            <label className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-2 block`}>Ano 1</label>
                             <select
                                 value={ano1}
                                 onChange={(e) => setAno1(parseInt(e.target.value))}
-                                className="w-full rounded-lg bg-surface-dark border border-border-dark text-white p-2 text-sm"
+                                className={`w-full rounded-lg bg-surface-dark border border-border-dark ${isDark ? 'text-white' : 'text-gray-900'} p-2 text-sm`}
                             >
                                 {anosDisponiveis.map(ano => (
                                     <option key={ano} value={ano}>{ano}</option>
@@ -216,11 +216,11 @@ const ComparacaoPeriodos: React.FC = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="text-sm text-text-muted mb-2 block">Ano 2</label>
+                            <label className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-2 block`}>Ano 2</label>
                             <select
                                 value={ano2}
                                 onChange={(e) => setAno2(parseInt(e.target.value))}
-                                className="w-full rounded-lg bg-surface-dark border border-border-dark text-white p-2 text-sm"
+                                className={`w-full rounded-lg bg-surface-dark border border-border-dark ${isDark ? 'text-white' : 'text-gray-900'} p-2 text-sm`}
                             >
                                 {anosDisponiveis.map(ano => (
                                     <option key={ano} value={ano}>{ano}</option>
@@ -231,11 +231,11 @@ const ComparacaoPeriodos: React.FC = () => {
                 ) : (
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="text-sm text-text-muted mb-2 block">Empresa 1</label>
+                            <label className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-2 block`}>Empresa 1</label>
                             <select
                                 value={empresa1}
                                 onChange={(e) => setEmpresa1(e.target.value)}
-                                className="w-full rounded-lg bg-surface-dark border border-border-dark text-white p-2 text-sm"
+                                className={`w-full rounded-lg bg-surface-dark border border-border-dark ${isDark ? 'text-white' : 'text-gray-900'} p-2 text-sm`}
                             >
                                 {empresasDespesas.filter(e => e !== 'Todas').map(emp => (
                                     <option key={emp} value={emp}>{emp}</option>
@@ -243,11 +243,11 @@ const ComparacaoPeriodos: React.FC = () => {
                             </select>
                         </div>
                         <div>
-                            <label className="text-sm text-text-muted mb-2 block">Empresa 2</label>
+                            <label className={`text-sm ${isDark ? 'text-text-muted' : 'text-gray-600'} mb-2 block`}>Empresa 2</label>
                             <select
                                 value={empresa2}
                                 onChange={(e) => setEmpresa2(e.target.value)}
-                                className="w-full rounded-lg bg-surface-dark border border-border-dark text-white p-2 text-sm"
+                                className={`w-full rounded-lg bg-surface-dark border border-border-dark ${isDark ? 'text-white' : 'text-gray-900'} p-2 text-sm`}
                             >
                                 {empresasDespesas.filter(e => e !== 'Todas').map(emp => (
                                     <option key={emp} value={emp}>{emp}</option>
@@ -261,15 +261,15 @@ const ComparacaoPeriodos: React.FC = () => {
             {/* Métricas de Comparação */}
             <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="bg-background-dark rounded-xl p-4">
-                    <p className="text-text-muted text-xs mb-1">{chave1}</p>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-1`}>{chave1}</p>
                     <p className="text-blue-400 text-lg font-bold whitespace-nowrap">{formatCurrency(total1)}</p>
                 </div>
                 <div className="bg-background-dark rounded-xl p-4">
-                    <p className="text-text-muted text-xs mb-1">{chave2}</p>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-1`}>{chave2}</p>
                     <p className="text-purple-400 text-lg font-bold whitespace-nowrap">{formatCurrency(total2)}</p>
                 </div>
                 <div className="bg-background-dark rounded-xl p-4">
-                    <p className="text-text-muted text-xs mb-1">Variação</p>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-1`}>Variação</p>
                     <div className="flex items-center gap-2">
                         <p className={`text-lg font-bold whitespace-nowrap ${variacao >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {variacao >= 0 ? '+' : ''}{variacao.toFixed(1)}%
@@ -319,4 +319,8 @@ const ComparacaoPeriodos: React.FC = () => {
 };
 
 export default ComparacaoPeriodos;
+
+
+
+
 

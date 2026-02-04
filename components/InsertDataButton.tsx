@@ -17,9 +17,9 @@ export default function InsertDataButton({ onClick, disabled = false }: InsertDa
         <button
             onClick={onClick}
             disabled={disabled}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${isDark
-                    ? 'bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white'
-                    : 'bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white'
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${isDark
+                ? 'bg-blue-600/80 hover:bg-blue-600 disabled:bg-slate-700 text-white'
+                : 'bg-blue-500/80 hover:bg-blue-500 disabled:bg-gray-300 text-white'
                 }`}
         >
             Inserir Dados

@@ -8,10 +8,12 @@ import DREComparativoTable from './DRETables/DREComparativoTable';
 import DataUploadModal from './DataUploadModal';
 import InsertDataButton from './InsertDataButton';
 import SaveDataButton from './SaveDataButton';
+import ClearDataButton from './ClearDataButton';
 import Toast from './Toast';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
 import { supabase } from '@/lib/supabase';
+import { markUserDataLoaded } from '@/utils/userDataState';
 
 type ViewType = 'mensal' | 'acumulado' | 'comparativo';
 
@@ -114,7 +116,7 @@ const DREDashboard: React.FC = () => {
                 Demonstração do Resultado do Exercício - Análise Detalhada
               </p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap gap-2">
               <InsertDataButton
                 onClick={() => setShowUploadModal(true)}
               />
@@ -131,6 +133,15 @@ const DREDashboard: React.FC = () => {
                   setToast({
                     message: `❌ Erro ao salvar: ${error}`,
                     type: 'error'
+                  });
+                }}
+              />
+              <ClearDataButton
+                onClear={() => {
+                  setDados(null as any);
+                  setToast({
+                    message: '🧹 Dados removidos da interface.',
+                    type: 'info'
                   });
                 }}
               />
@@ -155,6 +166,7 @@ const DREDashboard: React.FC = () => {
 
                     // Carregar dados no contexto (NÃO salva automaticamente)
                     carregarDados(result.firstSheet);
+                    markUserDataLoaded();
 
                     setToast({
                       message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
@@ -179,6 +191,7 @@ const DREDashboard: React.FC = () => {
             }}
             onGoogleSheets={(data) => {
               carregarDados(data);
+              markUserDataLoaded();
               setToast({
                 message: 'Dados do Google Sheets carregados com sucesso!',
                 type: 'success'
@@ -222,7 +235,7 @@ const DREDashboard: React.FC = () => {
                 }`}
             >
               <span className="material-symbols-outlined text-lg">{tab.icon}</span>
-              <span>{tab.label}</span>
+              <span className={viewType === tab.id ? 'text-white' : ''}>{tab.label}</span>
             </button>
           ))}
         </div>

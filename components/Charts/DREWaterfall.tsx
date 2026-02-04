@@ -103,8 +103,24 @@ const DREWaterfall: React.FC = () => {
               labelStyle={{ color: colors.tooltipText }}
               formatter={(value: any, name: any, props: any) => [new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(props.payload.actual), 'Valor']}
             />
-            <Bar dataKey="start" stackId="a" fill="transparent" />
-            <Bar dataKey="display" stackId="a" radius={[2, 2, 0, 0]}>
+            <Bar
+              dataKey="start"
+              stackId="a"
+              fill="transparent"
+              isAnimationActive
+              animationBegin={80}
+              animationDuration={700}
+              animationEasing="ease-out"
+            />
+            <Bar
+              dataKey="display"
+              stackId="a"
+              radius={[2, 2, 0, 0]}
+              isAnimationActive
+              animationBegin={120}
+              animationDuration={900}
+              animationEasing="ease-out"
+            >
               {data.map((entry, index) => {
                 let color = '#0ebe54';
                 if (entry.type === 'total') color = '#3b82f6';

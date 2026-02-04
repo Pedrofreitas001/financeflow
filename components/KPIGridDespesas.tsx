@@ -6,6 +6,7 @@ import { useTheme } from '../context/ThemeContext.tsx';
 const KPIGridDespesas: React.FC = () => {
     const { kpisDespesas } = useDespesas();
     const { theme } = useTheme();
+    const isDark = theme === 'dark';
 
     const formatCurrency = (value: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -70,11 +71,11 @@ const KPIGridDespesas: React.FC = () => {
                     </div>
 
                     <div>
-                        <p className="text-text-muted text-xs font-medium mb-1 uppercase tracking-wide">
+                        <p className={`${isDark ? 'text-text-muted' : 'text-gray-900'} text-xs font-medium mb-1 uppercase tracking-wide`}>
                             {kpi.label}
                         </p>
                         <div className="flex items-baseline gap-2">
-                            <p className="text-white text-2xl font-bold tracking-tight">
+                            <p className={`${isDark ? 'text-white' : 'text-gray-900'} text-2xl font-bold tracking-tight`}>
                                 {kpi.value}
                             </p>
                         </div>

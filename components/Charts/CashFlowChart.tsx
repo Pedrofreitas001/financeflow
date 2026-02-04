@@ -62,8 +62,28 @@ const CashFlowChart: React.FC = () => {
               iconType="circle"
               wrapperStyle={{ paddingTop: '10px', fontSize: '9px', color: colors.tickFill }}
             />
-            <Bar dataKey="inflow" name="Entradas" fill="#0ebe54" radius={[3, 3, 0, 0]} barSize={12} />
-            <Bar dataKey="outflow" name="Saídas" fill="#ef4444" radius={[3, 3, 0, 0]} barSize={12} />
+            <Bar
+              dataKey="inflow"
+              name="Entradas"
+              fill="#0ebe54"
+              radius={[3, 3, 0, 0]}
+              barSize={12}
+              isAnimationActive
+              animationBegin={100}
+              animationDuration={800}
+              animationEasing="ease-out"
+            />
+            <Bar
+              dataKey="outflow"
+              name="Saídas"
+              fill="#ef4444"
+              radius={[3, 3, 0, 0]}
+              barSize={12}
+              isAnimationActive
+              animationBegin={150}
+              animationDuration={800}
+              animationEasing="ease-out"
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>

@@ -89,27 +89,27 @@ const GalleryGrid: React.FC = () => {
 
     return (
         <>
-            <div className="grid md:grid-cols-3 gap-6">
-                {images.map((image, index) => (
-                    <div
-                        key={index}
-                        onClick={() => setSelectedImage(image.src)}
-                        className="cursor-pointer group relative overflow-hidden rounded-md border border-white/10 hover:border-blue-500/50 transition-all hover:shadow-lg hover:shadow-blue-500/20"
-                    >
-                        <img
-                            src={image.src}
-                            alt={image.alt}
-                            loading="lazy"
-                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                            <span className="material-symbols-outlined text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity">
-                                zoom_in
-                            </span>
-                        </div>
+                    <div className="grid md:grid-cols-3 gap-6">
+                        {images.map((image, index) => (
+                            <div
+                                key={index}
+                                onClick={() => setSelectedImage(image.src)}
+                                className="cursor-pointer group relative overflow-hidden rounded-md border border-slate-200 hover:border-blue-400/70 transition-all hover:shadow-lg hover:shadow-blue-200/40 bg-white"
+                            >
+                                <img
+                                    src={image.src}
+                                    alt={image.alt}
+                                    loading="lazy"
+                                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity">
+                                        zoom_in
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
 
             {/* Modal */}
             {selectedImage && (
@@ -143,6 +143,10 @@ const Home: React.FC = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [showSignupModal, setShowSignupModal] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<'premium' | 'diamond'>('premium');
+    const [isMockupLightState, setIsMockupLight] = useState(false);
+    const [mockupCycle, setMockupCycle] = useState(0);
+    const [isMockupTransitioning, setIsMockupTransitioning] = useState(false);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -151,6 +155,47 @@ const Home: React.FC = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    useEffect(() => {
+        // Toggle this to true if you want to bring back the white mockup cycle later.
+        const enableMockupLightCycle = false;
+        if (!enableMockupLightCycle) return;
+        let cancelled = false;
+        const runSequence = () => {
+            if (cancelled) return;
+            setIsMockupTransitioning(false);
+            setMockupCycle((prev) => prev + 1);
+            const animMs = 1100;
+            const pauseMs = 1700;
+            const transitionMs = 420;
+            setTimeout(() => {
+                if (cancelled) return;
+                setIsMockupTransitioning(true);
+                setTimeout(() => {
+                    if (cancelled) return;
+                    setIsMockupLight((prev) => !prev);
+                    setMockupCycle((prev) => prev + 1);
+                }, transitionMs / 2);
+                setTimeout(() => {
+                    if (cancelled) return;
+                    setIsMockupTransitioning(false);
+                }, transitionMs);
+                setTimeout(runSequence, animMs + pauseMs + transitionMs);
+            }, animMs + pauseMs);
+        };
+        const start = setTimeout(runSequence, 400);
+        return () => {
+            cancelled = true;
+            clearTimeout(start);
+        };
+    }, []);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setMockupCycle((prev) => prev + 1);
+        }, 5200);
+        return () => clearInterval(interval);
+    }, []);
+    const isMockupLight = false ? isMockupLightState : false;
 
     const features = [
         {
@@ -215,6 +260,28 @@ const Home: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-[#0f1d32]">
+            <style>{`
+                @keyframes mockupBarGrow {
+                    0% { transform: scaleY(0.1); opacity: 0.2; }
+                    20% { transform: scaleY(1); opacity: 1; }
+                    100% { transform: scaleY(1); opacity: 1; }
+                }
+                @keyframes mockupPieReveal {
+                    0% { transform: scale(0.86) rotate(-18deg); opacity: 0.15; }
+                    18% { transform: scale(1) rotate(0deg); opacity: 1; }
+                    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+                }
+                .mockup-bar {
+                    transform-origin: bottom;
+                    animation: mockupBarGrow 1100ms ease-out forwards;
+                    will-change: transform, opacity;
+                }
+                .mockup-pie {
+                    animation: mockupPieReveal 1100ms ease-out forwards;
+                    transform-origin: 50% 50%;
+                    will-change: transform, opacity;
+                }
+            `}</style>
             {/* Navbar - Conditional */}
             {user ? (
                 <LoggedNavbar />
@@ -353,7 +420,7 @@ const Home: React.FC = () => {
                     backgroundSize: '24px 24px'
                 }}></div>
 
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full py-32">
+                <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 w-full py-24 md:py-32">
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                         {/* Left Content */}
                         <div>
@@ -362,20 +429,20 @@ const Home: React.FC = () => {
                                 <span className="text-white/90 text-sm font-medium">Novo: Insights com IA Generativa</span>
                             </div>
 
-                            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-[1.1]">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-[1.1]">
                                 Dashboard Contábil<br />
                                 <span className="text-blue-400">Inteligente</span>
                             </h1>
 
-                            <p className="text-white/60 text-lg lg:text-xl leading-relaxed mb-10 max-w-lg">
+                            <p className="text-white/60 text-base sm:text-lg lg:text-xl leading-relaxed mb-8 sm:mb-10 max-w-lg">
                                 Transforme seus dados do Excel em dashboards profissionais com insights de IA. A solução completa para gestão financeira moderna.
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4 mb-10">
+                            <div className="flex flex-col sm:flex-row gap-4 mb-8 sm:mb-10">
                                 {user ? (
                                     <Link
                                         to="/dashboard"
-                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-blue-500 transition-all"
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-blue-500 transition-all"
                                     >
                                         <span className="material-symbols-outlined text-xl">rocket_launch</span>
                                         Acessar Dashboard
@@ -383,7 +450,7 @@ const Home: React.FC = () => {
                                 ) : (
                                     <button
                                         onClick={() => setShowSignupModal(true)}
-                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-blue-500 transition-all"
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-blue-500 transition-all"
                                     >
                                         <span className="material-symbols-outlined text-xl">rocket_launch</span>
                                         Acessar Dashboard
@@ -391,7 +458,7 @@ const Home: React.FC = () => {
                                 )}
                                 <a
                                     href="#demo"
-                                    className="inline-flex items-center justify-center gap-2 bg-white/5 border border-white/20 text-white text-base font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
+                                    className="inline-flex items-center justify-center gap-2 bg-white/5 border border-white/20 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-white/10 transition-all"
                                 >
                                     <span className="material-symbols-outlined text-xl">play_circle</span>
                                     Ver Demonstração
@@ -415,83 +482,89 @@ const Home: React.FC = () => {
                         </div>
 
                         {/* Right Content - Dashboard Preview */}
-                        <div className="relative">
+                        <div className="relative max-w-[520px] mx-auto lg:mx-0">
                             {/* Glow effect behind mockup */}
                             <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-blue-600/10 to-transparent rounded-3xl blur-2xl"></div>
 
-                            <div className="relative z-10 bg-gradient-to-br from-[#1e3654] to-[#152238] rounded-xl p-1 border border-white/15 shadow-2xl shadow-blue-900/30">
+                            <div
+                                className={`relative z-10 rounded-xl p-1 border shadow-2xl scale-[0.92] sm:scale-100 origin-top transition-all duration-500 ease-in-out ${
+                                    isMockupLight
+                                        ? 'bg-gradient-to-br from-[#dbe4ee] via-[#e6edf2] to-[#cfd8e3] border-slate-300 shadow-blue-200/35'
+                                        : 'bg-gradient-to-br from-[#1e3654] to-[#152238] border-white/15 shadow-blue-900/30'
+                                } ${isMockupTransitioning ? 'scale-[0.99]' : 'scale-100'}`}
+                            >
                                 {/* Browser Header */}
-                                <div className="flex items-center gap-3 px-4 py-3 bg-[#182d4a]/90 rounded-t-lg">
+                                <div className={`flex items-center gap-3 px-4 py-3 rounded-t-lg transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-b border-slate-200' : 'bg-[#182d4a]/90'}`}>
                                     <div className="flex gap-2">
                                         <div className="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
                                         <div className="w-3 h-3 rounded-full bg-[#febc2e]"></div>
                                         <div className="w-3 h-3 rounded-full bg-[#28c840]"></div>
                                     </div>
                                     <div className="flex-1 ml-4">
-                                        <div className="bg-[#0d1829] rounded-lg px-4 py-2 text-xs text-white/40 inline-block">
+                                        <div className={`rounded-lg px-4 py-2 text-xs inline-block transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-400 text-slate-700' : 'bg-[#0d1829] text-white/40'}`}>
                                             app.financeflow.com.br/dashboard
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Dashboard Content */}
-                                <div className="bg-[#0f1a2e] rounded-b-lg p-6">
+                                <div className={`rounded-b-lg p-4 sm:p-6 transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-200' : 'bg-[#0f1a2e]'}`}>
                                     <div className="flex gap-5">
                                         {/* Mini Sidebar */}
-                                        <div className="flex flex-col items-center gap-4 pt-1">
-                                            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-600/30">
-                                                <span className="text-white text-sm font-bold">F</span>
+                                        <div className={`flex flex-col items-center gap-4 pt-1 rounded-lg px-2 py-2 transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-200 border border-slate-300' : 'bg-transparent'}`}>
+                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all duration-700 ease-in-out ${isMockupLight ? 'bg-blue-600 shadow-blue-300/40' : 'bg-blue-600 shadow-blue-600/30'}`}>
+                                                <span className={`${isMockupLight ? 'text-white' : 'text-white'} text-sm font-bold`}>F</span>
                                             </div>
-                                            <div className="w-10 h-10 rounded-xl bg-white/10"></div>
-                                            <div className="w-10 h-10 rounded-xl bg-white/5"></div>
-                                            <div className="w-10 h-10 rounded-xl bg-white/5"></div>
+                                            <div className={`w-10 h-10 rounded-xl transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-400 border border-slate-300' : 'bg-white/10'}`}></div>
+                                            <div className={`w-10 h-10 rounded-xl transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-400 border border-slate-300' : 'bg-white/5'}`}></div>
+                                            <div className={`w-10 h-10 rounded-xl transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-400 border border-slate-300' : 'bg-white/5'}`}></div>
                                         </div>
 
                                         {/* Main Content */}
                                         <div className="flex-1">
                                             {/* KPIs */}
-                                            <div className="grid grid-cols-4 gap-3 mb-6">
-                                                <div className="bg-[#182d4a]/70 rounded-lg p-3 border border-white/5">
-                                                    <div className="text-[10px] text-white/50 mb-1 font-medium">Receita</div>
-                                                    <div className="text-sm font-bold text-emerald-400">R$ 1.2M</div>
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6" key={`kpis-${mockupCycle}-${isMockupLight ? 'light' : 'dark'}`}>
+                                                <div className={`rounded-lg p-3 border transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-slate-300' : 'bg-[#182d4a]/70 border-white/5'}`}>
+                                                    <div className={`text-[10px] mb-1 font-medium transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-slate-600' : 'text-white/50'}`}>Receita</div>
+                                                    <div className={`text-sm font-bold transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-emerald-600' : 'text-emerald-400'}`}>R$ 1.2M</div>
                                                 </div>
-                                                <div className="bg-[#182d4a]/70 rounded-lg p-3 border border-white/5">
-                                                    <div className="text-[10px] text-white/50 mb-1 font-medium">Despesas</div>
-                                                    <div className="text-sm font-bold text-red-400">R$ 890K</div>
+                                                <div className={`rounded-lg p-3 border transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-slate-300' : 'bg-[#182d4a]/70 border-white/5'}`}>
+                                                    <div className={`text-[10px] mb-1 font-medium transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-slate-600' : 'text-white/50'}`}>Despesas</div>
+                                                    <div className={`text-sm font-bold transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-red-500' : 'text-red-400'}`}>R$ 890K</div>
                                                 </div>
-                                                <div className="bg-[#182d4a]/70 rounded-lg p-3 border border-white/5">
-                                                    <div className="text-[10px] text-white/50 mb-1 font-medium">Lucro</div>
-                                                    <div className="text-sm font-bold text-blue-400">R$ 310K</div>
+                                                <div className={`rounded-lg p-3 border transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-slate-300' : 'bg-[#182d4a]/70 border-white/5'}`}>
+                                                    <div className={`text-[10px] mb-1 font-medium transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-slate-600' : 'text-white/50'}`}>Lucro</div>
+                                                    <div className={`text-sm font-bold transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-blue-600' : 'text-blue-400'}`}>R$ 310K</div>
                                                 </div>
-                                                <div className="bg-[#182d4a]/70 rounded-lg p-3 border border-white/5">
-                                                    <div className="text-[10px] text-white/50 mb-1 font-medium">Margem</div>
-                                                    <div className="text-sm font-bold text-purple-400">25.8%</div>
+                                                <div className={`rounded-lg p-3 border transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-slate-300' : 'bg-[#182d4a]/70 border-white/5'}`}>
+                                                    <div className={`text-[10px] mb-1 font-medium transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-slate-600' : 'text-white/50'}`}>Margem</div>
+                                                    <div className={`text-sm font-bold transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-purple-600' : 'text-purple-400'}`}>25.8%</div>
                                                 </div>
                                             </div>
 
                                             {/* Charts */}
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="bg-[#182d4a]/70 rounded-lg p-4 border border-white/5">
-                                                    <div className="text-[10px] text-white/50 mb-3 font-medium">Evolução Mensal</div>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" key={`charts-${mockupCycle}-${isMockupLight ? 'light' : 'dark'}`}>
+                                                <div className={`rounded-lg p-4 border transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-slate-300' : 'bg-[#182d4a]/70 border-white/5'}`}>
+                                                    <div className={`text-[10px] mb-3 font-medium transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-slate-600' : 'text-white/50'}`}>Evolução Mensal</div>
                                                     <div className="flex items-end gap-1.5 h-24">
                                                         {[30, 45, 35, 55, 50, 70, 60, 80, 75, 90, 85, 95].map((h, i) => (
                                                             <div
                                                                 key={i}
-                                                                className="flex-1 bg-gradient-to-t from-blue-600 to-blue-400 rounded-sm"
-                                                                style={{ height: `${h}%` }}
+                                                                className={`flex-1 rounded-sm mockup-bar ${isMockupLight ? 'bg-gradient-to-t from-blue-500 to-blue-300' : 'bg-gradient-to-t from-blue-600 to-blue-400'}`}
+                                                                style={{ height: `${h}%`, animationDelay: `${220 + i * 90}ms` }}
                                                             ></div>
                                                         ))}
                                                     </div>
                                                 </div>
-                                                <div className="bg-[#182d4a]/70 rounded-lg p-4 border border-white/5">
-                                                    <div className="text-[10px] text-white/50 mb-3 font-medium">Distribuição</div>
+                                                <div className={`rounded-lg p-4 border transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-slate-300' : 'bg-[#182d4a]/70 border-white/5'}`}>
+                                                    <div className={`text-[10px] mb-3 font-medium transition-colors duration-700 ease-in-out ${isMockupLight ? 'text-slate-600' : 'text-white/50'}`}>Distribuição</div>
                                                     <div className="flex items-center justify-center h-24">
                                                         <div className="relative w-20 h-20">
-                                                            <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                                                                <circle cx="18" cy="18" r="14" fill="none" stroke="#1e3a5f" strokeWidth="4" />
+                                                            <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90 mockup-pie" style={{ animationDelay: '240ms' }}>
+                                                                <circle cx="18" cy="18" r="14" fill="none" stroke={isMockupLight ? '#b8c4d3' : '#1e3a5f'} strokeWidth="4" />
                                                                 <circle cx="18" cy="18" r="14" fill="none" stroke="#3b82f6" strokeWidth="4" strokeDasharray="50 100" strokeLinecap="round" />
                                                                 <circle cx="18" cy="18" r="14" fill="none" stroke="#10b981" strokeWidth="4" strokeDasharray="25 100" strokeDashoffset="-50" strokeLinecap="round" />
-                                                                <circle cx="18" cy="18" r="14" fill="none" stroke="#06b6d4" strokeWidth="4" strokeDasharray="25 100" strokeDashoffset="-75" strokeLinecap="round" />
+                                                                <circle cx="18" cy="18" r="14" fill="none" stroke="#ef4444" strokeWidth="4" strokeDasharray="25 100" strokeDashoffset="-75" strokeLinecap="round" />
                                                             </svg>
                                                         </div>
                                                     </div>
@@ -701,13 +774,13 @@ const Home: React.FC = () => {
             </section>
 
             {/* Gallery Section */}
-            <section className="py-24 bg-[#0f1d32]">
+            <section className="py-24 bg-white">
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                        <h2 className="text-3xl md:text-5xl font-bold text-slate-900 mb-4">
                             Galeria do Dashboard
                         </h2>
-                        <p className="text-white/60 text-lg max-w-2xl mx-auto">
+                        <p className="text-slate-600 text-lg max-w-2xl mx-auto">
                             Confira as capturas de tela dos principais módulos do FinanceFlow
                         </p>
                     </div>
@@ -751,7 +824,7 @@ const Home: React.FC = () => {
 
             {/* Pricing Section */}
             <section id="pricing" className="py-16 bg-white">
-                <div className="max-w-3xl mx-auto px-6 lg:px-8">
+                <div className="max-w-5xl mx-auto px-6 lg:px-8">
                     <div className="text-center mb-8">
                         <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-3">
                             Comece Gratuitamente
@@ -770,93 +843,95 @@ const Home: React.FC = () => {
                         <p className="text-emerald-100 text-sm">Acesso completo a todos os recursos • Sem cartão de crédito</p>
                     </div>
 
-                    <div className="bg-white rounded-xl border-2 border-slate-200 shadow-lg overflow-hidden">
-                        <div className="p-6 text-center border-b border-slate-100">
-                            <div className="text-xs font-medium text-slate-500 mb-1">Após o período de teste</div>
-                            <div className="flex items-baseline justify-center gap-1">
-                                <span className="text-sm font-medium text-slate-400">R$</span>
-                                <span className="text-4xl font-bold text-slate-900">59</span>
-                                <span className="text-sm font-medium text-slate-400">,90</span>
-                                <span className="text-slate-500 text-sm ml-1">/mês</span>
+                    <div className="grid gap-6 md:grid-cols-2">
+                        <button
+                            type="button"
+                            onClick={() => setSelectedPlan('premium')}
+                            className={`bg-white rounded-xl border-2 shadow-lg overflow-hidden text-left transition-all h-full flex flex-col ${selectedPlan === 'premium' ? 'border-amber-300 ring-2 ring-amber-200/60' : 'border-slate-200 hover:border-amber-200'}`}
+                        >
+                            <div className="px-6 py-3 text-center bg-gradient-to-r from-amber-300/80 to-amber-200/60 border-b border-amber-200/60">
+                                <div className="text-xs font-semibold text-amber-700 tracking-wider">PLANO PREMIUM</div>
                             </div>
-                        </div>
-
-                        <div className="p-6">
-                            <ul className="space-y-2 mb-6">
-                                {[
-                                    'Upload ilimitado de arquivos Excel',
-                                    'Dashboards interativos personalizáveis',
-                                    'Análise DRE, Balancete e Cash Flow',
-                                    'Insights com Inteligência Artificial',
-                                    'Exportação de relatórios em PDF',
-                                    'Suporte prioritário por email',
-                                    'Cancele quando quiser'
-                                ].map((item, index) => (
-                                    <li key={index} className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-emerald-500 text-lg">check_circle</span>
-                                        <span className="text-slate-700 text-sm">{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <Link
-                                to="/dashboard"
-                                className="block w-full text-center bg-blue-600 text-white text-base font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-all"
-                            >
-                                Começar Teste Grátis
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* How It Works Section */}
-            <section id="how-it-works" className="py-24 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                            Como Funciona
-                        </h2>
-                        <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-                            Em apenas 3 passos você transforma seus dados contábeis em insights poderosos
-                        </p>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-8 relative">
-                        {/* Connection Line */}
-                        <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-0.5 bg-slate-200"></div>
-
-                        {[
-                            {
-                                step: '1',
-                                icon: 'upload_file',
-                                title: 'Faça o Upload',
-                                description: 'Importe seus arquivos Excel com os dados contábeis. Suportamos diversos formatos e estruturas.'
-                            },
-                            {
-                                step: '2',
-                                icon: 'auto_awesome',
-                                title: 'IA Processa',
-                                description: 'Nossa IA analisa seus dados, identifica padrões e gera insights personalizados automaticamente.'
-                            },
-                            {
-                                step: '3',
-                                icon: 'insights',
-                                title: 'Visualize',
-                                description: 'Acesse dashboards interativos com gráficos e relatórios prontos para decisões estratégicas.'
-                            }
-                        ].map((item, index) => (
-                            <div key={index} className="relative text-center">
-                                <div className="w-12 h-12 rounded-full bg-blue-600 text-white font-bold text-lg flex items-center justify-center mx-auto mb-6 relative z-10">
-                                    {item.step}
+                            <div className="p-6 text-center border-b border-slate-100">
+                                <div className="text-xs font-medium text-slate-500 mb-1">Após o período de teste</div>
+                                <div className="flex items-baseline justify-center gap-1">
+                                    <span className="text-sm font-medium text-slate-400">R$</span>
+                                    <span className="text-4xl font-bold text-slate-900">59</span>
+                                    <span className="text-sm font-medium text-slate-400">,90</span>
+                                    <span className="text-slate-500 text-sm ml-1">/mês</span>
                                 </div>
-                                <div className="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
-                                    <span className="material-symbols-outlined text-slate-600 text-2xl">{item.icon}</span>
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">{item.title}</h3>
-                                <p className="text-slate-600 leading-relaxed">{item.description}</p>
                             </div>
-                        ))}
+
+                            <div className="p-6 flex-1 flex flex-col">
+                                <ul className="space-y-2 mb-6">
+                                    {[
+                                        'Upload ilimitado de arquivos Excel',
+                                        'Dashboards interativos personalizáveis',
+                                        'Análise DRE, Balancete e Cash Flow',
+                                        'Insights com Inteligência Artificial',
+                                        'Exportação de relatórios em PDF',
+                                        'Suporte prioritário por email',
+                                        'Cancele quando quiser'
+                                    ].map((item, index) => (
+                                        <li key={index} className="flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-emerald-500 text-lg">check_circle</span>
+                                            <span className="text-slate-700 text-sm">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <Link
+                                    to="/dashboard"
+                                    className="mt-auto block w-full text-center bg-blue-600 text-white text-base font-semibold px-6 py-3 rounded-lg hover:bg-blue-700 transition-all"
+                                >
+                                    Começar Teste Grátis
+                                </Link>
+                            </div>
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setSelectedPlan('diamond')}
+                            className={`bg-white rounded-xl border-2 shadow-lg overflow-hidden text-left transition-all h-full flex flex-col ${selectedPlan === 'diamond' ? 'border-blue-300 ring-2 ring-blue-200/60' : 'border-slate-200 hover:border-blue-200'}`}
+                        >
+                            <div className="px-6 py-3 text-center bg-gradient-to-r from-blue-600/90 to-blue-500/80 border-b border-blue-200/60">
+                                <div className="text-xs font-semibold text-white tracking-wider">PLANO DIAMOND</div>
+                            </div>
+                            <div className="p-6 text-center border-b border-slate-100">
+                                <div className="text-xs font-medium text-slate-500 mb-1">Após o período de teste</div>
+                                <div className="flex items-baseline justify-center gap-1">
+                                    <span className="text-sm font-medium text-slate-400">R$</span>
+                                    <span className="text-4xl font-bold text-slate-900">97</span>
+                                    <span className="text-sm font-medium text-slate-400">,90</span>
+                                    <span className="text-slate-500 text-sm ml-1">/mês</span>
+                                </div>
+                            </div>
+
+                            <div className="p-6 flex-1 flex flex-col">
+                                <ul className="space-y-2 mb-6">
+                                    {[
+                                        'Tudo do Premium',
+                                        'Automação de atualizações (3x ao dia)',
+                                        'Histórico avançado de versões',
+                                        'Suporte prioritário com SLA',
+                                        'Acesso antecipado a novos módulos',
+                                        'Consultoria de onboarding'
+                                    ].map((item, index) => (
+                                        <li key={index} className="flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-blue-500 text-lg">check_circle</span>
+                                            <span className="text-slate-700 text-sm">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <Link
+                                    to="/dashboard"
+                                    className="mt-auto block w-full text-center bg-blue-700 text-white text-base font-semibold px-6 py-3 rounded-lg hover:bg-blue-800 transition-all"
+                                >
+                                    Começar Teste Grátis
+                                </Link>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -873,40 +948,73 @@ const Home: React.FC = () => {
                         </p>
                     </div>
 
-                    <div className="bg-[#1a3452] rounded-2xl border border-white/10 overflow-hidden">
-                        <div className="grid grid-cols-3 bg-[#162944] p-4">
-                            <div className="text-white/70 text-sm font-medium">Recurso</div>
-                            <div className="text-center text-white/70 text-sm font-medium">Planilhas Manuais</div>
-                            <div className="text-center text-blue-400 text-sm font-bold">FinanceFlow</div>
-                        </div>
-                        {[
-                            { feature: 'Tempo de setup', manual: '2-4 semanas', ff: '5 minutos' },
-                            { feature: 'Atualização de dados', manual: 'Manual', ff: 'Automática' },
-                            { feature: 'Análise com IA', manual: '❌', ff: '✅' },
-                            { feature: 'Dashboards interativos', manual: '❌', ff: '✅' },
-                            { feature: 'Relatórios PDF', manual: 'Trabalhoso', ff: '1 clique' },
-                            { feature: 'Segurança de dados', manual: 'Básica', ff: 'Criptografia' },
-                            { feature: 'Suporte técnico', manual: '❌', ff: '24/7' },
-                            { feature: 'Atualizações', manual: 'Manual', ff: 'Automáticas' }
-                        ].map((row, index) => (
-                            <div key={index} className={`grid grid-cols-3 p-4 ${index % 2 === 0 ? 'bg-white/10' : ''}`}>
-                                <div className="text-white/90 text-sm">{row.feature}</div>
-                                <div className="text-center text-white/60 text-sm">{row.manual}</div>
-                                <div className="text-center text-emerald-400 text-sm font-medium">{row.ff}</div>
+                    <div className="bg-[#1a2f48]/70 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-sm">
+                        <div className="bg-white/10 border-b border-white/10">
+                            <div className="grid grid-cols-3">
+                                <div className="py-4 px-5 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">
+                                    Recurso
+                                </div>
+                                <div className="py-4 px-5 text-center text-xs font-semibold text-white/60 uppercase tracking-wider bg-white/10">
+                                    Planilhas Manuais
+                                </div>
+                                <div className="py-4 px-5 text-center text-xs font-semibold text-blue-300 uppercase tracking-wider bg-blue-500/15">
+                                    FinanceFlow
+                                </div>
                             </div>
-                        ))}
+                        </div>
+                        <div className="divide-y divide-white/5 text-[13px]">
+                            {[
+                                { feature: 'Tempo de setup', manual: '2-4 semanas', ff: '5 minutos' },
+                                { feature: 'Atualização de dados', manual: 'Manual', ff: 'Automática' },
+                                { feature: 'Análise com IA', manual: false, ff: true },
+                                { feature: 'Dashboards interativos', manual: false, ff: true },
+                                { feature: 'Relatórios PDF', manual: 'Trabalhoso', ff: '1 clique' },
+                                { feature: 'Segurança de dados', manual: 'Básica', ff: 'Criptografia' },
+                                { feature: 'Suporte técnico', manual: false, ff: '24/7' },
+                                { feature: 'Atualizações', manual: 'Manual', ff: 'Automáticas' }
+                            ].map((row, index) => (
+                                <div
+                                    key={index}
+                                    className={`grid grid-cols-3 px-5 py-4 transition-colors hover:bg-white/6 ${index % 2 === 0 ? 'bg-white/6' : 'bg-white/3'}`}
+                                >
+                                    <div className="text-white/85 font-medium">{row.feature}</div>
+                                    <div className="text-center text-white/60 font-medium">
+                                        {row.manual === true && (
+                                            <span className="material-symbols-outlined text-emerald-400 text-base align-middle">check_circle</span>
+                                        )}
+                                        {row.manual === false && (
+                                            <span className="material-symbols-outlined text-rose-400 text-base align-middle">cancel</span>
+                                        )}
+                                        {typeof row.manual === 'string' && (
+                                            <span>{row.manual}</span>
+                                        )}
+                                    </div>
+                                    <div className="text-center text-emerald-400 font-semibold">
+                                        {row.ff === true && (
+                                            <span className="material-symbols-outlined text-emerald-400 text-base align-middle">check_circle</span>
+                                        )}
+                                        {row.ff === false && (
+                                            <span className="material-symbols-outlined text-rose-400 text-base align-middle">cancel</span>
+                                        )}
+                                        {typeof row.ff === 'string' && (
+                                            <span>{row.ff}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* FAQ Section */}
-            <section id="faq" className="py-24 bg-[#0f1d32]">
-                <div className="max-w-4xl mx-auto px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                            Perguntas <span className="text-blue-400">Frequentes</span>
+            <section id="faq" className="py-24 bg-white">
+                <div className="max-w-4xl px-6 lg:px-8 mr-auto">
+                    <div className="text-left mb-16">
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                            Perguntas <span className="text-blue-600">Frequentes</span>
                         </h2>
-                        <p className="text-white/60 text-lg">
+                        <p className="text-slate-600 text-lg max-w-2xl">
                             Tire suas dúvidas sobre o FinanceFlow
                         </p>
                     </div>
@@ -940,15 +1048,15 @@ const Home: React.FC = () => {
                         ].map((faq, index) => (
                             <details
                                 key={index}
-                                className="group bg-[#162944] rounded-xl border border-white/10 hover:border-blue-500/30 transition-all"
+                                className="group bg-white rounded-xl border border-slate-200 hover:border-blue-400/40 shadow-sm transition-all"
                             >
                                 <summary className="flex items-center justify-between p-6 cursor-pointer">
-                                    <span className="text-white font-medium pr-4">{faq.question}</span>
-                                    <span className="material-symbols-outlined text-blue-400 group-open:rotate-180 transition-transform">
+                                    <span className="text-slate-900 font-medium pr-4">{faq.question}</span>
+                                    <span className="material-symbols-outlined text-blue-600 group-open:rotate-180 transition-transform">
                                         expand_more
                                     </span>
                                 </summary>
-                                <div className="px-6 pb-6 text-white/60 leading-relaxed">
+                                <div className="px-6 pb-6 text-slate-600 leading-relaxed">
                                     {faq.answer}
                                 </div>
                             </details>

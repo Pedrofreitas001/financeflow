@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 import { useDespesas } from '../../context/DespesasContext.tsx';
 import { useTheme } from '../../context/ThemeContext.tsx';
@@ -22,7 +22,7 @@ const EvolucaoDespesasMensal: React.FC = () => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-surface-dark border border-border-dark rounded-xl p-4 shadow-2xl">
-                    <p className="text-white font-bold mb-2">{label}</p>
+                    <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-bold mb-2`}>{label}</p>
                     <p className="text-primary text-lg font-bold">{formatCurrency(payload[0].value)}</p>
                 </div>
             );
@@ -45,8 +45,8 @@ const EvolucaoDespesasMensal: React.FC = () => {
         <div className="bg-surface-dark border border-border-dark rounded-2xl p-6 shadow-lg">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h3 className="text-white text-lg font-bold">Evolução Mensal de Despesas</h3>
-                    <p className="text-text-muted text-sm mt-1">Tendência ao longo do período selecionado</p>
+                    <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} text-lg font-bold`}>Evolução Mensal de Despesas</h3>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-sm mt-1`}>Tendência ao longo do período selecionado</p>
                 </div>
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                     <span className="material-symbols-outlined text-primary text-2xl">trending_up</span>
@@ -56,17 +56,17 @@ const EvolucaoDespesasMensal: React.FC = () => {
             {/* Métricas rápidas */}
             <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="bg-background-dark rounded-xl p-4">
-                    <p className="text-text-muted text-xs mb-1">Total Período</p>
-                    <p className="text-white text-lg font-bold">{formatCurrency(totalPeriodo)}</p>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-1`}>Total Período</p>
+                    <p className={`${isDark ? 'text-white' : 'text-gray-900'} text-lg font-bold`}>{formatCurrency(totalPeriodo)}</p>
                 </div>
                 <div className="bg-background-dark rounded-xl p-4">
-                    <p className="text-text-muted text-xs mb-1">Média Mensal</p>
-                    <p className="text-white text-lg font-bold">
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-1`}>Média Mensal</p>
+                    <p className={`${isDark ? 'text-white' : 'text-gray-900'} text-lg font-bold`}>
                         {formatCurrency(agregadoDespesasMensal.length > 0 ? totalPeriodo / agregadoDespesasMensal.length : 0)}
                     </p>
                 </div>
                 <div className="bg-background-dark rounded-xl p-4">
-                    <p className="text-text-muted text-xs mb-1">Variação MoM</p>
+                    <p className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs mb-1`}>Variação MoM</p>
                     <div className="flex items-center gap-2">
                         <p className={`text-lg font-bold ${variacao >= 0 ? 'text-red-500' : 'text-blue-500'}`}>
                             {variacao >= 0 ? '+' : ''}{variacao.toFixed(1)}%
@@ -111,4 +111,7 @@ const EvolucaoDespesasMensal: React.FC = () => {
 };
 
 export default EvolucaoDespesasMensal;
+
+
+
 

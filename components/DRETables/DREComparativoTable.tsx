@@ -39,10 +39,10 @@ const DREComparativoTable: React.FC = () => {
           <thead>
             <tr className={`${isDark ? 'bg-background-dark border-border-dark' : 'bg-gray-100 border-gray-200'} border-b`}>
               <th className={`px-5 py-2 text-left text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest sticky left-0 ${isDark ? 'bg-background-dark' : 'bg-gray-100'}`}>Descrição</th>
-              <th className={`px-2 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest bg-blue-500/15`}>Caixa</th>
-              <th className={`px-2 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest bg-purple-500/15`}>Compet.</th>
-              <th className={`px-2 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest bg-primary/10`}>Dif.</th>
-              <th className={`px-3 py-2 text-right text-xs font-bold ${isDark ? 'text-primary' : 'text-primary'} uppercase tracking-widest bg-primary/10`}>%</th>
+              <th className={`px-2 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest ${isDark ? 'bg-blue-500/15' : 'bg-emerald-100'}`}>Caixa</th>
+              <th className={`px-2 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest ${isDark ? 'bg-purple-500/15' : 'bg-emerald-50'}`}>Compet.</th>
+              <th className={`px-2 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest ${isDark ? 'bg-primary/10' : 'bg-emerald-100'}`}>Dif.</th>
+              <th className={`px-3 py-2 text-right text-xs font-bold ${isDark ? 'text-primary' : 'text-emerald-700'} uppercase tracking-widest ${isDark ? 'bg-primary/10' : 'bg-emerald-100'}`}>%</th>
             </tr>
           </thead>
           <tbody>
@@ -62,7 +62,7 @@ const DREComparativoTable: React.FC = () => {
               let textColor = '';
 
               if (linhaCaixa.linha.isFinal) {
-                rowClass = isDark ? 'bg-primary/15 border-t-2 border-primary' : 'bg-primary/10 border-t-2 border-primary';
+                rowClass = isDark ? 'bg-primary/15 border-t-2 border-primary' : 'bg-emerald-100 border-t-2 border-emerald-400';
                 fontWeight = 'font-bold';
                 textColor = isDark ? 'text-white' : 'text-gray-900';
               } else if (linhaCaixa.linha.isResultado && !linhaCaixa.linha.isPercentual) {
@@ -84,16 +84,16 @@ const DREComparativoTable: React.FC = () => {
                   <td className={`px-5 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-10 ${rowClass || (isDark ? 'bg-surface-dark' : 'bg-white')}`}>
                     {linhaCaixa.linha.descricao}
                   </td>
-                  <td className={`px-2 py-2 text-xs text-right font-medium tabular-nums whitespace-nowrap bg-blue-500/8 ${linhaCaixa.real < 0 ? 'text-red-500' : textColor}`}>
+                  <td className={`px-2 py-2 text-xs text-right font-medium tabular-nums whitespace-nowrap ${isDark ? 'bg-blue-500/8' : 'bg-emerald-50'} ${linhaCaixa.real < 0 ? 'text-red-500' : textColor}`}>
                     {linhaCaixa.linha.isPercentual ? linhaCaixa.real.toFixed(0) + '%' : formatValor(linhaCaixa.real)}
                   </td>
-                  <td className={`px-2 py-2 text-xs text-right font-medium tabular-nums whitespace-nowrap bg-purple-500/8 ${linhaCompetencia.real < 0 ? 'text-red-500' : textColor}`}>
+                  <td className={`px-2 py-2 text-xs text-right font-medium tabular-nums whitespace-nowrap ${isDark ? 'bg-purple-500/8' : 'bg-emerald-50'} ${linhaCompetencia.real < 0 ? 'text-red-500' : textColor}`}>
                     {linhaCompetencia.linha.isPercentual ? linhaCompetencia.real.toFixed(0) + '%' : formatValor(linhaCompetencia.real)}
                   </td>
-                  <td className={`px-2 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap bg-primary/10 ${diferenca < 0 ? 'text-red-600 font-bold' : diferenca > 0 ? 'text-blue-600 font-bold' : textColor}`}>
+                  <td className={`px-2 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${isDark ? 'bg-primary/10' : 'bg-emerald-100'} ${diferenca < 0 ? 'text-red-600 font-bold' : diferenca > 0 ? (isDark ? 'text-blue-400 font-bold' : 'text-emerald-600 font-bold') : textColor}`}>
                     {linhaCaixa.linha.isPercentual ? diferenca.toFixed(0) + '%' : formatValor(diferenca)}
                   </td>
-                  <td className={`px-3 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${diferencaSignificativa ? 'text-orange-600 font-bold' : (isDark ? 'text-text-muted' : 'text-gray-600')} bg-primary/10`}>
+                  <td className={`px-3 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${diferencaSignificativa ? 'text-orange-600 font-bold' : (isDark ? 'text-text-muted' : 'text-gray-600')} ${isDark ? 'bg-primary/10' : 'bg-emerald-100'}`}>
                     {variacaoPerc}
                   </td>
                 </tr>
@@ -111,7 +111,7 @@ const DREComparativoTable: React.FC = () => {
             <span className={isDark ? 'text-text-muted' : 'text-gray-700'}>Diferença significativa (&gt;10%)</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded bg-blue-500/40"></div>
+            <div className={`w-2 h-2 rounded ${isDark ? 'bg-blue-500/40' : 'bg-emerald-400/60'}`}></div>
             <span className={isDark ? 'text-text-muted' : 'text-gray-700'}>Regime de Caixa</span>
           </div>
           <div className="flex items-center gap-2">

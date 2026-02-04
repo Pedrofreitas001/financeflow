@@ -18,9 +18,9 @@ const KPIIndicadorCard: React.FC<KPIIndicadorCardProps> = ({ titulo, valor, benc
 
     return (
         <div className={`${isDarkCard ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm`}>
-            <p className={`${isDarkCard ? 'text-gray-400' : 'text-gray-600'} text-sm`}>{titulo}</p>
-            <p className={`text-2xl font-bold ${cor}`}>{valor.toFixed(2)}%</p>
-            {benchmark && <p className={`text-xs ${isDarkCard ? 'text-gray-500' : 'text-gray-500'}`}>Setor: {benchmark.toFixed(2)}%</p>}
+            <p className={`${isDarkCard ? 'text-gray-400' : 'text-gray-900'} text-sm`}>{titulo}</p>
+            <p className={`text-2xl font-bold ${isDarkCard ? cor : 'text-gray-900'}`}>{valor.toFixed(2)}%</p>
+            {benchmark && <p className={`text-xs ${isDarkCard ? 'text-gray-500' : 'text-gray-900'}`}>Setor: {benchmark.toFixed(2)}%</p>}
             <div className={`mt-2 h-1 w-full rounded ${status === 'bom' ? 'bg-blue-600' : status === 'regular' ? 'bg-yellow-500' : 'bg-red-500'
                 }`}></div>
         </div>
@@ -211,7 +211,7 @@ const DashboardIndicadores: React.FC = () => {
                 {/* Gráficos */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
-                        <h2 className="text-base font-bold text-white mb-4">Evolução de Indicadores</h2>
+                        <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Evolução de Indicadores</h2>
                         <ResponsiveContainer width="100%" height={280}>
                             <LineChart data={chartData} margin={{ left: 50 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -227,7 +227,7 @@ const DashboardIndicadores: React.FC = () => {
                     </div>
 
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
-                        <h2 className="text-base font-bold text-white mb-4">Saúde Geral</h2>
+                        <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Saúde Geral</h2>
                         <ResponsiveContainer width="100%" height={280}>
                             <RadarChart data={radarData}>
                                 <PolarGrid stroke="#444" />
@@ -241,7 +241,7 @@ const DashboardIndicadores: React.FC = () => {
 
                 {/* Tabela */}
                 <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
-                    <h2 className="text-base font-bold text-white mb-4">Detalhamento</h2>
+                    <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Detalhamento</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead className="bg-background-dark border-b border-border-dark">

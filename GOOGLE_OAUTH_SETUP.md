@@ -53,6 +53,9 @@ Na seção **Authorized redirect URIs**, adicione:
 http://localhost:3003
 http://localhost:3000
 http://127.0.0.1:3003
+http://localhost:3003/auth/callback
+http://localhost:3000/auth/callback
+http://127.0.0.1:3003/auth/callback
 ```
 
 ### Passo 6: Salvar e Obter Credenciais
@@ -62,8 +65,19 @@ http://127.0.0.1:3003
 
 ```env
 VITE_GOOGLE_CLIENT_ID=seu-client-id-aqui.apps.googleusercontent.com
-VITE_GOOGLE_CLIENT_SECRET=seu-client-secret-aqui
 VITE_GOOGLE_API_KEY=sua-api-key-aqui
+```
+
+### Passo 6.1: Variáveis da Edge Function (Supabase)
+No painel do Supabase (Settings → Edge Functions), adicione:
+
+```
+GOOGLE_CLIENT_ID=seu-client-id-aqui.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=seu-client-secret-aqui
+GOOGLE_REDIRECT_URI=http://localhost:3003/auth/callback
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_ANON_KEY=sua-chave-anonima-aqui
+SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key-aqui
 ```
 
 ### Passo 7: Habilitar APIs Necessárias

@@ -54,10 +54,10 @@ const KPIGrid: React.FC = () => {
             </div>
           </div>
           <div>
-            <p className="text-text-muted text-xs font-medium mb-1 uppercase tracking-wide">
+            <p className={`${isDark ? 'text-text-muted' : 'text-gray-900'} text-xs font-medium mb-1 uppercase tracking-wide`}>
               {m.label}
             </p>
-            <h3 className="text-white text-2xl font-bold tracking-tight">
+            <h3 className={`${isDark ? 'text-white' : 'text-gray-900'} text-2xl font-bold tracking-tight`}>
               {m.value}
             </h3>
           </div>

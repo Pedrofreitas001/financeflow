@@ -3,9 +3,10 @@ import { useTheme } from '../context/ThemeContext';
 import { supabase } from '@/lib/supabase';
 import { saveDashboardData } from '@/utils/savedDashboardManager';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
+import { markUserDataLoaded } from '@/utils/userDataState';
 
 interface SaveDataButtonProps {
-    dashboardType: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'balancete';
+    dashboardType: 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete';
     data: any[];
     disabled?: boolean;
     onSaveComplete?: () => void;
@@ -13,12 +14,21 @@ interface SaveDataButtonProps {
 }
 
 // Validar dados conforme esperado pelos contextos
+function hasRequiredKeys(row: any): boolean {
+    if (!row) return false;
+    const ano = row.Ano ?? row.ano;
+    const mes = row.Mes ?? row.mes;
+    const categoria = row.Categoria ?? row.categoria;
+    const empresa = row.Empresa ?? row.empresa;
+    const valor = row.Valor ?? row.valor;
+    return ano !== undefined && mes !== undefined && categoria !== undefined && empresa !== undefined && valor !== undefined;
+}
+
 function validateDataForDashboard(data: any[]): any[] {
     if (!Array.isArray(data)) return [];
-
-    return data.filter(row => {
+    return data.filter((row) => {
         try {
-            return row && row.Ano && row.Mes && row.Categoria && row.Empresa && row.Valor !== undefined;
+            return hasRequiredKeys(row);
         } catch {
             return false;
         }
@@ -27,10 +37,9 @@ function validateDataForDashboard(data: any[]): any[] {
 
 function validateDataForDespesas(data: any[]): any[] {
     if (!Array.isArray(data)) return [];
-
-    return data.filter(row => {
+    return data.filter((row) => {
         try {
-            return row && row.Ano && row.Mes && row.Categoria && row.Empresa && row.Valor !== undefined;
+            return hasRequiredKeys(row);
         } catch {
             return false;
         }
@@ -92,8 +101,8 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({
                 return;
             }
 
-            // Salvar dados validados no Supabase
-            const result = await saveDashboardData(user.id, dashboardType, validatedData);
+            // Salvar dados validados no Supabase (versão)
+            const result = await saveDashboardData(user.id, dashboardType, validatedData, 3);
 
             if (!result.success) {
                 onError?.(result.error || 'Erro ao salvar no Supabase');
@@ -103,23 +112,22 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({
 
             // Salvar também no histórico
             const columns = validatedData.length > 0 ? Object.keys(validatedData[0]) : [];
-            const { error: historyError } = await supabase
-                .from('excel_uploads')
-                .insert({
-                    user_id: user.id,
-                    dashboard_type: dashboardType,
-                    source: 'manual_save',
-                    filename: `${dashboardType}_saved_${new Date().toISOString().split('T')[0]}.json`,
-                    row_count: validatedData.length,
-                    columns: columns
-                });
+            const historyResult = await saveDataToHistory(
+                user.id,
+                dashboardType,
+                'manual',
+                `${dashboardType}_saved_${new Date().toISOString().split('T')[0]}.json`,
+                validatedData.length,
+                columns
+            );
 
-            if (historyError) {
-                console.warn('Erro ao salvar histórico:', historyError);
+            if (!historyResult.success) {
+                console.warn('Erro ao salvar histórico:', historyResult.error);
                 // Não bloqueia o fluxo se o histórico falhar
             }
 
             onSaveComplete?.();
+            markUserDataLoaded();
             setIsSaving(false);
         } catch (error: any) {
             console.error('Erro ao salvar:', error);
@@ -133,15 +141,15 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({
             onClick={handleSave}
             disabled={disabled || isSaving || data.length === 0}
             className={`
-                flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold
-                transition-all duration-200 w-full
+                flex items-center justify-center gap-2 px-4 py-2 rounded-md font-semibold
+                transition-all duration-200
                 ${data.length === 0 || disabled || isSaving
                     ? isDark
                         ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                         : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     : isDark
-                        ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
-                        : 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
+                        ? 'bg-emerald-600/80 hover:bg-emerald-600 text-white'
+                        : 'bg-emerald-600/80 hover:bg-emerald-600 text-white'
                 }
             `}
         >

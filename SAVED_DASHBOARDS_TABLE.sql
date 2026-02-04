@@ -4,19 +4,17 @@
 CREATE TABLE IF NOT EXISTS saved_dashboards (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    dashboard_type TEXT NOT NULL CHECK (dashboard_type IN ('dashboard', 'despesas', 'dre', 'cashflow', 'balancete')),
+    dashboard_type TEXT NOT NULL CHECK (dashboard_type IN ('dashboard', 'despesas', 'dre', 'cashflow', 'indicadores', 'orcamento', 'balancete')),
     data JSONB NOT NULL, -- Array de objetos com os dados
     row_count INTEGER NOT NULL DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    
-    -- Um usuário só pode ter uma versão salva por tipo de dashboard
-    UNIQUE(user_id, dashboard_type)
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- Index para buscar rapidamente os dados salvos de um usuário
 CREATE INDEX IF NOT EXISTS idx_saved_dashboards_user_id ON saved_dashboards(user_id);
 CREATE INDEX IF NOT EXISTS idx_saved_dashboards_user_type ON saved_dashboards(user_id, dashboard_type);
+CREATE INDEX IF NOT EXISTS idx_saved_dashboards_user_type_created ON saved_dashboards(user_id, dashboard_type, created_at DESC);
 
 -- RLS (Row Level Security)
 ALTER TABLE saved_dashboards ENABLE ROW LEVEL SECURITY;
@@ -40,6 +38,6 @@ CREATE POLICY "Users can delete own saved dashboards" ON saved_dashboards
 -- Comentários
 COMMENT ON TABLE saved_dashboards IS 'Armazena dados salvos dos dashboards para auto-load na próxima entrada do usuário';
 COMMENT ON COLUMN saved_dashboards.user_id IS 'ID do usuário que salvou os dados';
-COMMENT ON COLUMN saved_dashboards.dashboard_type IS 'Tipo do dashboard: dashboard, despesas, dre, cashflow, balancete';
+COMMENT ON COLUMN saved_dashboards.dashboard_type IS 'Tipo do dashboard: dashboard, despesas, dre, cashflow, indicadores, orcamento, balancete';
 COMMENT ON COLUMN saved_dashboards.data IS 'Array JSON com os dados do dashboard';
 COMMENT ON COLUMN saved_dashboards.row_count IS 'Número de linhas/registros nos dados';

@@ -22,8 +22,8 @@ const KPIOrcamentoCard: React.FC<KPIOrcamentoCardProps> = ({ titulo, valor, perc
 
     return (
         <div className={`${isDarkCard ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-lg p-4 border shadow-sm`}>
-            <p className={`${isDarkCard ? 'text-gray-400' : 'text-gray-600'} text-sm`}>{titulo}</p>
-            <p className={`text-2xl font-bold ${cor}`}>
+            <p className={`${isDarkCard ? 'text-gray-400' : 'text-gray-900'} text-sm`}>{titulo}</p>
+            <p className={`text-2xl font-bold ${isDarkCard ? cor : 'text-gray-900'}`}>
                 {unidade === '%' ? `${valorValido.toFixed(1)}%` : `R$ ${(valorValido / 1000).toFixed(1)}k`}
             </p>
             {percentualValido !== undefined && (
@@ -233,7 +233,7 @@ const DashboardOrcamento: React.FC = () => {
                 {/* Gráficos */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
-                        <h2 className="text-base font-bold text-white mb-4">Orçado vs Realizado</h2>
+                        <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Orçado vs Realizado</h2>
                         <ResponsiveContainer width="100%" height={280}>
                             <BarChart data={chartData} margin={{ left: 50 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -248,7 +248,7 @@ const DashboardOrcamento: React.FC = () => {
                     </div>
 
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
-                        <h2 className="text-base font-bold text-white mb-4">Variância por Categoria</h2>
+                        <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Variância por Categoria</h2>
                         <ResponsiveContainer width="100%" height={280}>
                             <BarChart data={chartData} margin={{ left: 50 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -264,7 +264,7 @@ const DashboardOrcamento: React.FC = () => {
 
                 {/* Tabela - Desvios Críticos */}
                 <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden mb-6">
-                    <h2 className="text-base font-bold text-white mb-4">Desvios Críticos (variância &gt; 5%)</h2>
+                    <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Desvios Críticos (variância &gt; 5%)</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead className="bg-background-dark border-b border-border-dark">
@@ -307,7 +307,7 @@ const DashboardOrcamento: React.FC = () => {
 
                 {/* Tabela - Detalhamento Completo */}
                 <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
-                    <h2 className="text-base font-bold text-white mb-4">Detalhamento Completo</h2>
+                    <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Detalhamento Completo</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead className="bg-background-dark border-b border-border-dark">

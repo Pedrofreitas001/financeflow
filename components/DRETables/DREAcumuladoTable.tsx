@@ -11,7 +11,7 @@ const formatValor = (valor: number): string => {
 };
 
 // Estilos para scroll customizado e texto com quebras limitadas
-const scrollStyles = `
+const getScrollStyles = (isDark: boolean) => `
   .dre-scroll-container::-webkit-scrollbar {
     height: 8px;
   }
@@ -19,11 +19,11 @@ const scrollStyles = `
     background: transparent;
   }
   .dre-scroll-container::-webkit-scrollbar-thumb {
-    background: #22c55e;
+    background: ${isDark ? '#22c55e' : '#86efac'};
     border-radius: 10px;
   }
   .dre-scroll-container::-webkit-scrollbar-thumb:hover {
-    background: #16a34a;
+    background: ${isDark ? '#16a34a' : '#4ade80'};
   }
   .dre-descricao-cell {
     display: -webkit-box;
@@ -63,7 +63,7 @@ const DREAcumuladoTable: React.FC = () => {
           </p>
         </div>
 
-        <style>{scrollStyles}</style>
+        <style>{getScrollStyles(isDark)}</style>
         <div className="dre-scroll-container overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -76,7 +76,7 @@ const DREAcumuladoTable: React.FC = () => {
                     {mes}
                   </th>
                 ))}
-                <th className={`px-3 py-2 text-right text-xs font-bold ${isDark ? 'text-primary' : 'text-primary'} uppercase tracking-widest bg-primary/10 border-l ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
+                <th className={`px-3 py-2 text-right text-xs font-bold ${isDark ? 'text-primary' : 'text-emerald-700'} uppercase tracking-widest ${isDark ? 'bg-primary/10' : 'bg-emerald-100'} border-l ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
                   TOTAL
                 </th>
                 <th className={`px-3 py-2 text-right text-xs font-bold ${isDark ? 'text-text-muted' : 'text-gray-600'} uppercase tracking-widest`}>
@@ -91,7 +91,7 @@ const DREAcumuladoTable: React.FC = () => {
                 let textColor = '';
 
                 if (linha.linha.isFinal) {
-                  rowClass = isDark ? 'bg-primary/15 border-t-2 border-primary' : 'bg-primary/10 border-t-2 border-primary';
+                  rowClass = isDark ? 'bg-primary/15 border-t-2 border-primary' : 'bg-emerald-100 border-t-2 border-emerald-400';
                   fontWeight = 'font-bold';
                   textColor = isDark ? 'text-white' : 'text-gray-900';
                 } else if (linha.linha.isResultado && !linha.linha.isPercentual) {
@@ -111,7 +111,7 @@ const DREAcumuladoTable: React.FC = () => {
                     className={`${rowClass} border-b ${isDark ? 'border-border-dark/20' : 'border-gray-200'} hover:${isDark ? 'bg-gray-800/50' : 'bg-gray-50/80'} transition-colors`}
                   >
                     <td className={`dre-descricao-cell px-6 py-2 text-xs ${fontWeight} ${textColor} sticky left-0 z-50 border-r ${isDark ? 'border-border-dark' : 'border-gray-200'} min-w-[280px] ${linha.linha.isFinal ? (isDark ? 'bg-[#164e3b]' : 'bg-[#d1fae5]') :
-                      linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-[#1e293b]' : 'bg-[#e0e7ff]') :
+                      linha.linha.isResultado && !linha.linha.isPercentual ? (isDark ? 'bg-[#1e293b]' : 'bg-[#dcfce7]') :
                         (isDark ? 'bg-[#0f172a]' : 'bg-[#f8fafc]')
                       }`}>
                       {linha.linha.descricao}
@@ -129,7 +129,7 @@ const DREAcumuladoTable: React.FC = () => {
                         </td>
                       );
                     })}
-                    <td className={`px-3 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${linha.valores.total < 0 ? 'text-red-600 font-bold' : textColor} bg-primary/10 border-l ${isDark ? 'border-border-dark/20' : 'border-gray-200'}`}>
+                    <td className={`px-3 py-2 text-xs text-right font-bold tabular-nums whitespace-nowrap ${linha.valores.total < 0 ? 'text-red-600 font-bold' : textColor} ${isDark ? 'bg-primary/10' : 'bg-emerald-100'} border-l ${isDark ? 'border-border-dark/20' : 'border-gray-200'}`}>
                       {linha.linha.isPercentual ? linha.valores.total.toFixed(0) + '%' : formatValor(linha.valores.total)}
                     </td>
                     <td className={`px-3 py-2 text-xs text-right tabular-nums font-semibold ${isDark ? 'text-text-muted' : 'text-gray-600'}`}>
