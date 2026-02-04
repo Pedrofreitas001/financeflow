@@ -30,6 +30,7 @@ serve(async (req) => {
     }
 
     try {
+        console.log("[google-sheets-oauth] request", { method: req.method });
         if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
             throw new Error("Supabase env missing");
         }
@@ -39,6 +40,7 @@ serve(async (req) => {
 
         const authHeader = req.headers.get("Authorization");
         if (!authHeader) {
+            console.warn("[google-sheets-oauth] missing Authorization header");
             return new Response(JSON.stringify({ success: false, error: "Unauthorized" }), {
                 status: 401,
                 headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -58,7 +60,18 @@ serve(async (req) => {
             });
         }
 
-        const { code, state, redirect_uri } = await req.json();
+        let body: any;
+        try {
+            body = await req.json();
+        } catch {
+            console.error("[google-sheets-oauth] invalid JSON body");
+            return new Response(JSON.stringify({ success: false, error: "Invalid JSON body" }), {
+                status: 400,
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+        }
+
+        const { code, state, redirect_uri } = body || {};
         if (!code) {
             return new Response(JSON.stringify({ success: false, error: "Missing code" }), {
                 status: 400,
@@ -91,6 +104,7 @@ serve(async (req) => {
 
         if (!tokenResponse.ok) {
             const errorText = await tokenResponse.text();
+            console.error("[google-sheets-oauth] token exchange failed", errorText);
             throw new Error(`Token exchange failed: ${errorText}`);
         }
 
@@ -136,6 +150,7 @@ serve(async (req) => {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     } catch (error) {
+        console.error("[google-sheets-oauth] error", String(error));
         return new Response(JSON.stringify({ success: false, error: String(error) }), {
             status: 500,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
