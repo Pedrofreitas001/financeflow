@@ -217,10 +217,19 @@ export const useExampleData = () => {
 
             if (!authLoading && user?.id) {
                 try {
-                    // Ensure Supabase auth is ready (in some boot sequences the React auth state can
-                    // update slightly before the Supabase client attaches the JWT to requests).
+                    // Ensure Supabase auth/session is really ready before querying tables protected by RLS.
+                    // In some boot sequences, React auth state becomes available slightly before the Supabase
+                    // client has the session in memory for outgoing requests, which can cause SELECT to return empty.
+                    let sessionUserId: string | null = null;
+                    for (let attempt = 0; attempt < 5; attempt++) {
+                        const { data: sessionData } = await supabase.auth.getSession();
+                        sessionUserId = sessionData?.session?.user?.id ?? null;
+                        if (sessionUserId) break;
+                        await new Promise((r) => setTimeout(r, 120 * (attempt + 1)));
+                    }
+
                     const { data } = await supabase.auth.getUser();
-                    const effectiveUserId = data?.user?.id ?? user.id;
+                    const effectiveUserId = data?.user?.id ?? sessionUserId ?? user.id;
                     await applySavedDataForUser(effectiveUserId);
                 } catch (error) {
                     console.warn('Erro ao carregar dados salvos:', error);
