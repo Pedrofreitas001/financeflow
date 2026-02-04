@@ -20,10 +20,7 @@ import {
     dadosDREFicticios
 } from './dadosFicticios.ts';
 
-/**
- * Hook para carregar dados de exemplo automaticamente
- * Verifica se o usuário tem dados carregados, se não tiver, carrega os exemplos
- */
+// Load example data by default unless a backup exists for that dashboard.
 export const useExampleData = () => {
     const { dados: dadosFinance, carregarDados } = useFinance();
     const { dadosDespesas, carregarDadosDespesas } = useDespesas();
@@ -33,10 +30,20 @@ export const useExampleData = () => {
     const { dados: dadosOrcamento, setDados: setOrcamentoDados } = useOrcamento();
     const { dados: dadosBalancete, setDados: setBalanceteDados } = useBalancete();
     const { user } = useAuth();
+
     const [isLoadingExamples, setIsLoadingExamples] = useState(false);
     const [examplesLoaded, setExamplesLoaded] = useState(false);
     const [savedLoaded, setSavedLoaded] = useState(false);
     const [syncAttempted, setSyncAttempted] = useState(false);
+    const [savedAvailability, setSavedAvailability] = useState({
+        dashboard: false,
+        despesas: false,
+        dre: false,
+        cashflow: false,
+        indicadores: false,
+        orcamento: false,
+        balancete: false,
+    });
     const exampleOnceRef = useRef(false);
 
     useEffect(() => {
@@ -75,44 +82,54 @@ export const useExampleData = () => {
 
                 if (!isMounted) return;
 
-                let loadedAnySaved = false;
+                const availability = {
+                    dashboard: false,
+                    despesas: false,
+                    dre: false,
+                    cashflow: false,
+                    indicadores: false,
+                    orcamento: false,
+                    balancete: false,
+                };
 
                 if (Array.isArray(savedDashboard) && savedDashboard.length > 0) {
                     carregarDados(savedDashboard);
-                    loadedAnySaved = true;
+                    availability.dashboard = true;
                 }
 
                 if (Array.isArray(savedDespesas) && savedDespesas.length > 0) {
                     carregarDadosDespesas(savedDespesas as any);
-                    loadedAnySaved = true;
+                    availability.despesas = true;
                 }
 
                 if (Array.isArray(savedDRE) && savedDRE.length > 0) {
-                    // DRE é salvo como array com 1 objeto
                     setDREDados(savedDRE[0] as any);
-                    loadedAnySaved = true;
+                    availability.dre = true;
                 }
 
                 if (Array.isArray(savedCashFlow) && savedCashFlow.length > 0) {
                     setCashFlowDados(savedCashFlow as any);
-                    loadedAnySaved = true;
+                    availability.cashflow = true;
                 }
 
                 if (Array.isArray(savedIndicadores) && savedIndicadores.length > 0) {
                     setIndicadoresDados(savedIndicadores as any);
-                    loadedAnySaved = true;
+                    availability.indicadores = true;
                 }
 
                 if (Array.isArray(savedOrcamento) && savedOrcamento.length > 0) {
                     setOrcamentoDados(savedOrcamento as any);
-                    loadedAnySaved = true;
+                    availability.orcamento = true;
                 }
 
                 if (Array.isArray(savedBalancete) && savedBalancete.length > 0) {
                     setBalanceteDados(savedBalancete as any);
-                    loadedAnySaved = true;
+                    availability.balancete = true;
                 }
 
+                setSavedAvailability(availability);
+
+                const loadedAnySaved = Object.values(availability).some(Boolean);
                 if (loadedAnySaved) {
                     markUserDataLoaded();
                     try {
@@ -132,7 +149,6 @@ export const useExampleData = () => {
                         markDataSource('backup');
                     }
                 } else {
-                    // Sem backup: permite carregar dados fictícios
                     markUsingExampleData();
                 }
             } catch (error) {
@@ -162,95 +178,63 @@ export const useExampleData = () => {
 
     useEffect(() => {
         const loadExampleData = () => {
-            if (!savedLoaded) {
-                console.log('⏳ Aguardando carregamento de dados salvos...');
-                return;
-            }
-
-            if (exampleOnceRef.current || isLoadingExamples) {
-                return;
-            }
+            if (!savedLoaded) return;
+            if (exampleOnceRef.current || isLoadingExamples) return;
 
             exampleOnceRef.current = true;
-
-            console.log('🔄 Iniciando carregamento de dados fictícios...');
-
             setIsLoadingExamples(true);
             let loadedAny = false;
 
             try {
-                // Dashboard Financeiro
-                if (dadosFinance.length === 0 && dadosFinanceirosFicticios.length > 0) {
-                    console.log('⬆️ Carregando dados financeiros fictícios...');
+                if (!savedAvailability.dashboard && dadosFinanceirosFicticios.length > 0) {
                     carregarDados(dadosFinanceirosFicticios);
-                    console.log('✅ Dados fictícios do Dashboard carregados:', dadosFinanceirosFicticios.length);
                     loadedAny = true;
                 }
 
-                // Despesas
-                if (dadosDespesas.length === 0 && dadosDespesasFicticios.length > 0) {
-                    console.log('⬆️ Carregando dados de despesas fictícios...');
+                if (!savedAvailability.despesas && dadosDespesasFicticios.length > 0) {
                     carregarDadosDespesas(dadosDespesasFicticios as any);
-                    console.log('✅ Dados fictícios de Despesas carregados:', dadosDespesasFicticios.length);
                     loadedAny = true;
                 }
 
-                // DRE
-                if (!dreData && dadosDREFicticios) {
-                    console.log('⬆️ Carregando dados DRE fictícios...');
+                if (!savedAvailability.dre && dadosDREFicticios) {
                     setDREDados(dadosDREFicticios as any);
-                    console.log('✅ Dados fictícios de DRE carregados');
                     loadedAny = true;
                 }
 
-                // Cash Flow
-                if (dadosCashFlow.length === 0 && dadosCashFlowFicticios.length > 0) {
-                    console.log('⬆️ Carregando dados de cash flow fictícios...');
+                if (!savedAvailability.cashflow && dadosCashFlowFicticios.length > 0) {
                     setCashFlowDados(dadosCashFlowFicticios as any);
-                    console.log('✅ Dados fictícios de Cash Flow carregados:', dadosCashFlowFicticios.length);
                     loadedAny = true;
                 }
 
-                // Indicadores
-                if (dadosIndicadores.length === 0 && dadosIndicadoresFicticios.length > 0) {
-                    console.log('⬆️ Carregando dados de indicadores fictícios...');
+                if (!savedAvailability.indicadores && dadosIndicadoresFicticios.length > 0) {
                     setIndicadoresDados(dadosIndicadoresFicticios as any);
-                    console.log('✅ Dados fictícios de Indicadores carregados:', dadosIndicadoresFicticios.length);
                     loadedAny = true;
                 }
 
-                // Orçamento
-                if (dadosOrcamento.length === 0 && dadosOrcamentoFicticios.length > 0) {
-                    console.log('⬆️ Carregando dados de orçamento fictícios...');
+                if (!savedAvailability.orcamento && dadosOrcamentoFicticios.length > 0) {
                     setOrcamentoDados(dadosOrcamentoFicticios as any);
-                    console.log('✅ Dados fictícios de Orçamento carregados:', dadosOrcamentoFicticios.length);
                     loadedAny = true;
                 }
 
-                // Balancete
-                if (dadosBalancete.length === 0 && dadosBalanceteFicticios.length > 0) {
-                    console.log('⬆️ Carregando dados de balancete fictícios...');
+                if (!savedAvailability.balancete && dadosBalanceteFicticios.length > 0) {
                     setBalanceteDados(dadosBalanceteFicticios as any);
-                    console.log('✅ Dados fictícios de Balancete carregados:', dadosBalanceteFicticios.length);
                     loadedAny = true;
                 }
 
-                console.log('✅ Processo de carregamento de dados fictícios concluído');
                 setExamplesLoaded(loadedAny || examplesLoaded);
                 if (loadedAny) {
                     markUsingExampleData();
                 }
             } catch (error) {
-                console.error('❌ Erro ao carregar dados fictícios:', error);
+                console.error('Erro ao carregar dados ficticios:', error);
             } finally {
                 setIsLoadingExamples(false);
             }
         };
 
-        const timer = setTimeout(loadExampleData, 300);
+        const timer = setTimeout(loadExampleData, 200);
         return () => clearTimeout(timer);
-    }, [savedLoaded, isLoadingExamples]);
+    }, [savedLoaded, isLoadingExamples, savedAvailability]);
 
     return { isLoadingExamples, examplesLoaded };
 };
-
