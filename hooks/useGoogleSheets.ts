@@ -258,7 +258,16 @@ export function useGoogleSheets() {
         columns: string[];
         rowCount: number;
     }> => {
-        const buildRangeWithSheet = (sheetTitle: string) => `${sheetTitle}!A1:Z1000`;
+        const escapeSheetTitle = (title: string) => {
+            if (title.includes("'")) {
+                return title.replace(/'/g, "''");
+            }
+            return title;
+        };
+        const buildRangeWithSheet = (sheetTitle: string) => {
+            const safeTitle = escapeSheetTitle(sheetTitle);
+            return `'${safeTitle}'!A1:Z1000`;
+        };
         const resolveRange = (inputRange: string) => {
             if (inputRange.includes('!')) return inputRange;
             if (inputRange.includes(':')) return inputRange;
