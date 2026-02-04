@@ -103,7 +103,13 @@ serve(async (req) => {
         });
 
         if (!tokenResponse.ok) {
-            const errorText = await tokenResponse.text();
+            let errorText = "";
+            try {
+                const json = await tokenResponse.json();
+                errorText = JSON.stringify(json);
+            } catch {
+                errorText = await tokenResponse.text();
+            }
             console.error("[google-sheets-oauth] token exchange failed", errorText);
             throw new Error(`Token exchange failed: ${errorText}`);
         }
@@ -150,8 +156,18 @@ serve(async (req) => {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
     } catch (error) {
-        console.error("[google-sheets-oauth] error", String(error));
-        return new Response(JSON.stringify({ success: false, error: String(error) }), {
+        let errorMessage = "";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        } else {
+            try {
+                errorMessage = JSON.stringify(error);
+            } catch {
+                errorMessage = String(error);
+            }
+        }
+        console.error("[google-sheets-oauth] error", errorMessage);
+        return new Response(JSON.stringify({ success: false, error: errorMessage }), {
             status: 500,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

@@ -212,15 +212,18 @@ export function useGoogleSheets() {
         columns: string[];
         rowCount: number;
     }> => {
-        try {
-            if (!isLoaded) {
-                throw new Error('Google API não está pronta');
-            }
+        const buildRangeWithSheet = (sheetTitle: string) => `${sheetTitle}!A1:Z1000`;
+        const resolveRange = (inputRange: string) => {
+            if (inputRange.includes('!')) return inputRange;
+            if (inputRange.includes(':')) return inputRange;
+            return buildRangeWithSheet(inputRange);
+        };
 
+        const tryFetch = async (rangeToUse: string) => {
             if (window.gapi?.client?.sheets?.spreadsheets?.values?.get) {
                 const response = await window.gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId,
-                    range,
+                    range: rangeToUse,
                 });
 
                 const values = response.result?.values || [];
@@ -239,7 +242,7 @@ export function useGoogleSheets() {
                 };
             }
 
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}?key=${config.apiKey}`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(rangeToUse)}?key=${config.apiKey}`;
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -266,11 +269,33 @@ export function useGoogleSheets() {
                 columns,
                 rowCount: rows.length,
             };
+        };
+
+        try {
+            if (!isLoaded) {
+                throw new Error('Google API não está pronta');
+            }
+
+            const primaryRange = resolveRange(range);
+            return await tryFetch(primaryRange);
         } catch (err: any) {
+            const message = err?.message || String(err);
+            if (message.includes('Unable to parse range') || message.includes('não encontrada')) {
+                try {
+                    const metadata = await getSpreadsheetMetadata(spreadsheetId);
+                    const firstSheet = metadata?.sheets?.[0]?.title;
+                    if (firstSheet) {
+                        return await tryFetch(buildRangeWithSheet(firstSheet));
+                    }
+                } catch (fallbackErr) {
+                    console.error('Fallback de metadata falhou:', fallbackErr);
+                }
+            }
+
             console.error('Erro ao ler planilha:', err);
             throw new Error(err?.message || 'Erro ao ler a planilha do Google Sheets');
         }
-    }, [isLoaded, config.apiKey]);
+    }, [isLoaded, config.apiKey, getSpreadsheetMetadata]);
 
     const getSpreadsheetMetadata = useCallback(async (spreadsheetId: string) => {
         try {
