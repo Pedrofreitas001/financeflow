@@ -1,7 +1,8 @@
 // hooks/useGoogleSheets.ts
-// Hook para integrar com Google Sheets API
+// Hook para integrar com Google Sheets API (OAuth Code Flow moderno)
 
 import { useEffect, useState, useCallback } from 'react';
+import { exchangeCodeForToken } from '@/utils/googleSheetsAuth';
 
 declare global {
     interface Window {
@@ -19,6 +20,7 @@ export function useGoogleSheets() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [gisLoaded, setGisLoaded] = useState(false);
 
     const config: GoogleSheetsConfig = {
         clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
@@ -26,7 +28,6 @@ export function useGoogleSheets() {
     };
 
     useEffect(() => {
-        // Validar credenciais
         if (!config.clientId) {
             setError('Google Client ID não configurado');
             return;
@@ -50,7 +51,6 @@ export function useGoogleSheets() {
                     return;
                 }
 
-                // Inicializar apenas com API key primeiro (sem auth)
                 try {
                     await window.gapi.client.init({
                         apiKey: config.apiKey,
@@ -62,39 +62,6 @@ export function useGoogleSheets() {
                     console.log('Google API client inicializado com API Key');
                 } catch (initErr: any) {
                     console.warn('gapi.client.init() falhou:', initErr.message);
-                }
-
-                // Separadamente, inicializar auth2 se clientId estiver disponível
-                if (config.clientId && window.gapi.auth2) {
-                    try {
-                        // Verificar se já foi inicializado
-                        let authInstance = window.gapi.auth2.getAuthInstance();
-
-                        if (!authInstance) {
-                            // Inicializar auth2
-                            authInstance = await window.gapi.auth2.init({
-                                client_id: config.clientId,
-                                scope: 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/drive.readonly',
-                                cookie_policy: 'single_host_origin',
-                            });
-                            console.log('Google Auth2 inicializado');
-                        }
-
-                        // Listener para mudanças de autenticação
-                        authInstance.isSignedIn.listen((signed: boolean) => {
-                            if (isMounted) {
-                                console.log('Auth status mudou:', signed);
-                                setIsSignedIn(signed);
-                            }
-                        });
-
-                        // Estado inicial
-                        if (isMounted) {
-                            setIsSignedIn(authInstance.isSignedIn.get());
-                        }
-                    } catch (authErr: any) {
-                        console.warn('Auth2 setup falhou:', authErr.message);
-                    }
                 }
 
                 if (isMounted) {
@@ -112,7 +79,6 @@ export function useGoogleSheets() {
 
         const loadGoogleAPI = async () => {
             try {
-                // Se já foi carregado, inicializa direto
                 if (window.gapi && window.gapi.client) {
                     if (isMounted) {
                         await initClient();
@@ -120,7 +86,6 @@ export function useGoogleSheets() {
                     return;
                 }
 
-                // Carregar script do Google API
                 const script = document.createElement('script');
                 script.src = 'https://apis.google.com/js/api.js';
                 script.async = true;
@@ -128,7 +93,7 @@ export function useGoogleSheets() {
 
                 script.onload = () => {
                     if (isMounted && window.gapi) {
-                        window.gapi.load('client:auth2', async () => {
+                        window.gapi.load('client', async () => {
                             if (isMounted) {
                                 await initClient();
                             }
@@ -139,9 +104,7 @@ export function useGoogleSheets() {
                 script.onerror = () => {
                     if (isMounted) {
                         console.warn('Google API library não carregada, usando acesso direto');
-                        if (isMounted) {
-                            setIsLoaded(true);
-                        }
+                        setIsLoaded(true);
                     }
                 };
 
@@ -154,7 +117,31 @@ export function useGoogleSheets() {
             }
         };
 
+        const loadGoogleIdentity = () => {
+            if (window.google?.accounts?.oauth2) {
+                setGisLoaded(true);
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'https://accounts.google.com/gsi/client';
+            script.async = true;
+            script.defer = true;
+            script.onload = () => {
+                if (isMounted) {
+                    setGisLoaded(true);
+                }
+            };
+            script.onerror = () => {
+                if (isMounted) {
+                    console.warn('Google Identity Services não carregado');
+                }
+            };
+            document.body.appendChild(script);
+        };
+
         loadGoogleAPI();
+        loadGoogleIdentity();
 
         return () => {
             isMounted = false;
@@ -163,133 +150,58 @@ export function useGoogleSheets() {
 
     const signIn = useCallback(async () => {
         try {
-            console.log('=== INICIANDO PROCESSO DE LOGIN ===');
+            console.log('=== INICIANDO PROCESSO DE LOGIN (GIS Code Flow) ===');
             console.log('Client ID:', config.clientId);
             console.log('Origem atual:', window.location.origin);
 
-            // Verificar se gapi está disponível
-            if (!window.gapi) {
-                console.error('❌ gapi não disponível');
+            if (!gisLoaded || !window.google?.accounts?.oauth2) {
+                console.error('❌ Google Identity Services não disponível');
                 return false;
             }
 
-            // Garantir que auth2 está carregado
-            if (!window.gapi.auth2) {
-                console.log('📦 Carregando módulo auth2...');
-                await new Promise<void>((resolve, reject) => {
-                    window.gapi.load('auth2', {
-                        callback: () => {
-                            console.log('✅ auth2 carregado');
-                            resolve();
-                        },
-                        onerror: () => {
-                            console.error('❌ Erro ao carregar auth2');
-                            reject(new Error('Falha ao carregar auth2'));
-                        },
-                        timeout: 5000,
-                        ontimeout: () => {
-                            console.error('⏱️ Timeout ao carregar auth2');
-                            reject(new Error('Timeout ao carregar auth2'));
-                        }
-                    });
-                });
-            }
+            console.log('🔐 Abrindo popup de login (code flow)...');
 
-            // Obter ou criar instância de auth
-            let authInstance = window.gapi.auth2.getAuthInstance();
-
-            if (!authInstance) {
-                console.log('🔧 Criando nova instância auth2...');
-                console.log('Configuração:', {
-                    client_id: config.clientId,
-                    scope: 'spreadsheets.readonly + drive.readonly',
-                    origin: window.location.origin
-                });
-
-                authInstance = await window.gapi.auth2.init({
+            return await new Promise<boolean>((resolve) => {
+                const codeClient = window.google.accounts.oauth2.initCodeClient({
                     client_id: config.clientId,
                     scope: 'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/drive.readonly',
-                    cookie_policy: 'single_host_origin',
+                    ux_mode: 'popup',
+                    callback: async (response: any) => {
+                        try {
+                            if (!response?.code) {
+                                throw new Error('Código de autorização não recebido');
+                            }
+
+                            const tokens = await exchangeCodeForToken(response.code, 'postmessage');
+                            const accessToken = tokens?.access_token;
+
+                            if (!accessToken) {
+                                throw new Error('Access token não recebido');
+                            }
+
+                            if (window.gapi?.client?.setToken) {
+                                window.gapi.client.setToken({ access_token: accessToken });
+                            }
+
+                            setIsSignedIn(true);
+                            resolve(true);
+                        } catch (err: any) {
+                            console.error('❌ ERRO NO GOOGLE AUTH:', err);
+                            resolve(false);
+                        }
+                    }
                 });
-                console.log('✅ auth2 instance criada');
-            }
 
-            // Verificar se já está autenticado
-            if (authInstance.isSignedIn.get()) {
-                console.log('✅ Usuário já está autenticado');
-                setIsSignedIn(true);
-                return true;
-            }
-
-            // Fazer signin com opções específicas
-            console.log('🔐 Abrindo popup de login...');
-            const googleUser = await authInstance.signIn({
-                prompt: 'select_account'
+                codeClient.requestCode();
             });
-
-            console.log('✅ Login bem-sucedido!');
-            setIsSignedIn(true);
-            return true;
-
         } catch (err: any) {
             console.error('❌ ERRO NO GOOGLE AUTH:', err);
-            console.error('Tipo de erro:', err.error);
-            console.error('Detalhes:', err.details);
-
-            // Detectar erro IdentityCredentialError
-            const isIdentityError = err.error?.toString?.().includes('IdentityCredentialError') ||
-                err.toString?.().includes('IdentityCredentialError');
-
-            // Mensagens de erro mais específicas
-            if (err.error === 'popup_closed_by_user') {
-                console.log('⚠️ Popup fechado pelo usuário');
-            } else if (err.error === 'access_denied') {
-                console.log('⚠️ Acesso negado pelo usuário');
-            } else if (err.error === 'idpiframe_initialization_failed' || isIdentityError) {
-                console.error('');
-                console.error('════════════════════════════════════════════════');
-                console.error('❌ ERRO DE CONFIGURAÇÃO OAUTH!');
-                console.error('════════════════════════════════════════════════');
-                console.error('');
-                console.error('📋 SOLUÇÃO RÁPIDA (5 minutos):');
-                console.error('');
-                console.error('1️⃣  Acesse: https://console.cloud.google.com/apis/credentials');
-                console.error('');
-                console.error('2️⃣  Clique no seu OAuth 2.0 Client ID');
-                console.error('');
-                console.error(`3️⃣  Na seção "Authorized JavaScript origins", ADICIONE:`);
-                console.error(`    ➡️  ${window.location.origin}`);
-                console.error('');
-                console.error('4️⃣  Clique em SAVE');
-                console.error('');
-                console.error('5️⃣  Aguarde 5 minutos para propagar');
-                console.error('');
-                console.error('6️⃣  Limpe cache: Ctrl+Shift+Delete ou aba anônima');
-                console.error('');
-                console.error('7️⃣  Tente novamente');
-                console.error('');
-                console.error('💡 ALTERNATIVA: Use "Inserir Link Manual" para planilhas públicas');
-                console.error('');
-                console.error('📖 Instruções completas: GOOGLE_OAUTH_SETUP.md');
-                console.error('════════════════════════════════════════════════');
-                console.error('');
-            } else {
-                console.error('❌ Erro desconhecido:', JSON.stringify(err, null, 2));
-            }
-
             return false;
         }
-    }, [config.clientId]);
+    }, [config.clientId, gisLoaded]);
 
     const signOut = useCallback(async () => {
-        try {
-            const authInstance = window.gapi?.auth2?.getAuthInstance?.();
-            if (authInstance) {
-                await authInstance.signOut();
-            }
-        } catch (err: any) {
-            console.error('Erro ao fazer logout:', err);
-        }
+        setIsSignedIn(false);
     }, []);
 
     const readSpreadsheet = useCallback(async (
@@ -305,7 +217,6 @@ export function useGoogleSheets() {
                 throw new Error('Google API não está pronta');
             }
 
-            // Tentar usar gapi primeiro
             if (window.gapi?.client?.sheets?.spreadsheets?.values?.get) {
                 const response = await window.gapi.client.sheets.spreadsheets.values.get({
                     spreadsheetId,
@@ -328,9 +239,7 @@ export function useGoogleSheets() {
                 };
             }
 
-            // Fallback: usar fetch com API Key
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}?key=${config.apiKey}`;
-
             const response = await fetch(url);
 
             if (!response.ok) {
@@ -369,7 +278,6 @@ export function useGoogleSheets() {
                 throw new Error('Google API não está pronta');
             }
 
-            // Tentar usar gapi primeiro
             if (window.gapi?.client?.sheets?.spreadsheets?.get) {
                 const response = await window.gapi.client.sheets.spreadsheets.get({
                     spreadsheetId,
@@ -386,7 +294,6 @@ export function useGoogleSheets() {
                 };
             }
 
-            // Fallback: usar fetch
             const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}?key=${config.apiKey}`;
             const response = await fetch(url);
 
@@ -415,7 +322,6 @@ export function useGoogleSheets() {
         try {
             console.log('listUserSpreadsheets iniciando...', { isSignedIn, hasGapi: !!window.gapi });
 
-            // Método 1: Usar Google Drive API (requer autenticação)
             if (window.gapi?.client?.drive?.files?.list) {
                 try {
                     console.log('Tentando listar via Google Drive API...');
@@ -439,7 +345,6 @@ export function useGoogleSheets() {
                 }
             }
 
-            // Se chegou aqui, Drive API não está disponível ou não retornou nada
             if (!isSignedIn) {
                 throw new Error('Por favor, autentique-se com sua conta Google para listar suas planilhas');
             }

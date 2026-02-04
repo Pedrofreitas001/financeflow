@@ -13,3 +13,8 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Dev helper: expose client for console debugging
+if (import.meta.env.DEV) {
+    (window as any).supabase = supabase;
+}

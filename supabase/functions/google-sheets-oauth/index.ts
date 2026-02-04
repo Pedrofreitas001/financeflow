@@ -58,7 +58,7 @@ serve(async (req) => {
             });
         }
 
-        const { code, state } = await req.json();
+        const { code, state, redirect_uri } = await req.json();
         if (!code) {
             return new Response(JSON.stringify({ success: false, error: "Missing code" }), {
                 status: 400,
@@ -79,7 +79,7 @@ serve(async (req) => {
             client_id: GOOGLE_CLIENT_ID,
             client_secret: GOOGLE_CLIENT_SECRET,
             code,
-            redirect_uri: GOOGLE_REDIRECT_URI,
+            redirect_uri: redirect_uri || GOOGLE_REDIRECT_URI,
             grant_type: "authorization_code",
         });
 
@@ -124,7 +124,14 @@ serve(async (req) => {
             throw upsertError;
         }
 
-        return new Response(JSON.stringify({ success: true }), {
+        return new Response(JSON.stringify({
+            success: true,
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token,
+            expires_in: tokens.expires_in,
+            scope: tokens.scope,
+            token_type: tokens.token_type,
+        }), {
             status: 200,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

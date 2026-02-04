@@ -29,11 +29,11 @@ export async function getGoogleAuthUrl(state?: string) {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 }
 
-export async function exchangeCodeForToken(code: string) {
+export async function exchangeCodeForToken(code: string, redirectUri?: string) {
     const { data, error } = await supabase.functions.invoke('google-sheets-oauth', {
         body: {
             code,
-            redirect_uri: REDIRECT_URI
+            redirect_uri: redirectUri || REDIRECT_URI
         }
     });
 
