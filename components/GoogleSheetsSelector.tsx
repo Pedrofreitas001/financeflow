@@ -23,12 +23,14 @@ export function GoogleSheetsSelector({
 }: GoogleSheetsSelectorProps) {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
-    const { isLoaded, isSignedIn, signIn, readSpreadsheet, listUserSpreadsheets, error: hookError } = useGoogleSheets();
+    const { isLoaded, isSignedIn, signIn, readSpreadsheet, listUserSpreadsheets, getSpreadsheetMetadata, error: hookError } = useGoogleSheets();
 
     const [spreadsheets, setSpreadsheets] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [selectedSheetId, setSelectedSheetId] = useState('');
+    const [availableTabs, setAvailableTabs] = useState<string[]>([]);
+    const [selectedTab, setSelectedTab] = useState('');
     const [loadingSheets, setLoadingSheets] = useState(false);
     const [status, setStatus] = useState<'init' | 'auth' | 'loading' | 'ready' | 'error' | 'manual'>('init');
     const [manualSheetId, setManualSheetId] = useState('');
@@ -63,13 +65,19 @@ export function GoogleSheetsSelector({
             setError('Selecione uma planilha');
             return;
         }
+        if (!selectedTab) {
+            setError('Selecione uma aba da planilha');
+            return;
+        }
 
         setLoading(true);
         setError('');
 
         try {
+            const range = selectedTab ? `'${selectedTab.replace(/'/g, "''")}'!A1:ZZ10000` : 'Sheet1!A1:ZZ10000';
+
             // Ler dados
-            const result = await readSpreadsheet(sheetId, 'Sheet1');
+            const result = await readSpreadsheet(sheetId, range);
 
             // Converter para objetos
             const data = result.values.map((row: any[]) => {
@@ -88,7 +96,7 @@ export function GoogleSheetsSelector({
                     user.id,
                     dashboardType,
                     'google_sheets',
-                    `Google Sheets: ${selectedSheet?.name || sheetId}`,
+                    `Google Sheets: ${selectedSheet?.name || sheetId} (${selectedTab || 'Sheet1'})`,
                     result.rowCount,
                     result.columns
                 );
@@ -102,7 +110,23 @@ export function GoogleSheetsSelector({
         } finally {
             setLoading(false);
         }
-    }, [readSpreadsheet, spreadsheets, dashboardType, onDataLoaded, onClose]);
+    }, [readSpreadsheet, spreadsheets, dashboardType, onDataLoaded, onClose, selectedTab]);
+
+    const loadTabsForSheet = useCallback(async (sheetId: string) => {
+        try {
+            setAvailableTabs([]);
+            setSelectedTab('');
+            const metadata = await getSpreadsheetMetadata(sheetId);
+            const tabs = (metadata?.sheets || []).map((s: any) => s.title).filter(Boolean);
+            setAvailableTabs(tabs);
+            if (tabs.length > 0) {
+                setSelectedTab(tabs[0]);
+            }
+        } catch (err: any) {
+            console.error('Erro ao carregar abas:', err);
+            setAvailableTabs([]);
+        }
+    }, [getSpreadsheetMetadata]);
 
     const extractSheetId = useCallback((url: string) => {
         // Extrair ID da URL do Google Sheets
@@ -375,7 +399,10 @@ export function GoogleSheetsSelector({
                             spreadsheets.map((sheet) => (
                                 <button
                                     key={sheet.id}
-                                    onClick={() => setSelectedSheetId(sheet.id)}
+                                    onClick={async () => {
+                                        setSelectedSheetId(sheet.id);
+                                        await loadTabsForSheet(sheet.id);
+                                    }}
                                     disabled={loading}
                                     className={`w-full p-3 rounded-lg text-left transition-all border ${selectedSheetId === sheet.id
                                         ? isDark
@@ -399,6 +426,29 @@ export function GoogleSheetsSelector({
                             ))
                         )}
                     </div>
+
+                    {availableTabs.length > 0 && (
+                        <div className="p-4 border-t border-border-dark">
+                            <label className={`block text-xs font-semibold mb-2 ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>
+                                Aba da planilha
+                            </label>
+                            <select
+                                value={selectedTab}
+                                onChange={(e) => setSelectedTab(e.target.value)}
+                                className={`w-full rounded-lg px-3 py-2 text-sm ${isDark
+                                    ? 'bg-slate-800/60 border border-slate-600 text-slate-100'
+                                    : 'bg-white border border-gray-300 text-gray-900'
+                                    }`}
+                            >
+                                {availableTabs.map((tab) => (
+                                    <option key={tab} value={tab}>{tab}</option>
+                                ))}
+                            </select>
+                            <p className={`text-xs mt-2 ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>
+                                Usando intervalo automático: A1:ZZ10000
+                            </p>
+                        </div>
+                    )}
 
                     {/* Footer */}
                     <div className="flex gap-3 p-4 border-t border-border-dark flex-shrink-0">
