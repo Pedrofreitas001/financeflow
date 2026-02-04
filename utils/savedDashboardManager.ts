@@ -23,7 +23,7 @@ export async function loadSavedDashboard(
     try {
         const { data, error } = await supabase
             .from('saved_dashboards')
-            .select('data, row_count, updated_at')
+            .select('data, row_count, created_at, updated_at')
             .eq('user_id', userId)
             .eq('dashboard_type', dashboardType)
             .order('created_at', { ascending: false })
@@ -37,7 +37,10 @@ export async function loadSavedDashboard(
         const latest = Array.isArray(data) ? data[0] : null;
 
         if (latest && latest.data) {
-            console.log(`[loadSavedDashboard] ✅ ${latest.row_count} linhas carregadas de ${dashboardType} (salvo em ${new Date(latest.updated_at).toLocaleString()})`);
+            import.meta.env.DEV &&
+                console.log(
+                    `[loadSavedDashboard] ? ${latest.row_count} linhas carregadas de ${dashboardType} (salvo em ${new Date((latest as any).updated_at ?? (latest as any).created_at).toLocaleString()})`
+                );
             return latest.data;
         }
 

@@ -3,7 +3,6 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import DataHistoryTab from './DataHistoryTab';
 import SavedDashboardHistoryViewer from './SavedDashboardHistoryViewer';
-import GoogleSheetConnector from '../GoogleSheetConnector';
 import InsightsManager from './InsightsManager';
 
 const DashboardSettings: React.FC = () => {
@@ -11,7 +10,6 @@ const DashboardSettings: React.FC = () => {
     const { user, signOut } = useAuth();
     const isDark = theme === 'dark';
     const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'preferences' | 'business' | 'data-history' | 'insights'>('profile');
-    const [googleExpanded, setGoogleExpanded] = useState(false);
 
     // Estados para o perfil
     const [profileData, setProfileData] = useState({
@@ -645,34 +643,8 @@ const DashboardSettings: React.FC = () => {
                             </div>
 
                             <div>
-                                <button
-                                    onClick={() => setGoogleExpanded((prev) => !prev)}
-                                    className={`w-full flex items-center justify-between rounded-xl px-4 py-3 shadow-sm transition ${isDark
-                                        ? 'bg-slate-800 border border-slate-700 hover:bg-slate-700'
-                                        : 'bg-white border border-gray-200 hover:bg-gray-50'
-                                        }`}
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <span className={`material-symbols-outlined ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>link</span>
-                                        <div className="text-left">
-                                            <p className={`text-sm font-semibold ${isDark ? 'text-slate-100' : 'text-gray-900'}`}>Google Sheets</p>
-                                            <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Conectar e sincronizar planilhas</p>
-                                        </div>
-                                    </div>
-                                    <span className={`material-symbols-outlined transition-transform ${isDark ? 'text-slate-400' : 'text-gray-500'} ${googleExpanded ? 'rotate-180' : ''}`}>
-                                        expand_more
-                                    </span>
-                                </button>
-                                {googleExpanded && (
-                                    <div className="mt-4">
-                                        <GoogleSheetConnector userId={user.id} variant={isDark ? 'dark' : 'light'} />
-                                    </div>
-                                )}
-                            </div>
-
-                            <div>
                                 <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    Historico de Uploads
+                                    Google Sheets
                                 </h3>
                                 <DataHistoryTab userId={user.id} dashboardType="despesas" variant={isDark ? 'dark' : 'light'} />
                             </div>

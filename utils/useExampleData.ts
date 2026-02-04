@@ -20,153 +20,23 @@ import {
     dadosDREFicticios
 } from './dadosFicticios.ts';
 
-// Load example data by default unless a backup exists for that dashboard.
+// Default: always render example data for all dashboards.
+// If a saved backup exists for a given dashboard type, we override only that dashboard's data with the latest backup.
 export const useExampleData = () => {
-    const { dados: dadosFinance, carregarDados } = useFinance();
+    const { carregarDados } = useFinance();
     const { dadosDespesas, carregarDadosDespesas } = useDespesas();
-    const { dreData, setDados: setDREDados } = useDRE();
-    const { dados: dadosCashFlow, setDados: setCashFlowDados } = useCashFlow();
-    const { dados: dadosIndicadores, setDados: setIndicadoresDados } = useIndicadores();
-    const { dados: dadosOrcamento, setDados: setOrcamentoDados } = useOrcamento();
-    const { dados: dadosBalancete, setDados: setBalanceteDados } = useBalancete();
-    const { user } = useAuth();
+    const { setDados: setDREDados } = useDRE();
+    const { setDados: setCashFlowDados } = useCashFlow();
+    const { setDados: setIndicadoresDados } = useIndicadores();
+    const { setDados: setOrcamentoDados } = useOrcamento();
+    const { setDados: setBalanceteDados } = useBalancete();
+    const { user, loading: authLoading } = useAuth();
 
     const [isLoadingExamples, setIsLoadingExamples] = useState(false);
     const [examplesLoaded, setExamplesLoaded] = useState(false);
-    const [savedLoaded, setSavedLoaded] = useState(false);
-    const [syncAttempted, setSyncAttempted] = useState(false);
-    const [savedAvailability, setSavedAvailability] = useState({
-        dashboard: false,
-        despesas: false,
-        dre: false,
-        cashflow: false,
-        indicadores: false,
-        orcamento: false,
-        balancete: false,
-    });
-    const exampleOnceRef = useRef(false);
-
-    useEffect(() => {
-        let isMounted = true;
-
-        const loadSavedData = async () => {
-            if (savedLoaded) return;
-
-            if (!user?.id) {
-                if (isMounted) setSavedLoaded(true);
-                return;
-            }
-
-            try {
-                if (!syncAttempted) {
-                    setSyncAttempted(true);
-                }
-
-                const [
-                    savedDashboard,
-                    savedDespesas,
-                    savedDRE,
-                    savedCashFlow,
-                    savedIndicadores,
-                    savedOrcamento,
-                    savedBalancete,
-                ] = await Promise.all([
-                    loadSavedDashboard(user.id, 'dashboard'),
-                    loadSavedDashboard(user.id, 'despesas'),
-                    loadSavedDashboard(user.id, 'dre'),
-                    loadSavedDashboard(user.id, 'cashflow'),
-                    loadSavedDashboard(user.id, 'indicadores'),
-                    loadSavedDashboard(user.id, 'orcamento'),
-                    loadSavedDashboard(user.id, 'balancete'),
-                ]);
-
-                if (!isMounted) return;
-
-                const availability = {
-                    dashboard: false,
-                    despesas: false,
-                    dre: false,
-                    cashflow: false,
-                    indicadores: false,
-                    orcamento: false,
-                    balancete: false,
-                };
-
-                if (Array.isArray(savedDashboard) && savedDashboard.length > 0) {
-                    carregarDados(savedDashboard);
-                    availability.dashboard = true;
-                }
-
-                if (Array.isArray(savedDespesas) && savedDespesas.length > 0) {
-                    carregarDadosDespesas(savedDespesas as any);
-                    availability.despesas = true;
-                }
-
-                if (Array.isArray(savedDRE) && savedDRE.length > 0) {
-                    setDREDados(savedDRE[0] as any);
-                    availability.dre = true;
-                }
-
-                if (Array.isArray(savedCashFlow) && savedCashFlow.length > 0) {
-                    setCashFlowDados(savedCashFlow as any);
-                    availability.cashflow = true;
-                }
-
-                if (Array.isArray(savedIndicadores) && savedIndicadores.length > 0) {
-                    setIndicadoresDados(savedIndicadores as any);
-                    availability.indicadores = true;
-                }
-
-                if (Array.isArray(savedOrcamento) && savedOrcamento.length > 0) {
-                    setOrcamentoDados(savedOrcamento as any);
-                    availability.orcamento = true;
-                }
-
-                if (Array.isArray(savedBalancete) && savedBalancete.length > 0) {
-                    setBalanceteDados(savedBalancete as any);
-                    availability.balancete = true;
-                }
-
-                setSavedAvailability(availability);
-
-                const loadedAnySaved = Object.values(availability).some(Boolean);
-                if (loadedAnySaved) {
-                    markUserDataLoaded();
-                    try {
-                        const { data: activeConn } = await supabase
-                            .from('google_sheets_connections')
-                            .select('id')
-                            .eq('user_id', user.id)
-                            .eq('is_active', true)
-                            .limit(1);
-
-                        if (activeConn && activeConn.length > 0) {
-                            markDataSource('google_sheets');
-                        } else {
-                            markDataSource('backup');
-                        }
-                    } catch {
-                        markDataSource('backup');
-                    }
-                } else {
-                    markUsingExampleData();
-                }
-            } catch (error) {
-                console.warn('Erro ao carregar dados salvos:', error);
-            } finally {
-                if (isMounted) setSavedLoaded(true);
-            }
-        };
-
-        loadSavedData();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [
-        user?.id,
-        savedLoaded,
-        syncAttempted,
+    // Context functions can be non-stable (re-created on every render). Keep them in a ref so our effects
+    // only depend on user id and don't accidentally loop forever.
+    const fnsRef = useRef({
         carregarDados,
         carregarDadosDespesas,
         setDREDados,
@@ -174,67 +44,196 @@ export const useExampleData = () => {
         setIndicadoresDados,
         setOrcamentoDados,
         setBalanceteDados,
-    ]);
+    });
+    fnsRef.current = {
+        carregarDados,
+        carregarDadosDespesas,
+        setDREDados,
+        setCashFlowDados,
+        setIndicadoresDados,
+        setOrcamentoDados,
+        setBalanceteDados,
+    };
+
+    const lastLoadedKeyRef = useRef<string | null>(null);
 
     useEffect(() => {
-        const loadExampleData = () => {
-            if (!savedLoaded) return;
-            if (exampleOnceRef.current || isLoadingExamples) return;
+        const userKey = `${user?.id ?? 'anonymous'}|${authLoading ? 'loading' : 'ready'}`;
+        if (lastLoadedKeyRef.current === userKey) return;
+        lastLoadedKeyRef.current = userKey;
 
-            exampleOnceRef.current = true;
-            setIsLoadingExamples(true);
+        let cancelled = false;
+
+        const applyExampleData = () => {
+            const fns = fnsRef.current;
             let loadedAny = false;
 
+            if (dadosFinanceirosFicticios.length > 0) {
+                fns.carregarDados(dadosFinanceirosFicticios);
+                loadedAny = true;
+            }
+
+            if (dadosDespesasFicticios.length > 0) {
+                fns.carregarDadosDespesas(dadosDespesasFicticios as any);
+                loadedAny = true;
+            }
+
+            if (dadosDREFicticios) {
+                fns.setDREDados(dadosDREFicticios as any);
+                loadedAny = true;
+            }
+
+            if (dadosCashFlowFicticios.length > 0) {
+                fns.setCashFlowDados(dadosCashFlowFicticios as any);
+                loadedAny = true;
+            }
+
+            if (dadosIndicadoresFicticios.length > 0) {
+                fns.setIndicadoresDados(dadosIndicadoresFicticios as any);
+                loadedAny = true;
+            }
+
+            if (dadosOrcamentoFicticios.length > 0) {
+                fns.setOrcamentoDados(dadosOrcamentoFicticios as any);
+                loadedAny = true;
+            }
+
+            if (dadosBalanceteFicticios.length > 0) {
+                fns.setBalanceteDados(dadosBalanceteFicticios as any);
+                loadedAny = true;
+            }
+
+            return loadedAny;
+        };
+
+        const applySavedDataForUser = async (userId: string) => {
+            const [
+                savedDashboard,
+                savedDespesas,
+                savedDRE,
+                savedCashFlow,
+                savedIndicadores,
+                savedOrcamento,
+                savedBalancete,
+            ] = await Promise.all([
+                loadSavedDashboard(userId, 'dashboard'),
+                loadSavedDashboard(userId, 'despesas'),
+                loadSavedDashboard(userId, 'dre'),
+                loadSavedDashboard(userId, 'cashflow'),
+                loadSavedDashboard(userId, 'indicadores'),
+                loadSavedDashboard(userId, 'orcamento'),
+                loadSavedDashboard(userId, 'balancete'),
+            ]);
+
+            if (cancelled) return;
+
+            const fns = fnsRef.current;
+            const availability = {
+                dashboard: false,
+                despesas: false,
+                dre: false,
+                cashflow: false,
+                indicadores: false,
+                orcamento: false,
+                balancete: false,
+            };
+
+            if (Array.isArray(savedDashboard) && savedDashboard.length > 0) {
+                fns.carregarDados(savedDashboard);
+                availability.dashboard = true;
+            }
+
+            if (Array.isArray(savedDespesas) && savedDespesas.length > 0) {
+                fns.carregarDadosDespesas(savedDespesas as any);
+                availability.despesas = true;
+            }
+
+            if (Array.isArray(savedDRE) && savedDRE.length > 0) {
+                fns.setDREDados(savedDRE[0] as any);
+                availability.dre = true;
+            }
+
+            if (Array.isArray(savedCashFlow) && savedCashFlow.length > 0) {
+                fns.setCashFlowDados(savedCashFlow as any);
+                availability.cashflow = true;
+            }
+
+            if (Array.isArray(savedIndicadores) && savedIndicadores.length > 0) {
+                fns.setIndicadoresDados(savedIndicadores as any);
+                availability.indicadores = true;
+            }
+
+            if (Array.isArray(savedOrcamento) && savedOrcamento.length > 0) {
+                fns.setOrcamentoDados(savedOrcamento as any);
+                availability.orcamento = true;
+            }
+
+            if (Array.isArray(savedBalancete) && savedBalancete.length > 0) {
+                fns.setBalanceteDados(savedBalancete as any);
+                availability.balancete = true;
+            }
+
+            const loadedAnySaved = Object.values(availability).some(Boolean);
+            if (!loadedAnySaved) {
+                markUsingExampleData();
+                return;
+            }
+
+            markUserDataLoaded();
+
+            // Best-effort: if there is an active Sheets connection, show it as the data source.
             try {
-                if (!savedAvailability.dashboard && dadosFinanceirosFicticios.length > 0) {
-                    carregarDados(dadosFinanceirosFicticios);
-                    loadedAny = true;
-                }
+                const { data: activeConn } = await supabase
+                    .from('google_sheets_connections')
+                    .select('id')
+                    .eq('user_id', userId)
+                    .eq('is_active', true)
+                    .limit(1);
 
-                if (!savedAvailability.despesas && dadosDespesasFicticios.length > 0) {
-                    carregarDadosDespesas(dadosDespesasFicticios as any);
-                    loadedAny = true;
+                if (activeConn && activeConn.length > 0) {
+                    markDataSource('google_sheets');
+                } else {
+                    markDataSource('backup');
                 }
+            } catch {
+                markDataSource('backup');
+            }
+        };
 
-                if (!savedAvailability.dre && dadosDREFicticios) {
-                    setDREDados(dadosDREFicticios as any);
-                    loadedAny = true;
-                }
+        const run = async () => {
+            setIsLoadingExamples(true);
+            try {
+                const loadedAny = applyExampleData();
+                setExamplesLoaded(loadedAny);
 
-                if (!savedAvailability.cashflow && dadosCashFlowFicticios.length > 0) {
-                    setCashFlowDados(dadosCashFlowFicticios as any);
-                    loadedAny = true;
-                }
-
-                if (!savedAvailability.indicadores && dadosIndicadoresFicticios.length > 0) {
-                    setIndicadoresDados(dadosIndicadoresFicticios as any);
-                    loadedAny = true;
-                }
-
-                if (!savedAvailability.orcamento && dadosOrcamentoFicticios.length > 0) {
-                    setOrcamentoDados(dadosOrcamentoFicticios as any);
-                    loadedAny = true;
-                }
-
-                if (!savedAvailability.balancete && dadosBalanceteFicticios.length > 0) {
-                    setBalanceteDados(dadosBalanceteFicticios as any);
-                    loadedAny = true;
-                }
-
-                setExamplesLoaded(loadedAny || examplesLoaded);
-                if (loadedAny) {
-                    markUsingExampleData();
-                }
+                // Only mark examples if we don't end up loading backups for the logged-in user.
+                // We'll finalize this after we try to fetch backups below.
+                markUsingExampleData();
             } catch (error) {
                 console.error('Erro ao carregar dados ficticios:', error);
             } finally {
                 setIsLoadingExamples(false);
             }
+
+            if (!authLoading && user?.id) {
+                try {
+                    // Ensure Supabase auth is ready (in some boot sequences the React auth state can
+                    // update slightly before the Supabase client attaches the JWT to requests).
+                    const { data } = await supabase.auth.getUser();
+                    const effectiveUserId = data?.user?.id ?? user.id;
+                    await applySavedDataForUser(effectiveUserId);
+                } catch (error) {
+                    console.warn('Erro ao carregar dados salvos:', error);
+                }
+            }
         };
 
-        const timer = setTimeout(loadExampleData, 200);
-        return () => clearTimeout(timer);
-    }, [savedLoaded, isLoadingExamples, savedAvailability]);
+        run();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [user?.id]);
 
     return { isLoadingExamples, examplesLoaded };
 };
