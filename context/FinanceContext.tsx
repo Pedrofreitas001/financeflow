@@ -1,7 +1,9 @@
 
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { DadosFinanceiros, KPIs } from '../types.ts';
 import { limparValor, getMesNumero } from '../utils/financeUtils.ts';
+import { loadSavedDashboard } from '@/utils/savedDashboardManager';
+import { supabase } from '@/lib/supabase';
 
 interface FinanceContextType {
   dados: DadosFinanceiros[];
@@ -30,24 +32,68 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [uploadDate, setUploadDate] = useState<string | null>(null);
 
   const carregarDados = (json: any[]) => {
-    const processados: DadosFinanceiros[] = json.map(row => ({
-      ano: parseInt(row.Ano),
-      mes: row.Mes,
-      mesNum: getMesNumero(row.Mes),
-      categoria: String(row.Categoria || ""),
-      empresa: String(row.Empresa || ""),
-      valor: limparValor(row.Valor),
-      data: new Date(parseInt(row.Ano) || 2024, getMesNumero(row.Mes) - 1, 1)
-    })).filter(d => d.categoria && d.mes);
+    try {
+      if (!Array.isArray(json)) {
+        console.error('[FinanceContext] Dados não é um array');
+        setDados([]);
+        return;
+      }
 
-    setDados(processados);
-    const uniqueMeses = Array.from(new Set(processados.map(d => d.mes))).sort((a: string, b: string) => getMesNumero(a) - getMesNumero(b));
-    setFiltros({ empresa: 'Todas', meses: uniqueMeses });
+      const dadosValidos = json.filter(row => {
+        try {
+          return row && row.Ano && row.Mes && row.Categoria && row.Empresa && row.Valor !== undefined;
+        } catch {
+          return false;
+        }
+      });
 
-    // Armazena a data de upload
-    const now = new Date();
-    const formattedDate = now.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    setUploadDate(formattedDate);
+      if (dadosValidos.length === 0) {
+        console.warn('[FinanceContext] Nenhum dado válido encontrado');
+        setDados([]);
+        setFiltros({ empresa: 'Todas', meses: [] });
+        return;
+      }
+
+      const processados: DadosFinanceiros[] = dadosValidos.map(row => {
+        try {
+          const mesStr = String(row.Mes).trim();
+          const mesNum = getMesNumero(mesStr);
+
+          return {
+            ano: parseInt(row.Ano),
+            mes: mesStr,
+            mesNum: mesNum,
+            categoria: String(row.Categoria || ""),
+            empresa: String(row.Empresa || ""),
+            valor: limparValor(row.Valor),
+            data: new Date(parseInt(row.Ano) || 2024, mesNum - 1, 1)
+          };
+        } catch (err) {
+          console.error('[FinanceContext] Erro ao processar linha:', row, err);
+          return null;
+        }
+      }).filter((d): d is DadosFinanceiros => d !== null && d.categoria && d.mes);
+
+      if (processados.length === 0) {
+        console.warn('[FinanceContext] Nenhum dado pôde ser processado');
+        setDados([]);
+        setFiltros({ empresa: 'Todas', meses: [] });
+        return;
+      }
+
+      setDados(processados);
+      const uniqueMeses = Array.from(new Set(processados.map(d => d.mes))).sort((a: string, b: string) => getMesNumero(a) - getMesNumero(b));
+      setFiltros({ empresa: 'Todas', meses: uniqueMeses });
+
+      // Armazena a data de upload
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      setUploadDate(formattedDate);
+    } catch (error) {
+      console.error('[FinanceContext] Erro ao carregar dados:', error);
+      setDados([]);
+      setFiltros({ empresa: 'Todas', meses: [] });
+    }
   };
 
   const empresas = useMemo(() => ['Todas', ...Array.from(new Set(dados.map(d => d.empresa)))], [dados]);

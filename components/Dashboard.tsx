@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import KPIGrid from './KPIGrid.tsx';
 import DREWaterfall from './Charts/DREWaterfall.tsx';
 import CashFlowChart from './Charts/CashFlowChart.tsx';
@@ -7,13 +7,21 @@ import ExpenseDonut from './Charts/ExpenseDonut.tsx';
 import CompanyPerformance from './Charts/CompanyPerformance.tsx';
 import ExecutiveDRE from './Charts/ExecutiveDRE.tsx';
 import ExpenseEvolution from './Charts/ExpenseEvolution.tsx';
+import DataUploadModal from './DataUploadModal.tsx';
+import InsertDataButton from './InsertDataButton.tsx';
+import SaveDataButton from './SaveDataButton.tsx';
+import Toast from './Toast.tsx';
 import { useFinance } from '../context/FinanceContext.tsx';
 import { useTheme } from '../context/ThemeContext.tsx';
+import { importFromExcel } from '@/utils/excelUtils';
+import { saveDataToHistory } from '@/utils/dataHistoryManager';
 
 const Dashboard: React.FC = () => {
-  const { dados } = useFinance();
+  const { dados, carregarDados } = useFinance();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
 
   // Se não houver dados, mostrar disclaimer
   if (dados.length === 0) {
@@ -95,12 +103,103 @@ const Dashboard: React.FC = () => {
     <main id="dashboard-content" className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
       <div className="max-w-[1400px] mx-auto flex flex-col gap-6 w-full">
         {/* Cabeçalho da página */}
-        <div>
-          <h1 className="text-white text-3xl font-bold mb-2">Dashboard Financeiro</h1>
-          <p className="text-text-muted">
-            Acompanhe a performance financeira da sua empresa em tempo real
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-white text-3xl font-bold mb-2">Dashboard Financeiro</h1>
+            <p className="text-text-muted">
+              Acompanhe a performance financeira da sua empresa em tempo real
+            </p>
+          </div>
+          <div className="flex flex-col gap-2">
+            <InsertDataButton
+              onClick={() => setShowUploadModal(true)}
+            />
+            <SaveDataButton
+              dashboardType="dashboard"
+              data={dados}
+              onSaveComplete={() => {
+                setToast({
+                  message: '✅ Dados salvos! Serão carregados automaticamente na próxima entrada.',
+                  type: 'success'
+                });
+              }}
+              onError={(error) => {
+                setToast({
+                  message: `❌ Erro ao salvar: ${error}`,
+                  type: 'error'
+                });
+              }}
+            />
+          </div>
         </div>
+
+        {/* Modal de upload */}
+        <DataUploadModal
+          isOpen={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          dashboardType="dashboard"
+          onManualUpload={async () => {
+            try {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.xlsx,.xls';
+              input.onchange = async (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (!file) return;
+
+                try {
+                  const result = await importFromExcel(file);
+
+                  if (!result.firstSheet || result.firstSheet.length === 0) {
+                    setToast({
+                      message: '❌ Arquivo vazio ou sem dados válidos',
+                      type: 'error'
+                    });
+                    return;
+                  }
+
+                  // Carregar dados no contexto (NÃO salva automaticamente)
+                  carregarDados(result.firstSheet);
+
+                  setToast({
+                    message: `✅ ${result.rowCount} linhas carregadas com sucesso! Clique em "Salvar" para persistir.`,
+                    type: 'success'
+                  });
+                  setShowUploadModal(false);
+                } catch (error: any) {
+                  console.error('Erro de importação:', error);
+                  setToast({
+                    message: `❌ ${error?.message || 'Erro ao importar arquivo'}`,
+                    type: 'error'
+                  });
+                }
+              };
+              input.click();
+            } catch (error) {
+              setToast({
+                message: 'Erro ao abrir seletor de arquivo',
+                type: 'error'
+              });
+            }
+          }}
+          onGoogleSheets={(data) => {
+            // Carregar dados do Google Sheets
+            carregarDados(data);
+            setToast({
+              message: `✅ Dados do Google Sheets carregados com sucesso!`,
+              type: 'success'
+            });
+          }}
+        />
+
+        {/* Toast de notificação */}
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
 
         {/* KPIs */}
         <KPIGrid />

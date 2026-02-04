@@ -1,7 +1,9 @@
 
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import { DadosDespesas, KPIDespesas, ExpenseCategory, ExpenseEvolution } from '../types.ts';
 import { limparValor, getMesNumero } from '../utils/financeUtils.ts';
+import { loadSavedDashboard } from '@/utils/savedDashboardManager';
+import { supabase } from '@/lib/supabase';
 
 interface DespesasContextType {
     dadosDespesas: DadosDespesas[];
@@ -38,40 +40,82 @@ export const DespesasProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [uploadDateDespesas, setUploadDateDespesas] = useState<string | null>(null);
 
     const carregarDadosDespesas = (json: any[]) => {
-        const processados: DadosDespesas[] = json.map(row => {
-            const mesNum = row.Mes_Num || getMesNumero(row.Mes);
+        try {
+            if (!Array.isArray(json)) {
+                console.error('[DespesasContext] Dados não é um array');
+                setDadosDespesas([]);
+                return;
+            }
 
-            return {
-                ano: parseInt(row.Ano) || 2024,
-                mes: String(row.Mes || ""),
-                mesNum: mesNum,
-                empresa: String(row.Empresa || ""),
-                categoria: String(row.Categoria || ""),
-                subcategoria: String(row.Subcategoria || ""),
-                valor: Math.abs(limparValor(row.Valor)),
-                data: new Date(parseInt(row.Ano) || 2024, mesNum - 1, 1),
-                tipo: row.Categoria?.toUpperCase().includes('FATURAMENTO') ? 'receita' : 'despesa'
-            };
-        }).filter(d => d.categoria && d.mes);
+            // Filtrar dados inválidos e com campos faltantes
+            const dadosValidos = json.filter(row => {
+                try {
+                    return row && row.Ano && row.Mes && row.Categoria && row.Empresa && row.Valor !== undefined;
+                } catch {
+                    return false;
+                }
+            });
 
-        setDadosDespesas(processados);
+            if (dadosValidos.length === 0) {
+                console.warn('[DespesasContext] Nenhum dado válido encontrado');
+                setDadosDespesas([]);
+                setFiltrosDespesas({ empresa: 'Todas', meses: [], categorias: [] });
+                return;
+            }
 
-        const uniqueMeses = Array.from(new Set(processados.map(d => d.mes)))
-            .sort((a: string, b: string) => getMesNumero(a) - getMesNumero(b));
+            const processados: DadosDespesas[] = dadosValidos.map(row => {
+                try {
+                    const mesStr = String(row.Mes || "").trim();
+                    const mesNum = row.Mes_Num || getMesNumero(mesStr);
+                    const categoria = String(row.Categoria || "");
 
-        setFiltrosDespesas({
-            empresa: 'Todas',
-            meses: uniqueMeses,
-            categorias: []
-        });
+                    return {
+                        ano: parseInt(row.Ano) || 2024,
+                        mes: mesStr,
+                        mesNum: mesNum,
+                        empresa: String(row.Empresa || ""),
+                        categoria: categoria,
+                        subcategoria: String(row.Subcategoria || ""),
+                        valor: Math.abs(limparValor(row.Valor)),
+                        data: new Date(parseInt(row.Ano) || 2024, mesNum - 1, 1),
+                        tipo: categoria?.toUpperCase().includes('FATURAMENTO') ? 'receita' : 'despesa'
+                    };
+                } catch (err) {
+                    console.error('[DespesasContext] Erro ao processar linha:', row, err);
+                    return null;
+                }
+            }).filter((d): d is DadosDespesas => d !== null && d.categoria && d.mes);
 
-        const now = new Date();
-        const formattedDate = now.toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        });
-        setUploadDateDespesas(formattedDate);
+            if (processados.length === 0) {
+                console.warn('[DespesasContext] Nenhum dado pôde ser processado');
+                setDadosDespesas([]);
+                setFiltrosDespesas({ empresa: 'Todas', meses: [], categorias: [] });
+                return;
+            }
+
+            setDadosDespesas(processados);
+
+            const uniqueMeses = Array.from(new Set(processados.map(d => d.mes)))
+                .sort((a: string, b: string) => getMesNumero(a) - getMesNumero(b));
+
+            setFiltrosDespesas({
+                empresa: 'Todas',
+                meses: uniqueMeses,
+                categorias: []
+            });
+
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            setUploadDateDespesas(formattedDate);
+        } catch (error) {
+            console.error('[DespesasContext] Erro ao carregar dados:', error);
+            setDadosDespesas([]);
+            setFiltrosDespesas({ empresa: 'Todas', meses: [], categorias: [] });
+        }
     };
 
     const empresasDespesas = useMemo(() =>

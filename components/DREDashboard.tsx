@@ -5,14 +5,23 @@ import DREFilters from './DRETables/DREFilters';
 import DREMensalTable from './DRETables/DREMensalTable';
 import DREAcumuladoTable from './DRETables/DREAcumuladoTable';
 import DREComparativoTable from './DRETables/DREComparativoTable';
+import DataUploadModal from './DataUploadModal';
+import InsertDataButton from './InsertDataButton';
+import SaveDataButton from './SaveDataButton';
+import Toast from './Toast';
+import { importFromExcel } from '@/utils/excelUtils';
+import { saveDataToHistory } from '@/utils/dataHistoryManager';
+import { supabase } from '@/lib/supabase';
 
 type ViewType = 'mensal' | 'acumulado' | 'comparativo';
 
 const DREDashboard: React.FC = () => {
   const { theme } = useTheme();
-  const { dreData, loading, error } = useDRE();
+  const { dreData, loading, error, setDados } = useDRE();
   const isDark = theme === 'dark';
   const [viewType, setViewType] = useState<ViewType>('mensal');
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
 
   // Se não houver dados, mostrar disclaimer
   if (!dreData || (dreData && Object.keys(dreData).length === 0)) {
@@ -96,6 +105,96 @@ const DREDashboard: React.FC = () => {
       <div className="max-w-[1600px] mx-auto">
         {/* Filtros Horizontais */}
         <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
+                Tabelas DRE
+              </h1>
+              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                Demonstração do Resultado do Exercício - Análise Detalhada
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <InsertDataButton
+                onClick={() => setShowUploadModal(true)}
+              />
+              <SaveDataButton
+                dashboardType="dre"
+                data={dreData ? [dreData] : []}
+                onSaveComplete={() => {
+                  setToast({
+                    message: '✅ Dados salvos! Serão carregados automaticamente na próxima entrada.',
+                    type: 'success'
+                  });
+                }}
+                onError={(error) => {
+                  setToast({
+                    message: `❌ Erro ao salvar: ${error}`,
+                    type: 'error'
+                  });
+                }}
+              />
+            </div>
+          </div>
+
+          <DataUploadModal
+            isOpen={showUploadModal}
+            onClose={() => setShowUploadModal(false)}
+            dashboardType="dre"
+            onManualUpload={async () => {
+              try {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.xlsx,.xls';
+                input.onchange = async (e) => {
+                  const file = (e.target as HTMLInputElement).files?.[0];
+                  if (!file) return;
+
+                  try {
+                    const result = await importFromExcel(file);
+
+                    // Carregar dados no contexto (NÃO salva automaticamente)
+                    carregarDados(result.firstSheet);
+
+                    setToast({
+                      message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
+                      type: 'success'
+                    });
+                    setShowUploadModal(false);
+                  } catch (error: any) {
+                    console.error('Erro de importação:', error);
+                    setToast({
+                      message: `❌ ${error?.message || 'Erro ao importar arquivo'}`,
+                      type: 'error'
+                    });
+                  }
+                };
+                input.click();
+              } catch (error) {
+                setToast({
+                  message: 'Erro ao abrir seletor de arquivo',
+                  type: 'error'
+                });
+              }
+            }}
+            onGoogleSheets={(data) => {
+              carregarDados(data);
+              setToast({
+                message: 'Dados do Google Sheets carregados com sucesso!',
+                type: 'success'
+              });
+            }}
+          />
+
+          {/* Toast de notificação */}
+          {toast && (
+            <Toast
+              message={toast.message}
+              type={toast.type}
+              onClose={() => setToast(null)}
+            />
+          )}
+
           <DREFilters />
 
           {error && (
@@ -103,16 +202,6 @@ const DREDashboard: React.FC = () => {
               <p className="text-red-500 text-sm">{error}</p>
             </div>
           )}
-        </div>
-
-        {/* Cabeçalho */}
-        <div className="mb-6">
-          <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>
-            Tabelas DRE
-          </h1>
-          <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            Demonstração do Resultado do Exercício - Análise Detalhada
-          </p>
         </div>
 
         {/* Tabs de Visualização */}

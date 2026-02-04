@@ -1,17 +1,31 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import KPIGridDespesas from './KPIGridDespesas.tsx';
 import DespesasPorCategoria from './Charts/DespesasPorCategoria.tsx';
 import EvolucaoDespesasMensal from './Charts/EvolucaoDespesasMensal.tsx';
 import ComparacaoPeriodos from './Charts/ComparacaoPeriodos.tsx';
 import TabelaPlanoConta from './Charts/TabelaPlanoConta.tsx';
+import DataInputSelector from './DataInputSelector.tsx';
+import DataUploadModal from './DataUploadModal.tsx';
+import InsertDataButton from './InsertDataButton.tsx';
+import Toast from './Toast.tsx';
+import SaveDataButton from './SaveDataButton.tsx';
 import { useDespesas } from '../context/DespesasContext.tsx';
 import { useTheme } from '../context/ThemeContext.tsx';
+import { useUserPlan } from '@/hooks/useUserPlan';
+import { importFromExcel } from '@/utils/excelUtils';
+import { saveDataToHistory } from '@/utils/dataHistoryManager';
 
 const DashboardDespesas: React.FC = () => {
-    const { dadosDespesas } = useDespesas();
+    const { dadosDespesas, carregarDadosDespesas } = useDespesas();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+    const [showDataInput, setShowDataInput] = useState(false);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
+
+    // Hook para pegar o plano do usuário
+    const { userPlan, loading: planLoading } = useUserPlan();
 
     // Se não houver dados, mostrar mensagem
     if (dadosDespesas.length === 0) {
@@ -104,12 +118,112 @@ const DashboardDespesas: React.FC = () => {
         <main id="dashboard-despesas-content" className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar bg-background-dark">
             <div className="max-w-[1400px] mx-auto flex flex-col gap-6 w-full">
                 {/* Cabeçalho da página */}
-                <div>
-                    <h1 className="text-white text-3xl font-bold mb-2">Análise de Despesas</h1>
-                    <p className="text-text-muted">
-                        Visualize e compare as despesas da empresa ao longo do tempo
-                    </p>
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-white text-3xl font-bold mb-2">Análise de Despesas</h1>
+                        <p className="text-text-muted">
+                            Visualize e compare as despesas da empresa ao longo do tempo
+                        </p>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <InsertDataButton
+                            onClick={() => setShowUploadModal(true)}
+                            disabled={planLoading}
+                        />
+                        <SaveDataButton
+                            dashboardType="despesas"
+                            data={dadosDespesas}
+                            disabled={planLoading}
+                            onSaveComplete={() => {
+                                setToast({
+                                    message: '✅ Dados salvos! Serão carregados automaticamente na próxima entrada.',
+                                    type: 'success'
+                                });
+                            }}
+                            onError={(error) => {
+                                setToast({
+                                    message: `❌ Erro ao salvar: ${error}`,
+                                    type: 'error'
+                                });
+                            }}
+                        />
+                    </div>
                 </div>
+
+                {/* Modal de upload de dados */}
+                <DataUploadModal
+                    isOpen={showUploadModal}
+                    onClose={() => setShowUploadModal(false)}
+                    dashboardType="despesas"
+                    onManualUpload={async () => {
+                        try {
+                            const input = document.createElement('input');
+                            input.type = 'file';
+                            input.accept = '.xlsx,.xls';
+                            input.onchange = async (e) => {
+                                const file = (e.target as HTMLInputElement).files?.[0];
+                                if (!file) return;
+
+                                try {
+                                    const result = await importFromExcel(file);
+
+                                    // Carregar dados no contexto (NÃO salva automaticamente)
+                                    carregarDadosDespesas(result.firstSheet);
+
+                                    setToast({
+                                        message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`,
+                                        type: 'success'
+                                    });
+                                    setShowUploadModal(false);
+                                } catch (error: any) {
+                                    setToast({
+                                        message: `Erro ao importar: ${error.message || 'Arquivo inválido'}`,
+                                        type: 'error'
+                                    });
+                                }
+                            };
+                            input.click();
+                        } catch (error) {
+                            setToast({
+                                message: 'Erro ao abrir seletor de arquivo',
+                                type: 'error'
+                            });
+                        }
+                    }}
+                    onGoogleSheets={(data) => {
+                        carregarDadosDespesas(data);
+                        setToast({
+                            message: 'Dados do Google Sheets carregados com sucesso!',
+                            type: 'success'
+                        });
+                    }}
+                />
+
+                {/* Toast de notificação */}
+                {toast && (
+                    <Toast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={() => setToast(null)}
+                    />
+                )}
+
+                {/* Modal de seleção de fonte de dados (antigo) */}
+                {showDataInput && (
+                    <DataInputSelector
+                        userId={userPlan.userId || ''}
+                        dashboardType="Despesas"
+                        onManual={() => {
+                            setShowDataInput(false);
+                            alert('Excel uploader será integrado aqui');
+                        }}
+                        onGoogleSheets={() => {
+                            setShowDataInput(false);
+                            alert('Google Sheets será integrado aqui');
+                        }}
+                        onClose={() => setShowDataInput(false)}
+                    />
+                )}
 
                 {/* KPIs */}
                 <KPIGridDespesas />

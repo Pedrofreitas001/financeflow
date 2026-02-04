@@ -8,6 +8,7 @@ import { useIndicadores } from '../context/IndicadoresContext/IndicadoresContext
 import { useOrcamento } from '../context/OrcamentoContext/OrcamentoContext';
 import { useBalancete } from '../context/BalanceteContext';
 import { useTheme } from '../context/ThemeContext';
+import { useUserPlan } from '@/hooks/useUserPlan';
 import PremiumModal from './PremiumModal';
 import * as XLSX from 'xlsx';
 
@@ -21,7 +22,8 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage = 'dashboard', onNavigate }) => {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [premiumFeature, setPremiumFeature] = useState('');
-  const isPremium = false; // Mock - substituir por lógica real de assinatura
+  const { userPlan } = useUserPlan();
+  const isPremium = userPlan.isPremium || userPlan.isDiamond;
 
   const { empresas, mesesDisponiveis, filtros, setFiltroEmpresa, setFiltroMeses, carregarDados } = useFinance();
   const {
@@ -299,6 +301,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onExport, visible = true, currentPage
       </div>
 
       <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-4 space-y-8">
+
         <nav className="flex flex-col gap-2">
           <p className="px-2 text-xs font-bold text-text-muted uppercase">Navegação Principal</p>
           <button

@@ -5,6 +5,8 @@ import { useFinance } from '../../context/FinanceContext';
 import { useDespesas } from '../../context/DespesasContext';
 import { useDRE } from '../../context/DREContext';
 import { useAIInsights } from '../../utils/useAIInsights';
+import { useUserPlan } from '../../hooks/useUserPlan';
+import { useAuth } from '../../context/AuthContext';
 import PremiumModal from '../PremiumModal';
 import { Brain, Loader, TrendingUp, AlertTriangle, Sparkles } from 'lucide-react';
 
@@ -26,6 +28,8 @@ const DashboardAIInsights: React.FC = () => {
     const { categoriaSummary } = useDespesas();
     const { dreData } = useDRE();
     const { saveInsight } = useAIInsights();
+    const { user } = useAuth();
+    const { userPlan } = useUserPlan(user?.id);
 
     const [selectedCategory, setSelectedCategory] = useState<string>('todos');
     const [selectedInsight, setSelectedInsight] = useState<AIInsight | null>(null);
@@ -34,7 +38,9 @@ const DashboardAIInsights: React.FC = () => {
     const [generatedAnalysis, setGeneratedAnalysis] = useState<AnalysisResult | null>(null);
     const [selectedDashboard, setSelectedDashboard] = useState<AnalysisType | null>(null);
     const [showPremiumModal, setShowPremiumModal] = useState(false);
-    const isPremium = false; // Mock - substituir por lógica real de assinatura
+
+    // Diamond e Premium têm acesso total
+    const hasAccess = userPlan.isDiamond || userPlan.isPremium;
 
     const dashboardOptions = [
         { id: 'visao_geral' as AnalysisType, name: 'Visão Geral', icon: '📊', description: 'Análise estratégica geral' },
@@ -315,7 +321,7 @@ Para manter essa trajetória:
     };
 
     const handleGenerateInsight = () => {
-        if (!isPremium) {
+        if (!hasAccess) {
             setShowPremiumModal(true);
             return;
         }

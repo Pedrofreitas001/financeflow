@@ -21,6 +21,8 @@ import { IndicadoresProvider } from './context/IndicadoresContext/IndicadoresCon
 import { OrcamentoProvider } from './context/OrcamentoContext/OrcamentoContext.tsx';
 import { BalanceteProvider } from './context/BalanceteContext.tsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.tsx';
+import { useAuth } from './context/AuthContext.tsx';
+import { useUserPlan } from './hooks/useUserPlan.ts';
 import { useExampleData } from './utils/useExampleData.ts';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -41,13 +43,15 @@ const AppContent: React.FC = () => {
     description: ''
   });
   const isDark = theme === 'dark';
+  const { user } = useAuth();
+  const { userPlan } = useUserPlan(user?.id);
 
-  // Mock - substituir por dados reais do Supabase
-  const isPremium = false; // Alterar para true para testar como premium
+  // Diamond e Premium têm acesso a exportação de PDF
+  const hasExportAccess = userPlan.isDiamond || userPlan.isPremium;
 
   const handleExportPDF = async () => {
-    // Verificar se é premium
-    if (!isPremium) {
+    // Verificar se tem acesso (Premium ou Diamond)
+    if (!hasExportAccess) {
       setPremiumFeature({
         feature: 'Exportação de PDF',
         description: 'Exporte relatórios profissionais em PDF com todos os gráficos e análises do seu dashboard.'

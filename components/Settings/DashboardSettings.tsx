@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import DataHistoryTab from './DataHistoryTab';
+import InsightsManager from './InsightsManager';
 
 const DashboardSettings: React.FC = () => {
     const { theme } = useTheme();
     const { user, signOut } = useAuth();
     const isDark = theme === 'dark';
-    const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'preferences' | 'business'>('profile');
+    const [activeTab, setActiveTab] = useState<'profile' | 'subscription' | 'preferences' | 'business' | 'data-history' | 'insights'>('profile');
 
     // Estados para o perfil
     const [profileData, setProfileData] = useState({
@@ -62,23 +64,25 @@ const DashboardSettings: React.FC = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className={`flex gap-2 mb-6 border-b ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
+                <div className={`flex flex-wrap gap-1 mb-6 border-b ${isDark ? 'border-border-dark' : 'border-gray-200'}`}>
                     {[
                         { id: 'profile', label: 'Perfil', icon: 'person' },
                         { id: 'business', label: 'Contexto Empresarial', icon: 'business' },
                         { id: 'subscription', label: 'Assinatura', icon: 'workspace_premium' },
-                        { id: 'preferences', label: 'Preferências', icon: 'settings' }
+                        { id: 'preferences', label: 'Preferências', icon: 'settings' },
+                        { id: 'data-history', label: 'Histórico de Dados', icon: 'history' },
+                        { id: 'insights', label: 'Insights Salvos', icon: 'lightbulb' }
                     ].map((tab) => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
-                            className={`flex items-center gap-2 px-4 py-3 font-semibold transition-colors border-b-2 ${activeTab === tab.id
+                            className={`flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors border-b-2 ${activeTab === tab.id
                                 ? 'border-blue-500 text-blue-500'
                                 : `border-transparent ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-900'}`
                                 }`}
                         >
-                            <span className="material-symbols-outlined text-xl">{tab.icon}</span>
-                            {tab.label}
+                            <span className="material-symbols-outlined text-lg">{tab.icon}</span>
+                            <span className="hidden sm:inline">{tab.label}</span>
                         </button>
                     ))}
                 </div>
@@ -625,6 +629,16 @@ const DashboardSettings: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+                    )}
+
+                    {/* Data History Tab */}
+                    {activeTab === 'data-history' && user?.id && (
+                        <DataHistoryTab userId={user.id} dashboardType="despesas" />
+                    )}
+
+                    {/* Insights Tab */}
+                    {activeTab === 'insights' && user?.id && (
+                        <InsightsManager userId={user.id} dashboardType="despesas" />
                     )}
                 </div>
             </div>

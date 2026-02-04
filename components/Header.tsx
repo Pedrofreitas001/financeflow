@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import { useFinance } from '../context/FinanceContext';
+import { useUserPlan } from '@/hooks/useUserPlan';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -13,6 +14,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, examplesLoaded = false }) => {
   const { theme } = useTheme();
   const { uploadDate } = useFinance();
+  const { userPlan } = useUserPlan();
   const isDark = theme === 'dark';
 
   return (
@@ -61,6 +63,14 @@ const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarVisible, exampl
       </div>
 
       <div className="flex items-center gap-4">
+        {/* Plan Status Badge - Clean */}
+        <div className={`px-2 py-1 rounded-md text-[10px] font-medium ${userPlan.isDiamond ? isDark ? 'bg-purple-500/10 text-purple-300' : 'bg-purple-100 text-purple-700' :
+            userPlan.isPremium ? isDark ? 'bg-blue-500/10 text-blue-300' : 'bg-blue-100 text-blue-700' :
+              isDark ? 'bg-slate-700 text-slate-300' : 'bg-gray-200 text-gray-700'
+          }`}>
+          {userPlan.plan ? userPlan.plan.charAt(0).toUpperCase() + userPlan.plan.slice(1) : 'Free'}
+        </div>
+
         <div className="relative group">
           <input
             className={`${isDark ? 'bg-surface-dark border-border-dark text-white' : 'bg-white border-gray-300 text-gray-900'} border rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all`}
