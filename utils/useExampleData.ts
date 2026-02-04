@@ -185,8 +185,8 @@ export const useExampleData = () => {
             }
 
             // Verificar se já carregou exemplos ou se está carregando
-            if (examplesLoaded || isLoadingExamples) {
-                console.log('⏭️ Exemplos já carregados ou carregando, pulando...');
+            if (isLoadingExamples) {
+                console.log('⏳ Exemplos já carregando, pulando...');
                 return;
             }
 
@@ -254,10 +254,10 @@ export const useExampleData = () => {
                 }
 
                 console.log('✅ Processo de carregamento de dados fictícios concluído');
-                setExamplesLoaded(loadedAny);
-                if (loadedAny) {
-                    markUsingExampleData();
-                }
+            setExamplesLoaded(loadedAny || examplesLoaded);
+            if (loadedAny) {
+                markUsingExampleData();
+            }
             } catch (error) {
                 console.error('❌ Erro ao carregar dados fictícios:', error);
             } finally {

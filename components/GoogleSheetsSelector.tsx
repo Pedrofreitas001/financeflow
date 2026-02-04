@@ -13,6 +13,14 @@ interface GoogleSheetsSelectorProps {
     onClose: () => void;
     dashboardType: DashboardType;
     onDataLoaded: (data: any[]) => void;
+    onConnected?: (payload: {
+        sheetId: string;
+        sheetName: string;
+        tabName: string;
+        range: string;
+        rowCount: number;
+        columns: string[];
+    }) => void;
 }
 
 export function GoogleSheetsSelector({
@@ -20,6 +28,7 @@ export function GoogleSheetsSelector({
     onClose,
     dashboardType,
     onDataLoaded,
+    onConnected,
 }: GoogleSheetsSelectorProps) {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -103,6 +112,14 @@ export function GoogleSheetsSelector({
             }
 
             onDataLoaded(data);
+            onConnected?.({
+                sheetId,
+                sheetName: selectedSheet?.name || sheetId,
+                tabName: selectedTab || 'Sheet1',
+                range,
+                rowCount: result.rowCount,
+                columns: result.columns,
+            });
             onClose();
         } catch (err: any) {
             console.error('Erro:', err);

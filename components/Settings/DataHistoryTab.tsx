@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import GoogleSheetConnector from '@/components/GoogleSheetConnector';
+import { GoogleSheetsSelector } from '@/components/GoogleSheetsSelector';
 
 interface DataHistoryTabProps {
     userId: string;
@@ -26,7 +26,7 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
     const [loading, setLoading] = useState(true);
     const [syncing, setSyncing] = useState(false);
     const [toggling, setToggling] = useState(false);
-    const [showConnector, setShowConnector] = useState(false);
+    const [showSelector, setShowSelector] = useState(false);
 
     useEffect(() => {
         loadHistory();
@@ -144,10 +144,10 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                             </button>
                         ) : (
                             <button
-                                onClick={() => setShowConnector((prev) => !prev)}
+                                onClick={() => setShowSelector(true)}
                                 className={`${isLight ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-500/20 text-blue-200 hover:bg-blue-500/30'} text-xs px-3 py-1.5 rounded font-semibold transition`}
                             >
-                                {showConnector ? 'Fechar' : 'Reconectar'}
+                                Conectar
                             </button>
                         )}
                     </div>
@@ -156,19 +156,6 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                         Atualização automática: ao login
                     </p>
 
-                    {showConnector && (
-                        <div className="mt-3">
-                            <GoogleSheetConnector
-                                userId={userId}
-                                initialDashboardType={dashboardType as any}
-                                variant={isLight ? 'light' : 'dark'}
-                                onConnected={async () => {
-                                    setShowConnector(false);
-                                    await loadHistory();
-                                }}
-                            />
-                        </div>
-                    )}
                 </div>
             ) : (
                 <div className={`${isLight ? 'bg-white border border-gray-200' : 'bg-slate-800/30 border border-slate-700'} rounded p-3`}>
@@ -178,28 +165,44 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                             <p className={`text-xs ${isLight ? 'text-gray-500' : 'text-slate-400'}`}>Nenhuma conexão ativa</p>
                         </div>
                         <button
-                            onClick={() => setShowConnector((prev) => !prev)}
+                            onClick={() => setShowSelector(true)}
                             className={`${isLight ? 'text-blue-600 hover:bg-blue-50' : 'text-blue-300 hover:bg-blue-500/20'} text-xs px-3 py-1.5 rounded font-semibold transition`}
                         >
-                            {showConnector ? 'Fechar' : 'Conectar'}
+                            Conectar
                         </button>
                     </div>
-
-                    {showConnector && (
-                        <div className="mt-3">
-                            <GoogleSheetConnector
-                                userId={userId}
-                                initialDashboardType={dashboardType as any}
-                                variant={isLight ? 'light' : 'dark'}
-                                onConnected={async () => {
-                                    setShowConnector(false);
-                                    await loadHistory();
-                                }}
-                            />
-                        </div>
-                    )}
                 </div>
             )}
+
+            <GoogleSheetsSelector
+                isOpen={showSelector}
+                onClose={() => setShowSelector(false)}
+                dashboardType={dashboardType as any}
+                onDataLoaded={() => {
+                    // Não carregar dados na tela aqui
+                }}
+                onConnected={async ({ sheetId, sheetName, tabName, range }) => {
+                    try {
+                        await supabase
+                            .from('google_sheets_connections')
+                            .upsert({
+                                user_id: userId,
+                                dashboard_type: dashboardType,
+                                spreadsheet_id: sheetId,
+                                spreadsheet_name: sheetName,
+                                sheet_name: tabName,
+                                sheet_names: [tabName],
+                                range,
+                                is_active: true,
+                            }, {
+                                onConflict: 'user_id,spreadsheet_id'
+                            });
+                        await loadHistory();
+                    } finally {
+                        setShowSelector(false);
+                    }
+                }}
+            />
 
         </div>
     );
