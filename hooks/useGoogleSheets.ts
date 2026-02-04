@@ -204,6 +204,52 @@ export function useGoogleSheets() {
         setIsSignedIn(false);
     }, []);
 
+    const getSpreadsheetMetadata = useCallback(async (spreadsheetId: string) => {
+        try {
+            if (!isLoaded) {
+                throw new Error('Google API não está pronta');
+            }
+
+            if (window.gapi?.client?.sheets?.spreadsheets?.get) {
+                const response = await window.gapi.client.sheets.spreadsheets.get({
+                    spreadsheetId,
+                });
+
+                return {
+                    title: response.result?.properties?.title || 'Sem título',
+                    sheets: (response.result?.sheets || []).map((sheet: any) => ({
+                        title: sheet.properties?.title,
+                        sheetId: sheet.properties?.sheetId,
+                        rowCount: sheet.properties?.gridProperties?.rowCount,
+                        columnCount: sheet.properties?.gridProperties?.columnCount,
+                    })),
+                };
+            }
+
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}?key=${config.apiKey}`;
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar metadata: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            return {
+                title: data.properties?.title || 'Sem título',
+                sheets: (data.sheets || []).map((sheet: any) => ({
+                    title: sheet.properties?.title,
+                    sheetId: sheet.properties?.sheetId,
+                    rowCount: sheet.properties?.gridProperties?.rowCount,
+                    columnCount: sheet.properties?.gridProperties?.columnCount,
+                })),
+            };
+        } catch (err: any) {
+            console.error('Erro ao buscar metadados:', err);
+            throw new Error(err?.message || 'Erro ao buscar informações da planilha');
+        }
+    }, [isLoaded, config.apiKey]);
+
     const readSpreadsheet = useCallback(async (
         spreadsheetId: string,
         range: string = 'Sheet1'
@@ -296,52 +342,6 @@ export function useGoogleSheets() {
             throw new Error(err?.message || 'Erro ao ler a planilha do Google Sheets');
         }
     }, [isLoaded, config.apiKey, getSpreadsheetMetadata]);
-
-    const getSpreadsheetMetadata = useCallback(async (spreadsheetId: string) => {
-        try {
-            if (!isLoaded) {
-                throw new Error('Google API não está pronta');
-            }
-
-            if (window.gapi?.client?.sheets?.spreadsheets?.get) {
-                const response = await window.gapi.client.sheets.spreadsheets.get({
-                    spreadsheetId,
-                });
-
-                return {
-                    title: response.result?.properties?.title || 'Sem título',
-                    sheets: (response.result?.sheets || []).map((sheet: any) => ({
-                        title: sheet.properties?.title,
-                        sheetId: sheet.properties?.sheetId,
-                        rowCount: sheet.properties?.gridProperties?.rowCount,
-                        columnCount: sheet.properties?.gridProperties?.columnCount,
-                    })),
-                };
-            }
-
-            const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}?key=${config.apiKey}`;
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`Erro ao buscar metadata: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            return {
-                title: data.properties?.title || 'Sem título',
-                sheets: (data.sheets || []).map((sheet: any) => ({
-                    title: sheet.properties?.title,
-                    sheetId: sheet.properties?.sheetId,
-                    rowCount: sheet.properties?.gridProperties?.rowCount,
-                    columnCount: sheet.properties?.gridProperties?.columnCount,
-                })),
-            };
-        } catch (err: any) {
-            console.error('Erro ao buscar metadados:', err);
-            throw new Error(err?.message || 'Erro ao buscar informações da planilha');
-        }
-    }, [isLoaded, config.apiKey]);
 
     const listUserSpreadsheets = useCallback(async () => {
         try {
