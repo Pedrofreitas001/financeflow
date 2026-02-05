@@ -1,5 +1,3 @@
-// supabase/functions/google-sheets-fetch-one/index.ts
-// Busca dados do Google Sheets para um dashboard_type do usuário autenticado e retorna os dados.
 
 import { serve } from "https://deno.land/std@0.203.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.4";
