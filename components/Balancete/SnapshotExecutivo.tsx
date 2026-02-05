@@ -49,11 +49,10 @@ const SnapshotExecutivo: React.FC<SnapshotExecutivoProps> = ({ dados, empresas, 
         : 0;
 
     const caixaEquivalentes = dadosFiltrados
-        .filter(d =>
-            d.nomeContaContabil.toLowerCase().includes('caixa') ||
-            d.nomeContaContabil.toLowerCase().includes('banco') ||
-            d.nomeContaContabil.toLowerCase().includes('aplicação')
-        )
+        .filter(d => {
+            const nome = d.nomeContaContabil ? d.nomeContaContabil.toLowerCase() : '';
+            return nome.includes('caixa') || nome.includes('banco') || nome.includes('aplicação');
+        })
         .reduce((acc, d) => acc + Math.abs(d.saldo), 0);
 
     const caixaPercentualAC = totais.ativoCirculante > 0

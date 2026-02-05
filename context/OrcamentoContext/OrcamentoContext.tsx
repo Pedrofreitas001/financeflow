@@ -28,7 +28,17 @@ interface OrcamentoContextType {
 const OrcamentoContext = createContext<OrcamentoContextType | undefined>(undefined);
 
 export const OrcamentoProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [dados, setDados] = useState<OrcamentoItem[]>([]);
+    const [dados, setDadosRaw] = useState<OrcamentoItem[]>([]);
+
+    // Patch: garantir que orçado e realizado sejam números
+    const setDados = (input: OrcamentoItem[]) => {
+        const convertidos = input.map(item => ({
+            ...item,
+            orcado: typeof item.orcado === 'string' ? Number(item.orcado) : item.orcado,
+            realizado: typeof item.realizado === 'string' ? Number(item.realizado) : item.realizado,
+        }));
+        setDadosRaw(convertidos);
+    };
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 

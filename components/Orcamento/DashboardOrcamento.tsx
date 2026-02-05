@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useTheme } from '../../context/ThemeContext';
 import { useOrcamento } from '../../context/OrcamentoContext/OrcamentoContext';
+import DataUploadModal from '../DataUploadModal';
+import InsertDataButton from '../InsertDataButton';
+import SaveDataButton from '../SaveDataButton';
+import ClearDataButton from '../ClearDataButton';
+import UpdateFromSheetsButton from '../UpdateFromSheetsButton';
+import DownloadTemplateButton from '../DownloadTemplateButton';
+import Toast from '../Toast';
+import { DASHBOARD_TEMPLATE_URLS } from '@/utils/dashboardTemplateUrls';
+import { importFromExcel } from '@/utils/excelUtils';
+import { markDataSource, markUserDataLoaded } from '@/utils/userDataState';
 
 interface KPIOrcamentoCardProps {
     titulo: string;
@@ -37,7 +47,73 @@ const KPIOrcamentoCard: React.FC<KPIOrcamentoCardProps> = ({ titulo, valor, perc
 };
 
 const DashboardOrcamento: React.FC = () => {
-    const { dados, empresas } = useOrcamento();
+    const { dados, setDados, empresas } = useOrcamento();
+
+    // Validação dos dados de orçamento
+    function validarDadosOrcamento(rows: any[]): any[] {
+        if (!Array.isArray(rows)) return [];
+        // Logar dados brutos importados
+        // eslint-disable-next-line no-console
+        console.log('[Orcamento] Dados brutos importados:', rows);
+        const validos: any[] = [];
+        const descartados: any[] = [];
+        rows.forEach((row, idx) => {
+            try {
+                // Aceitar nomes alternativos das colunas
+                const mes = row?.mes ?? row?.Mes ?? row?.MES ?? row?.Mês ?? row?.MÊS;
+                const empresa = row?.empresa ?? row?.Empresa ?? row?.EMPRESA ?? row?.Empresa;
+                const categoria = row?.categoria ?? row?.Categoria ?? row?.CATEGORIA ?? row?.Categoria;
+                const orcadoRaw = row?.orcado ?? row?.Orcado ?? row?.ORCADO ?? row?.Orçado ?? row?.ORÇADO;
+                const realizadoRaw = row?.realizado ?? row?.Realizado ?? row?.REALIZADO ?? row?.Realizado;
+                const responsavel = row?.responsavel ?? row?.Responsavel ?? row?.RESPONSAVEL ?? row?.Responsável ?? '';
+                const observacoes = row?.observacoes ?? row?.Observacoes ?? row?.OBSERVACOES ?? row?.Observações ?? '';
+                // Corrigir conversão: remover separador de milhar e garantir decimal
+                const parseNumber = (val: any) => {
+                    if (typeof val === 'string') {
+                        // Se for só número, retorna direto
+                        if (/^\d+$/.test(val)) return Number(val);
+                        // Se for decimal com vírgula (18666,00)
+                        if (/^\d+,\d+$/.test(val)) return Number(val.replace(/,/g, '.'));
+                        // Se for decimal com ponto (18666.00)
+                        if (/^\d+\.\d+$/.test(val)) return Number(val);
+                        // Fallback: remove tudo exceto números, ponto e menos
+                        let num = val.replace(/[^0-9\-.]/g, '');
+                        return Number(num);
+                    }
+                    return Number(val);
+                };
+                const orcado = parseNumber(orcadoRaw);
+                const realizado = parseNumber(realizadoRaw);
+                // Debug: log valores convertidos
+                // eslint-disable-next-line no-console
+                console.log('[Orcamento] Convertido:', { idx, mes, empresa, categoria, orcadoRaw, realizadoRaw, orcado, realizado });
+                if (mes && empresa && categoria && !isNaN(orcado) && !isNaN(realizado)) {
+                    validos.push({
+                        mes,
+                        empresa,
+                        categoria,
+                        orcado,
+                        realizado,
+                        responsavel,
+                        observacoes,
+                    });
+                } else {
+                    descartados.push({ idx, row });
+                }
+            } catch (err) {
+                descartados.push({ idx, row, err });
+            }
+        });
+        if (descartados.length > 0) {
+            // eslint-disable-next-line no-console
+            console.warn('[Orcamento] Dados descartados na validação:', descartados);
+        }
+        if (validos.length === 0) {
+            // eslint-disable-next-line no-console
+            console.error('[Orcamento] Nenhum dado válido encontrado. Verifique as colunas e os valores do Excel.');
+        }
+        return validos;
+    }
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [selectedEmpresa, setSelectedEmpresa] = useState<string>('');
@@ -45,6 +121,8 @@ const DashboardOrcamento: React.FC = () => {
     const [desviosPorCategoria, setDesviosPorCategoria] = useState<any[]>([]);
     const [totalOrcadoFiltrado, setTotalOrcadoFiltrado] = useState(0);
     const [totalRealizadoFiltrado, setTotalRealizadoFiltrado] = useState(0);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
 
     useEffect(() => {
         const empresa = selectedEmpresa || (empresas.length > 0 ? empresas[0] : '');
@@ -98,6 +176,7 @@ const DashboardOrcamento: React.FC = () => {
 
     if (dados.length === 0) {
         return (
+            <>
             <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
                 <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center relative`} style={{
                     backgroundColor: '#0f1d32',
@@ -171,23 +250,42 @@ const DashboardOrcamento: React.FC = () => {
                             <p className="text-xs mb-4 text-gray-600">Arquivo: <span className="text-primary font-mono">Orcamento_Exemplo.xlsx</span></p>
 
                             {/* Botão Download */}
-                            <a data-cta-button href="https://docs.google.com/spreadsheets/d/1pjEyn5Jy43kC3og11hjU1Co7peBn11EH8EwfuEHxk_M/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
+                            <a data-cta-button href={DASHBOARD_TEMPLATE_URLS.orcamento} download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
                                 <span className="material-symbols-outlined text-base">download</span>
                                 Baixar Arquivo
                             </a>
                         </div>
+                        <div className="flex flex-wrap gap-1.5 mt-8 justify-center items-center">
+                            <InsertDataButton onClick={() => setShowUploadModal(true)} compact />
+                            <SaveDataButton dashboardType="orcamento" data={[]} compact onSaveComplete={() => setToast({ message: '✅ Dados salvos!', type: 'success' })} onError={(e) => setToast({ message: `❌ ${e}`, type: 'error' })} />
+                            <UpdateFromSheetsButton dashboardType="orcamento" onDataLoaded={(data) => { setDados(validarDadosOrcamento(data)); setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' }); }} onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })} />
+                            <ClearDataButton onClear={() => setDados([])} compact />
+                            <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.orcamento} />
+                        </div>
                     </div>
                 </div>
             </div>
+            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+            </>
         );
     }
 
     return (
+        <>
         <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'} min-h-screen`}>
             <div className="max-w-[1400px] mx-auto pb-8">
-                <div className="mb-8">
-                    <h1 className={`text-3xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>Budgeting vs Realizado</h1>
-                    <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mt-2`}>Análise de desvios orçamentários e controle de gastos</p>
+                <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 className={`text-3xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>Budgeting vs Realizado</h1>
+                        <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mt-2`}>Análise de desvios orçamentários e controle de gastos</p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                        <InsertDataButton onClick={() => setShowUploadModal(true)} compact />
+                        <SaveDataButton dashboardType="orcamento" data={dados} compact onSaveComplete={() => setToast({ message: '✅ Dados salvos!', type: 'success' })} onError={(e) => setToast({ message: `❌ ${e}`, type: 'error' })} />
+                        <UpdateFromSheetsButton dashboardType="orcamento" onDataLoaded={(data) => { setDados(data as any); setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' }); }} onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })} />
+                        <ClearDataButton onClear={() => { setDados([]); setToast({ message: '🧹 Dados removidos.', type: 'info' }); }} compact />
+                        <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.orcamento} />
+                    </div>
                 </div>
 
                 {/* KPIs */}
@@ -344,6 +442,44 @@ const DashboardOrcamento: React.FC = () => {
                 <div className="pb-12"></div>
             </div>
         </main>
+        <DataUploadModal isOpen={showUploadModal} onClose={() => setShowUploadModal(false)} dashboardType="orcamento" onManualUpload={async () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.xlsx,.xls'; input.onchange = async (e) => { const file = (e.target as HTMLInputElement).files?.[0]; if (!file) return; try { const result = await importFromExcel(file); setDados(result.firstSheet as any); markUserDataLoaded(); markDataSource('manual'); setToast({ message: `✅ ${result.rowCount} linhas carregadas!`, type: 'success' }); setShowUploadModal(false); } catch (err: any) { setToast({ message: `❌ ${err?.message || 'Erro'}`, type: 'error' }); } }; input.click(); }} onGoogleSheets={(data) => { setDados(data as any); markUserDataLoaded(); markDataSource('google_sheets'); setToast({ message: 'Google Sheets carregado!', type: 'success' }); }} />
+        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+
+        {/* Patch: garantir validação sempre */}
+        <DataUploadModal
+            isOpen={showUploadModal}
+            onClose={() => setShowUploadModal(false)}
+            dashboardType="orcamento"
+            onManualUpload={async () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.xlsx,.xls';
+                input.onchange = async (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (!file) return;
+                    try {
+                        const result = await importFromExcel(file);
+                        const validados = validarDadosOrcamento(result.firstSheet as any);
+                        setDados(validados);
+                        markUserDataLoaded();
+                        markDataSource('manual');
+                        setToast({ message: `✅ ${validados.length} linhas válidas carregadas!`, type: 'success' });
+                        setShowUploadModal(false);
+                    } catch (err: any) {
+                        setToast({ message: `❌ ${err?.message || 'Erro'}`, type: 'error' });
+                    }
+                };
+                input.click();
+            }}
+            onGoogleSheets={(data) => {
+                const validados = validarDadosOrcamento(data as any);
+                setDados(validados);
+                markUserDataLoaded();
+                markDataSource('google_sheets');
+                setToast({ message: 'Google Sheets carregado!', type: 'success' });
+            }}
+        />
+        </>
     );
 };
 

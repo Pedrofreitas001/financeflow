@@ -5,15 +5,18 @@ interface ClearDataButtonProps {
     onClear: () => void;
     disabled?: boolean;
     label?: string;
+    compact?: boolean;
 }
 
 const ClearDataButton: React.FC<ClearDataButtonProps> = ({
     onClear,
     disabled = false,
-    label = 'Limpar Dados'
+    label = 'Limpar',
+    compact = false,
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
+    const sizeClass = compact ? 'gap-1.5 px-3 py-1.5 text-sm' : 'gap-2 px-4 py-2';
 
     const handleClear = () => {
         if (!confirm('Tem certeza que deseja limpar os dados da interface?')) return;
@@ -24,7 +27,7 @@ const ClearDataButton: React.FC<ClearDataButtonProps> = ({
         <button
             onClick={handleClear}
             disabled={disabled}
-            className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md font-semibold transition-all duration-200
+            className={`flex items-center justify-center rounded-md font-semibold transition-all duration-200 ${sizeClass}
                 ${disabled
                     ? isDark
                         ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
@@ -35,7 +38,7 @@ const ClearDataButton: React.FC<ClearDataButtonProps> = ({
                 }
             `}
         >
-            <span className="material-symbols-outlined">delete_forever</span>
+            <span className="material-symbols-outlined text-base">delete_forever</span>
             {label}
         </button>
     );

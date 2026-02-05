@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { GoogleSheetsSelector } from '@/components/GoogleSheetsSelector';
+import { fetchGoogleSheetsData } from '@/utils/googleSheetsFetchOne';
 
 interface DataHistoryTabProps {
     userId: string;
@@ -63,12 +64,15 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
     }
 
     async function handleSyncNow() {
+        if (!googleConnection) return;
         try {
             setSyncing(true);
-            await supabase.functions.invoke('google-sheets-sync');
+            await fetchGoogleSheetsData(dashboardType);
             await loadHistory();
+            window.dispatchEvent(new CustomEvent('google-sheets-synced', { detail: { dashboardType } }));
         } catch (error) {
-            console.error('Erro ao sincronizar agora:', error);
+            console.error('Erro ao atualizar do Google Sheets:', error);
+            throw error;
         } finally {
             setSyncing(false);
         }
@@ -128,11 +132,11 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
 
                     <div className="mt-3 flex flex-wrap gap-2">
                         <button
-                            onClick={handleSyncNow}
+                            onClick={() => handleSyncNow().catch(() => {})}
                             disabled={syncing}
                             className={`${isLight ? 'bg-emerald-600 text-white hover:bg-emerald-700' : 'bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/30'} text-xs px-3 py-1.5 rounded font-semibold transition disabled:opacity-60`}
                         >
-                            {syncing ? 'Sincronizando...' : 'Sincronizar agora'}
+                            {syncing ? 'Atualizando...' : 'Atualizar'}
                         </button>
                         {googleConnection.isActive ? (
                             <button
@@ -153,7 +157,7 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                     </div>
 
                     <p className={`mt-2 text-[11px] ${isLight ? 'text-gray-500' : 'text-slate-400'}`}>
-                        Atualização automática: ao login
+                        Clique em &quot;Atualizar&quot; para puxar a última versão da planilha. Os dados também aparecem no dashboard.
                     </p>
 
                 </div>
@@ -198,6 +202,12 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                                 onConflict: 'user_id,spreadsheet_id'
                             });
                         await loadHistory();
+                        try {
+                            await fetchGoogleSheetsData(dashboardType);
+                            window.dispatchEvent(new CustomEvent('google-sheets-synced', { detail: { dashboardType } }));
+                        } catch (_) {
+                            console.warn('Primeira carga do Google Sheets pode ser feita pelo botão Atualizar.');
+                        }
                     } finally {
                         setShowSelector(false);
                     }

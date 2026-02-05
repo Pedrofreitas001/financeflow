@@ -11,8 +11,11 @@ import DataUploadModal from './DataUploadModal.tsx';
 import InsertDataButton from './InsertDataButton.tsx';
 import SaveDataButton from './SaveDataButton.tsx';
 import ClearDataButton from './ClearDataButton';
+import UpdateFromSheetsButton from './UpdateFromSheetsButton';
+import DownloadTemplateButton from './DownloadTemplateButton';
 import Toast from './Toast.tsx';
 import { useFinance } from '../context/FinanceContext.tsx';
+import { DASHBOARD_TEMPLATE_URLS } from '@/utils/dashboardTemplateUrls';
 import { useTheme } from '../context/ThemeContext.tsx';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
@@ -106,13 +109,62 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Botões de ação */}
-            <div className="flex flex-wrap gap-2 mt-8 justify-center">
-              <InsertDataButton onClick={() => setShowUploadModal(true)} />
-              <SaveDataButton dashboardType="dashboard" data={[]} />
-              <ClearDataButton onClear={() => carregarDados([])} />
+            <div className="flex flex-wrap gap-1.5 mt-8 justify-center items-center">
+              <InsertDataButton onClick={() => setShowUploadModal(true)} compact />
+              <SaveDataButton dashboardType="dashboard" data={[]} compact />
+              <UpdateFromSheetsButton
+                dashboardType="dashboard"
+                onDataLoaded={(data) => {
+                  carregarDados(data);
+                  setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' });
+                }}
+                onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })}
+              />
+              <ClearDataButton onClear={() => carregarDados([])} compact />
+              <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.dashboard} />
             </div>
           </div>
         </div>
+        <DataUploadModal
+          isOpen={showUploadModal}
+          onClose={() => setShowUploadModal(false)}
+          dashboardType="dashboard"
+          onManualUpload={async () => {
+            try {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.xlsx,.xls';
+              input.onchange = async (e) => {
+                const file = (e.target as HTMLInputElement).files?.[0];
+                if (!file) return;
+                try {
+                  const result = await importFromExcel(file);
+                  if (!result.firstSheet || result.firstSheet.length === 0) {
+                    setToast({ message: '❌ Arquivo vazio ou sem dados válidos', type: 'error' });
+                    return;
+                  }
+                  carregarDados(result.firstSheet);
+                  markUserDataLoaded();
+                  markDataSource('manual');
+                  setToast({ message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`, type: 'success' });
+                  setShowUploadModal(false);
+                } catch (err: any) {
+                  setToast({ message: `❌ ${err?.message || 'Erro ao importar'}`, type: 'error' });
+                }
+              };
+              input.click();
+            } catch {
+              setToast({ message: 'Erro ao abrir seletor de arquivo', type: 'error' });
+            }
+          }}
+          onGoogleSheets={(data) => {
+            carregarDados(data);
+            markUserDataLoaded();
+            markDataSource('google_sheets');
+            setToast({ message: '✅ Dados do Google Sheets carregados!', type: 'success' });
+          }}
+        />
+        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       </div>
     );
   }
@@ -127,13 +179,12 @@ const Dashboard: React.FC = () => {
               Acompanhe a performance financeira da sua empresa em tempo real
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <InsertDataButton
-              onClick={() => setShowUploadModal(true)}
-            />
+          <div className="flex flex-wrap gap-1.5 items-center">
+            <InsertDataButton onClick={() => setShowUploadModal(true)} compact />
             <SaveDataButton
               dashboardType="dashboard"
               data={dados}
+              compact
               onSaveComplete={() => {
                 setToast({
                   message: '✅ Dados salvos! Serão carregados automaticamente na próxima entrada.',
@@ -147,6 +198,14 @@ const Dashboard: React.FC = () => {
                 });
               }}
             />
+            <UpdateFromSheetsButton
+              dashboardType="dashboard"
+              onDataLoaded={(data) => {
+                carregarDados(data);
+                setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' });
+              }}
+              onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })}
+            />
             <ClearDataButton
               onClear={() => {
                 carregarDados([]);
@@ -155,7 +214,9 @@ const Dashboard: React.FC = () => {
                   type: 'info'
                 });
               }}
+              compact
             />
+            <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.dashboard} />
           </div>
         </div>
 

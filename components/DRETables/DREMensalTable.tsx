@@ -15,11 +15,11 @@ const DREMensalTable: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  if (!dreData) {
+  if (!dreData || !dreData.regimeCaixa || !dreData.regimeCompetencia) {
     return (
       <div className={`${isDark ? 'bg-[#1f2937] border-[#374151] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
         <span className="material-symbols-outlined text-4xl text-text-muted mb-2">table_chart</span>
-        <p className="text-sm">Carregue um arquivo DRE Mensal para visualizar</p>
+        <p className="text-sm">Dados inválidos ou planilha incompleta.<br/>Carregue um arquivo DRE Mensal válido para visualizar.</p>
       </div>
     );
   }
@@ -97,15 +97,23 @@ const DREMensalTable: React.FC = () => {
   if (regimeSelecionado === 'ambos') {
     return (
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {renderTabela(dreData.regimeCaixa.mensal, 'Regime de Caixa - Mensal')}
-        {renderTabela(dreData.regimeCompetencia.mensal, 'Regime de Competência - Mensal')}
+        {dreData.regimeCaixa?.mensal && renderTabela(dreData.regimeCaixa.mensal, 'Regime de Caixa - Mensal')}
+        {dreData.regimeCompetencia?.mensal && renderTabela(dreData.regimeCompetencia.mensal, 'Regime de Competência - Mensal')}
       </div>
     );
   }
 
-  const data = regimeSelecionado === 'caixa' ? dreData.regimeCaixa.mensal : dreData.regimeCompetencia.mensal;
-  const titulo = regimeSelecionado === 'caixa' ? 'Regime de Caixa - Mensal' : 'Regime de Competência - Mensal';
-
+  // ...existing code...
+  const data = regimeSelecionado === 'caixa' ? dreData.regimeCaixa?.mensal : dreData.regimeCompetencia?.mensal;
+   const titulo = regimeSelecionado === 'caixa' ? 'Regime de Caixa - Mensal' : 'Regime de Competência - Mensal';
+   if (!data || !Array.isArray(data) || data.length === 0) {
+     return (
+      <div className={`${isDark ? 'bg-[#1f2937] border-[#374151] text-white' : 'bg-white border-gray-200 text-gray-900'} border rounded-xl p-8 text-center`}>
+        <span className="material-symbols-outlined text-4xl text-text-muted mb-2">table_chart</span>
+        <p className="text-sm">Nenhum dado mensal disponível para o regime selecionado.</p>
+      </div>
+    );
+  }
   return renderTabela(data, titulo);
 };
 

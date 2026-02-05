@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { useTheme } from '../../context/ThemeContext';
 import { useIndicadores } from '../../context/IndicadoresContext/IndicadoresContext';
+import DataUploadModal from '../DataUploadModal';
+import InsertDataButton from '../InsertDataButton';
+import SaveDataButton from '../SaveDataButton';
+import ClearDataButton from '../ClearDataButton';
+import UpdateFromSheetsButton from '../UpdateFromSheetsButton';
+import DownloadTemplateButton from '../DownloadTemplateButton';
+import Toast from '../Toast';
+import { DASHBOARD_TEMPLATE_URLS } from '@/utils/dashboardTemplateUrls';
+import { importFromExcel } from '@/utils/excelUtils';
+import { markDataSource, markUserDataLoaded } from '@/utils/userDataState';
 
 interface KPIIndicadorCardProps {
     titulo: string;
@@ -28,12 +38,14 @@ const KPIIndicadorCard: React.FC<KPIIndicadorCardProps> = ({ titulo, valor, benc
 };
 
 const DashboardIndicadores: React.FC = () => {
-    const { dados, indicadores, empresas, obterComparativoSetor } = useIndicadores();
+    const { dados, setDados, indicadores, empresas, obterComparativoSetor } = useIndicadores();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [selectedEmpresa, setSelectedEmpresa] = useState<string>('');
     const [chartData, setChartData] = useState<any[]>([]);
     const [radarData, setRadarData] = useState<any[]>([]);
+    const [showUploadModal, setShowUploadModal] = useState(false);
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
 
     useEffect(() => {
         const empresa = selectedEmpresa || (empresas.length > 0 ? empresas[0] : '');
@@ -68,6 +80,7 @@ const DashboardIndicadores: React.FC = () => {
 
     if (dados.length === 0) {
         return (
+            <>
             <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
                 <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center relative`} style={{
                     backgroundColor: '#0f1d32',
@@ -140,15 +153,24 @@ const DashboardIndicadores: React.FC = () => {
                             </div>
                             <p className="text-xs mb-4 text-gray-600">Arquivo: <span className="text-primary font-mono">Indicadores_Exemplo.xlsx</span></p>
 
-                            {/* Botão Download */}
-                            <a data-cta-button href="https://docs.google.com/spreadsheets/d/127Nqx8umUkgpoT1UxIoZlXpfr-KUYP6dJcz5uTfOSok/export?format=xlsx" download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
+                            <a data-cta-button href={DASHBOARD_TEMPLATE_URLS.indicadores} download className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-900 hover:bg-blue-950 text-white rounded-lg text-sm font-semibold transition-colors w-full">
                                 <span className="material-symbols-outlined text-base">download</span>
                                 Baixar Arquivo
                             </a>
                         </div>
+                        <div className="flex flex-wrap gap-1.5 mt-8 justify-center items-center">
+                            <InsertDataButton onClick={() => setShowUploadModal(true)} compact />
+                            <SaveDataButton dashboardType="indicadores" data={[]} compact onSaveComplete={() => setToast({ message: '✅ Dados salvos!', type: 'success' })} onError={(e) => setToast({ message: `❌ ${e}`, type: 'error' })} />
+                            <UpdateFromSheetsButton dashboardType="indicadores" onDataLoaded={(data) => { setDados(data as any); setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' }); }} onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })} />
+                            <ClearDataButton onClear={() => setDados([])} compact />
+                            <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.indicadores} />
+                        </div>
                     </div>
                 </div>
             </div>
+            <DataUploadModal isOpen={showUploadModal} onClose={() => setShowUploadModal(false)} dashboardType="indicadores" onManualUpload={async () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.xlsx,.xls'; input.onchange = async (e) => { const file = (e.target as HTMLInputElement).files?.[0]; if (!file) return; try { const result = await importFromExcel(file); setDados(result.firstSheet as any); markUserDataLoaded(); markDataSource('manual'); setToast({ message: `✅ ${result.rowCount} linhas carregadas!`, type: 'success' }); setShowUploadModal(false); } catch (err: any) { setToast({ message: `❌ ${err?.message || 'Erro'}`, type: 'error' }); } }; input.click(); }} onGoogleSheets={(data) => { setDados(data as any); markUserDataLoaded(); markDataSource('google_sheets'); setToast({ message: 'Google Sheets carregado!', type: 'success' }); }} />
+            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+        </>
         );
     }
 
@@ -157,11 +179,21 @@ const DashboardIndicadores: React.FC = () => {
     const margem_setor_calc = obterComparativoSetor('margemLiquida').benchmarkSetor;
 
     return (
+        <>
         <main className={`flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar ${isDark ? 'bg-background-dark' : 'bg-gray-50'} min-h-screen`}>
             <div className="max-w-[1400px] mx-auto pb-8">
-                <div className="mb-8">
-                    <h1 className={`text-3xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>Indicadores Financeiros</h1>
-                    <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mt-2`}>Análise de saúde financeira com benchmarks do setor</p>
+                <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h1 className={`text-3xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>Indicadores Financeiros</h1>
+                        <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm mt-2`}>Análise de saúde financeira com benchmarks do setor</p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                        <InsertDataButton onClick={() => setShowUploadModal(true)} compact />
+                        <SaveDataButton dashboardType="indicadores" data={dados} compact onSaveComplete={() => setToast({ message: '✅ Dados salvos!', type: 'success' })} onError={(e) => setToast({ message: `❌ ${e}`, type: 'error' })} />
+                        <UpdateFromSheetsButton dashboardType="indicadores" onDataLoaded={(data) => { setDados(data as any); setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' }); }} onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })} />
+                        <ClearDataButton onClear={() => { setDados([]); setToast({ message: '🧹 Dados removidos.', type: 'info' }); }} compact />
+                        <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.indicadores} />
+                    </div>
                 </div>
 
                 {/* KPIs */}
@@ -274,6 +306,9 @@ const DashboardIndicadores: React.FC = () => {
                 <div className="pb-12"></div>
             </div>
         </main>
+        <DataUploadModal isOpen={showUploadModal} onClose={() => setShowUploadModal(false)} dashboardType="indicadores" onManualUpload={async () => { const input = document.createElement('input'); input.type = 'file'; input.accept = '.xlsx,.xls'; input.onchange = async (e) => { const file = (e.target as HTMLInputElement).files?.[0]; if (!file) return; try { const result = await importFromExcel(file); setDados(result.firstSheet as any); markUserDataLoaded(); markDataSource('manual'); setToast({ message: `✅ ${result.rowCount} linhas carregadas!`, type: 'success' }); setShowUploadModal(false); } catch (err: any) { setToast({ message: `❌ ${err?.message || 'Erro'}`, type: 'error' }); } }; input.click(); }} onGoogleSheets={(data) => { setDados(data as any); markUserDataLoaded(); markDataSource('google_sheets'); setToast({ message: 'Google Sheets carregado!', type: 'success' }); }} />
+        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+        </>
     );
 };
 

@@ -1,4 +1,4 @@
-﻿
+
 import React, { useState } from 'react';
 import KPIGridDespesas from './KPIGridDespesas.tsx';
 import DespesasPorCategoria from './Charts/DespesasPorCategoria.tsx';
@@ -11,6 +11,9 @@ import InsertDataButton from './InsertDataButton.tsx';
 import Toast from './Toast.tsx';
 import SaveDataButton from './SaveDataButton.tsx';
 import ClearDataButton from './ClearDataButton';
+import UpdateFromSheetsButton from './UpdateFromSheetsButton';
+import DownloadTemplateButton from './DownloadTemplateButton';
+import { DASHBOARD_TEMPLATE_URLS } from '@/utils/dashboardTemplateUrls';
 import { useDespesas } from '../context/DespesasContext.tsx';
 import { useTheme } from '../context/ThemeContext.tsx';
 import { useUserPlan } from '@/hooks/useUserPlan';
@@ -29,9 +32,10 @@ const DashboardDespesas: React.FC = () => {
     // Hook para pegar o plano do usuÃ¡rio
     const { userPlan, loading: planLoading } = useUserPlan();
 
-    // Se nÃ£o houver dados, mostrar mensagem
+    // Se não houver dados, mostrar mensagem
     if (dadosDespesas.length === 0) {
         return (
+            <>
             <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
                 <div className={`flex-1 overflow-y-auto custom-scrollbar flex items-center justify-center relative`} style={{
                     backgroundColor: '#0f1d32',
@@ -110,10 +114,58 @@ const DashboardDespesas: React.FC = () => {
                                 Baixar Arquivo
                             </a>
                         </div>
+
+                        {/* Botões de ação no estado vazio */}
+                        <div className="flex flex-wrap gap-1.5 mt-8 justify-center items-center">
+                            <InsertDataButton onClick={() => setShowUploadModal(true)} disabled={planLoading} compact />
+                            <SaveDataButton dashboardType="despesas" data={[]} disabled={planLoading} compact onSaveComplete={() => setToast({ message: '✅ Dados salvos!', type: 'success' })} onError={(e) => setToast({ message: `❌ ${e}`, type: 'error' })} />
+                            <UpdateFromSheetsButton dashboardType="despesas" onDataLoaded={(data) => { carregarDadosDespesas(data); setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' }); }} onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })} disabled={planLoading} />
+                            <ClearDataButton onClear={() => carregarDadosDespesas([])} compact />
+                            <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.despesas} />
+                        </div>
                     </div>
                 </div>
             </div>
-        );
+
+            {/* Modal de upload também no estado vazio */}
+            <DataUploadModal
+                isOpen={showUploadModal}
+                onClose={() => setShowUploadModal(false)}
+                dashboardType="despesas"
+                onManualUpload={async () => {
+                    try {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = '.xlsx,.xls';
+                        input.onchange = async (e) => {
+                            const file = (e.target as HTMLInputElement).files?.[0];
+                            if (!file) return;
+                            try {
+                                const result = await importFromExcel(file);
+                                carregarDadosDespesas(result.firstSheet);
+                                markUserDataLoaded();
+                                markDataSource('manual');
+                                setToast({ message: `✅ ${result.rowCount} linhas carregadas! Clique em "Salvar" para persistir.`, type: 'success' });
+                                setShowUploadModal(false);
+                            } catch (err: any) {
+                                setToast({ message: `Erro: ${err?.message || 'Arquivo inválido'}`, type: 'error' });
+                            }
+                        };
+                        input.click();
+                    } catch {
+                        setToast({ message: 'Erro ao abrir seletor de arquivo', type: 'error' });
+                    }
+                }}
+                onGoogleSheets={(data) => {
+                    carregarDadosDespesas(data);
+                    markUserDataLoaded();
+                    markDataSource('google_sheets');
+                    setToast({ message: 'Dados do Google Sheets carregados!', type: 'success' });
+                }}
+            />
+            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+            </>
+    );
     }
 
     return (
@@ -127,15 +179,13 @@ const DashboardDespesas: React.FC = () => {
                             Visualize e compare as despesas da empresa ao longo do tempo
                         </p>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                        <InsertDataButton
-                            onClick={() => setShowUploadModal(true)}
-                            disabled={planLoading}
-                        />
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                        <InsertDataButton onClick={() => setShowUploadModal(true)} disabled={planLoading} compact />
                         <SaveDataButton
                             dashboardType="despesas"
                             data={dadosDespesas}
                             disabled={planLoading}
+                            compact
                             onSaveComplete={() => {
                                 setToast({
                                     message: 'âœ… Dados salvos! SerÃ£o carregados automaticamente na prÃ³xima entrada.',
@@ -149,15 +199,9 @@ const DashboardDespesas: React.FC = () => {
                                 });
                             }}
                         />
-                        <ClearDataButton
-                            onClear={() => {
-                                carregarDadosDespesas([]);
-                                setToast({
-                                    message: 'ðŸ§¹ Dados removidos da interface.',
-                                    type: 'info'
-                                });
-                            }}
-                        />
+                        <UpdateFromSheetsButton dashboardType="despesas" onDataLoaded={(data) => { carregarDadosDespesas(data); setToast({ message: '✅ Dados atualizados do Google Sheets!', type: 'success' }); }} onError={(msg) => setToast({ message: `❌ ${msg}`, type: 'error' })} disabled={planLoading} />
+                        <ClearDataButton onClear={() => { carregarDadosDespesas([]); setToast({ message: '🧹 Dados removidos da interface.', type: 'info' }); }} compact />
+                        <DownloadTemplateButton href={DASHBOARD_TEMPLATE_URLS.despesas} />
                     </div>
                 </div>
 

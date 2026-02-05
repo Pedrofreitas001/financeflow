@@ -11,6 +11,7 @@ interface SaveDataButtonProps {
     disabled?: boolean;
     onSaveComplete?: () => void;
     onError?: (error: string) => void;
+    compact?: boolean;
 }
 
 // Validar dados conforme esperado pelos contextos
@@ -51,11 +52,13 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({
     data,
     disabled = false,
     onSaveComplete,
-    onError
+    onError,
+    compact = false,
 }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
     const [isSaving, setIsSaving] = useState(false);
+    const sizeClass = compact ? 'gap-1.5 px-3 py-1.5 text-sm' : 'gap-2 px-4 py-2';
 
     const handleSave = async () => {
         if (data.length === 0) {
@@ -141,7 +144,7 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({
             onClick={handleSave}
             disabled={disabled || isSaving || data.length === 0}
             className={`
-                flex items-center justify-center gap-2 px-4 py-2 rounded-md font-semibold
+                flex items-center justify-center rounded-md font-semibold ${sizeClass}
                 transition-all duration-200
                 ${data.length === 0 || disabled || isSaving
                     ? isDark
@@ -160,8 +163,8 @@ const SaveDataButton: React.FC<SaveDataButtonProps> = ({
                 </>
             ) : (
                 <>
-                    <span className="material-symbols-outlined">save</span>
-                    Salvar Dados
+                    <span className="material-symbols-outlined text-base">save</span>
+                    {compact ? 'Salvar' : 'Salvar Dados'}
                 </>
             )}
         </button>

@@ -72,18 +72,25 @@ export const DREProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const sheetCaixaAcumulado = workbook.Sheets['Regime de Caixa Enxuto'];
       const sheetCompetenciaAcumulado = workbook.Sheets['Regime de Competência Enxuto'];
 
+      // Validação de abas
       if (!sheetCaixaMensal || !sheetCompetenciaMensal || !sheetCaixaAcumulado || !sheetCompetenciaAcumulado) {
-        throw new Error('Planilha deve conter as 4 abas: "Regime de Caixa", "Regime de Competência", "Regime de Caixa Enxuto" e "Regime de Competência Enxuto"');
+        setError('❌ Planilha deve conter as 4 abas: "Regime de Caixa", "Regime de Competência", "Regime de Caixa Enxuto" e "Regime de Competência Enxuto"');
+        return;
       }
 
       const parseDREMensalSheet = (sheet: any): DREMensal[] => {
         const data = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+        // Espera: primeira linha = ano, segunda = empresa, terceira = cabeçalho
+        if (!data[0] || !data[1]) {
+          setError('❌ Abas mensais devem ter pelo menos duas linhas: ano e empresa.');
+          return [];
+        }
+        const ano = typeof data[0][0] === 'number' ? data[0][0] : parseInt(data[0][0]);
+        const empresa = data[1][0] || '';
         const result: DREMensal[] = [];
-
         for (let i = 2; i < data.length; i++) {
           const row = data[i];
           if (!row[0]) continue;
-
           result.push({
             linha: parseDRELine(row[0]),
             projetado: parseNumero(row[1]),
@@ -92,38 +99,32 @@ export const DREProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             analiseVertical: row[4] || ''
           });
         }
-
         return result;
       };
 
       const parseDREAcumuladoSheet = (sheet: any): DREAcumulado[] => {
         const data = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+        if (!data[0] || !data[1]) {
+          setError('❌ Abas acumuladas devem ter pelo menos duas linhas: ano e empresa.');
+          return [];
+        }
+        const ano = typeof data[0][0] === 'number' ? data[0][0] : parseInt(data[0][0]);
+        const empresa = data[1][0] || '';
+        const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez','total'];
         const result: DREAcumulado[] = [];
-
         for (let i = 2; i < data.length; i++) {
           const row = data[i];
           if (!row[0]) continue;
-
+          const valores: any = {};
+          for (let m = 0; m < meses.length; m++) {
+            valores[meses[m]] = parseNumero(row[m+1]);
+          }
           result.push({
             linha: parseDRELine(row[0]),
-            valores: {
-              jan: parseNumero(row[1]),
-              fev: parseNumero(row[2]),
-              mar: parseNumero(row[3]),
-              abr: parseNumero(row[4]),
-              mai: parseNumero(row[5]),
-              jun: parseNumero(row[6]),
-              jul: parseNumero(row[7]),
-              ago: parseNumero(row[8]),
-              set: parseNumero(row[9]),
-              out: parseNumero(row[10]),
-              nov: parseNumero(row[11]),
-              total: parseNumero(row[12])
-            },
-            analiseVertical: row[13] || ''
+            valores,
+            analiseVertical: row[row.length-1] || ''
           });
         }
-
         return result;
       };
 
@@ -131,6 +132,16 @@ export const DREProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const competenciaMensal = parseDREMensalSheet(sheetCompetenciaMensal);
       const caixaAcumulado = parseDREAcumuladoSheet(sheetCaixaAcumulado);
       const competenciaAcumulado = parseDREAcumuladoSheet(sheetCompetenciaAcumulado);
+
+      // Validação final dos dados
+      if (!caixaMensal.length && !competenciaMensal.length) {
+        setError('❌ Não foi possível extrair dados mensais válidos. Verifique o preenchimento das abas.');
+        return;
+      }
+      if (!caixaAcumulado.length && !competenciaAcumulado.length) {
+        setError('❌ Não foi possível extrair dados acumulados válidos. Verifique o preenchimento das abas.');
+        return;
+      }
 
       setDreData({
         regimeCaixa: {
@@ -141,12 +152,12 @@ export const DREProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           mensal: competenciaMensal,
           acumulado: competenciaAcumulado
         },
-        ano: anoSelecionado,
-        empresa: 'Bonaliment Alimentação'
+        ano: typeof caixaMensal[0]?.ano === 'number' ? caixaMensal[0].ano : 2025,
+        empresa: caixaMensal[0]?.empresa || ''
       });
 
     } catch (err: any) {
-      setError(err.message);
+      setError('❌ ' + (err.message || 'Erro ao importar arquivo'));
     } finally {
       setLoading(false);
     }

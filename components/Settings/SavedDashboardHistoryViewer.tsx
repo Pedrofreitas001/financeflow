@@ -24,10 +24,15 @@ interface SavedVersion {
 
 interface SavedDashboardHistoryViewerProps {
     variant?: 'light' | 'dark';
+    /** Se informado, o tipo de dashboard é controlado pelo pai (ex.: mesma aba que Google Sheets). */
+    dashboardType?: DashboardType;
+    onDashboardTypeChange?: (type: DashboardType) => void;
 }
 
-export default function SavedDashboardHistoryViewer({ variant }: SavedDashboardHistoryViewerProps) {
-    const [dashboardType, setDashboardType] = useState<DashboardType>('dashboard');
+export default function SavedDashboardHistoryViewer({ variant, dashboardType: controlledType, onDashboardTypeChange }: SavedDashboardHistoryViewerProps) {
+    const [internalType, setInternalType] = useState<DashboardType>('dashboard');
+    const dashboardType = controlledType ?? internalType;
+    const setDashboardType = onDashboardTypeChange ?? setInternalType;
     const [versions, setVersions] = useState<SavedVersion[]>([]);
     const [loading, setLoading] = useState(false);
     const [restoring, setRestoring] = useState<string | null>(null);
@@ -169,23 +174,25 @@ export default function SavedDashboardHistoryViewer({ variant }: SavedDashboardH
 
     return (
         <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-3">
-                <label className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-gray-700'}`}>Dashboard</label>
-                <select
-                    value={dashboardType}
-                    onChange={(e) => setDashboardType(e.target.value as DashboardType)}
-                    className={`${isDark
-                        ? 'bg-slate-800 border-slate-700 text-slate-200'
-                        : 'bg-white border-gray-300 text-gray-900'
-                        } border rounded-lg px-3 py-2 text-sm`}
-                >
-                    {Object.entries(dashboardLabels).map(([key, label]) => (
-                        <option key={key} value={key}>
-                            {label}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {controlledType === undefined && (
+                <div className="flex flex-wrap items-center gap-3">
+                    <label className={`text-sm font-semibold ${isDark ? 'text-slate-200' : 'text-gray-700'}`}>Dashboard</label>
+                    <select
+                        value={dashboardType}
+                        onChange={(e) => setDashboardType(e.target.value as DashboardType)}
+                        className={`${isDark
+                            ? 'bg-slate-800 border-slate-700 text-slate-200'
+                            : 'bg-white border-gray-300 text-gray-900'
+                            } border rounded-lg px-3 py-2 text-sm`}
+                    >
+                        {Object.entries(dashboardLabels).map(([key, label]) => (
+                            <option key={key} value={key}>
+                                {label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
 
             {loading ? (
                 <div className={`${isDark ? 'text-slate-400' : 'text-gray-500'} text-sm`}>Carregando versoes...</div>

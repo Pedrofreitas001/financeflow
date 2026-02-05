@@ -5,6 +5,56 @@ import DataHistoryTab from './DataHistoryTab';
 import SavedDashboardHistoryViewer from './SavedDashboardHistoryViewer';
 import InsightsManager from './InsightsManager';
 
+type DataHistoryDashboardType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete';
+
+function DataHistorySection({ userId, isDark }: { userId: string; isDark: boolean }) {
+    const [dashboardType, setDashboardType] = useState<DataHistoryDashboardType>('dashboard');
+    const labels: Record<DataHistoryDashboardType, string> = {
+        dashboard: 'Dashboard',
+        despesas: 'Despesas',
+        dre: 'DRE',
+        cashflow: 'Cash Flow',
+        indicadores: 'Indicadores',
+        orcamento: 'Orçamento',
+        balancete: 'Balancete',
+    };
+    return (
+        <div className="space-y-8">
+            <div className="flex flex-wrap items-center gap-3">
+                <span className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Aba do dashboard</span>
+                <select
+                    value={dashboardType}
+                    onChange={(e) => setDashboardType(e.target.value as DataHistoryDashboardType)}
+                    className={`${isDark ? 'bg-slate-800 border-slate-700 text-slate-200' : 'bg-white border-gray-300 text-gray-900'} border rounded-lg px-3 py-2 text-sm`}
+                >
+                    {Object.entries(labels).map(([key, label]) => (
+                        <option key={key} value={key}>{label}</option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Versões salvas
+                </h3>
+                <SavedDashboardHistoryViewer
+                    variant={isDark ? 'dark' : 'light'}
+                    dashboardType={dashboardType}
+                    onDashboardTypeChange={setDashboardType as (t: DataHistoryDashboardType) => void}
+                />
+            </div>
+            <div>
+                <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                    Google Sheets
+                </h3>
+                <p className={`text-sm mb-3 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Configure a conexão automática com uma planilha para a aba &quot;{labels[dashboardType]}&quot;. Ao clicar em Atualizar, os dados serão puxados e exibidos no dashboard.
+                </p>
+                <DataHistoryTab userId={userId} dashboardType={dashboardType} variant={isDark ? 'dark' : 'light'} />
+            </div>
+        </div>
+    );
+}
+
 const DashboardSettings: React.FC = () => {
     const { theme } = useTheme();
     const { user, signOut } = useAuth();
@@ -634,21 +684,7 @@ const DashboardSettings: React.FC = () => {
 
                     {/* Data History Tab */}
                     {activeTab === 'data-history' && user?.id && (
-                        <div className="space-y-8">
-                            <div>
-                                <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    Versoes Salvas
-                                </h3>
-                                <SavedDashboardHistoryViewer variant={isDark ? 'dark' : 'light'} />
-                            </div>
-
-                            <div>
-                                <h3 className={`text-lg font-bold mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                                    Google Sheets
-                                </h3>
-                                <DataHistoryTab userId={user.id} dashboardType="despesas" variant={isDark ? 'dark' : 'light'} />
-                            </div>
-                        </div>
+                        <DataHistorySection userId={user.id} isDark={isDark} />
                     )}
 
                     {/* Insights Tab */}

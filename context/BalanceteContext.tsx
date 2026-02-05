@@ -42,12 +42,14 @@ export const BalanceteProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     useEffect(() => {
         const empresasUnicas = Array.from(new Set(dados.map(d => d.empresa)));
         setEmpresas(empresasUnicas);
-        // Se não há empresa selecionada e há empresas disponíveis, seleciona a primeira
-        if (!empresaSelecionada && empresasUnicas.length > 0) {
-            setEmpresaSelecionada(empresasUnicas[0]);
+        // Sempre atualiza empresa selecionada para a primeira válida após importação
+        if (empresasUnicas.length > 0) {
+            setEmpresaSelecionada(prev => (empresasUnicas.includes(prev) ? prev : empresasUnicas[0]));
+        } else {
+            setEmpresaSelecionada('');
         }
         console.log('BalanceteContext atualizado com', dados.length, 'registros e', empresasUnicas.length, 'empresas');
-    }, [dados, empresaSelecionada]);
+    }, [dados]);
 
     // Filtrar dados pela empresa selecionada
     const dadosFiltrados = empresaSelecionada
