@@ -313,9 +313,10 @@ Para manter essa trajetória:
 
     const getSentimentIcon = (sentiment: string) => {
         switch (sentiment) {
-            case 'positive': return 'sentiment_satisfied';
-            case 'negative': return 'sentiment_dissatisfied';
+            case 'positive': return 'thumb_up';
+            case 'negative': return 'thumb_down';
             case 'warning': return 'warning';
+            case 'neutral': return 'info';
             default: return 'info';
         }
     };

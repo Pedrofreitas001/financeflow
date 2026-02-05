@@ -55,15 +55,8 @@ export const useExampleData = () => {
         setBalanceteDados,
     };
 
-    const lastLoadedKeyRef = useRef<string | null>(null);
-
     useEffect(() => {
-        const userKey = `${user?.id ?? 'anonymous'}|${authLoading ? 'loading' : 'ready'}`;
-        if (lastLoadedKeyRef.current === userKey) return;
-        lastLoadedKeyRef.current = userKey;
-
         let cancelled = false;
-
         const applyExampleData = () => {
             const fns = fnsRef.current;
             let loadedAny = false;
@@ -106,143 +99,164 @@ export const useExampleData = () => {
             return loadedAny;
         };
 
-        const applySavedDataForUser = async (userId: string) => {
-            const [
-                savedDashboard,
-                savedDespesas,
-                savedDRE,
-                savedCashFlow,
-                savedIndicadores,
-                savedOrcamento,
-                savedBalancete,
-            ] = await Promise.all([
-                loadSavedDashboard(userId, 'dashboard'),
-                loadSavedDashboard(userId, 'despesas'),
-                loadSavedDashboard(userId, 'dre'),
-                loadSavedDashboard(userId, 'cashflow'),
-                loadSavedDashboard(userId, 'indicadores'),
-                loadSavedDashboard(userId, 'orcamento'),
-                loadSavedDashboard(userId, 'balancete'),
-            ]);
-
-            if (cancelled) return;
-
-            const fns = fnsRef.current;
-            const availability = {
-                dashboard: false,
-                despesas: false,
-                dre: false,
-                cashflow: false,
-                indicadores: false,
-                orcamento: false,
-                balancete: false,
-            };
-
-            if (Array.isArray(savedDashboard) && savedDashboard.length > 0) {
-                fns.carregarDados(savedDashboard);
-                availability.dashboard = true;
-            }
-
-            if (Array.isArray(savedDespesas) && savedDespesas.length > 0) {
-                fns.carregarDadosDespesas(savedDespesas as any);
-                availability.despesas = true;
-            }
-
-            if (Array.isArray(savedDRE) && savedDRE.length > 0) {
-                fns.setDREDados(savedDRE[0] as any);
-                availability.dre = true;
-            }
-
-            if (Array.isArray(savedCashFlow) && savedCashFlow.length > 0) {
-                fns.setCashFlowDados(savedCashFlow as any);
-                availability.cashflow = true;
-            }
-
-            if (Array.isArray(savedIndicadores) && savedIndicadores.length > 0) {
-                fns.setIndicadoresDados(savedIndicadores as any);
-                availability.indicadores = true;
-            }
-
-            if (Array.isArray(savedOrcamento) && savedOrcamento.length > 0) {
-                fns.setOrcamentoDados(savedOrcamento as any);
-                availability.orcamento = true;
-            }
-
-            if (Array.isArray(savedBalancete) && savedBalancete.length > 0) {
-                fns.setBalanceteDados(savedBalancete as any);
-                availability.balancete = true;
-            }
-
-            const loadedAnySaved = Object.values(availability).some(Boolean);
-            if (!loadedAnySaved) {
-                markUsingExampleData();
-                return;
-            }
-
-            markUserDataLoaded();
-
-            // Best-effort: if there is an active Sheets connection, show it as the data source.
-            try {
-                const { data: activeConn } = await supabase
-                    .from('google_sheets_connections')
-                    .select('id')
-                    .eq('user_id', userId)
-                    .eq('is_active', true)
-                    .limit(1);
-
-                if (activeConn && activeConn.length > 0) {
-                    markDataSource('google_sheets');
-                } else {
-                    markDataSource('backup');
-                }
-            } catch {
-                markDataSource('backup');
-            }
-        };
-
         const run = async () => {
             setIsLoadingExamples(true);
             try {
+                // Primeiro, tentar carregar backups se usuário está logado
+                if (!authLoading && user?.id) {
+                    try {
+                        // Ensure Supabase auth/session is really ready before querying tables protected by RLS.
+                        // In some boot sequences, React auth state becomes available slightly before the Supabase
+                        // client has the session in memory for outgoing requests, which can cause SELECT to return empty.
+                        let sessionUserId: string | null = null;
+                        for (let attempt = 0; attempt < 5; attempt++) {
+                            const { data: sessionData } = await supabase.auth.getSession();
+                            sessionUserId = sessionData?.session?.user?.id ?? null;
+                            if (sessionUserId) break;
+                            await new Promise((r) => setTimeout(r, 120 * (attempt + 1)));
+                        }
+
+                        const { data } = await supabase.auth.getUser();
+                        const effectiveUserId = data?.user?.id ?? sessionUserId ?? user.id;
+
+                        // Tenta carregar backups do usuário
+                        const [
+                            savedDashboard,
+                            savedDespesas,
+                            savedDRE,
+                            savedCashFlow,
+                            savedIndicadores,
+                            savedOrcamento,
+                            savedBalancete,
+                        ] = await Promise.all([
+                            loadSavedDashboard(effectiveUserId, 'dashboard'),
+                            loadSavedDashboard(effectiveUserId, 'despesas'),
+                            loadSavedDashboard(effectiveUserId, 'dre'),
+                            loadSavedDashboard(effectiveUserId, 'cashflow'),
+                            loadSavedDashboard(effectiveUserId, 'indicadores'),
+                            loadSavedDashboard(effectiveUserId, 'orcamento'),
+                            loadSavedDashboard(effectiveUserId, 'balancete'),
+                        ]);
+
+                        if (cancelled) {
+                            setIsLoadingExamples(false);
+                            return;
+                        }
+
+                        const fns = fnsRef.current;
+                        const loadedAnySaved = !!(
+                            (Array.isArray(savedDashboard) && savedDashboard.length > 0) ||
+                            (Array.isArray(savedDespesas) && savedDespesas.length > 0) ||
+                            (Array.isArray(savedDRE) && savedDRE.length > 0) ||
+                            (Array.isArray(savedCashFlow) && savedCashFlow.length > 0) ||
+                            (Array.isArray(savedIndicadores) && savedIndicadores.length > 0) ||
+                            (Array.isArray(savedOrcamento) && savedOrcamento.length > 0) ||
+                            (Array.isArray(savedBalancete) && savedBalancete.length > 0)
+                        );
+
+                        if (loadedAnySaved) {
+                            // Carregar apenas os backups que existem
+                            if (Array.isArray(savedDashboard) && savedDashboard.length > 0) {
+                                fns.carregarDados(savedDashboard);
+                            } else {
+                                // Se não tem backup de dashboard, carrega exemplo fictício
+                                if (dadosFinanceirosFicticios.length > 0) {
+                                    fns.carregarDados(dadosFinanceirosFicticios);
+                                }
+                            }
+
+                            if (Array.isArray(savedDespesas) && savedDespesas.length > 0) {
+                                fns.carregarDadosDespesas(savedDespesas as any);
+                            } else {
+                                if (dadosDespesasFicticios.length > 0) {
+                                    fns.carregarDadosDespesas(dadosDespesasFicticios as any);
+                                }
+                            }
+
+                            if (Array.isArray(savedDRE) && savedDRE.length > 0) {
+                                fns.setDREDados(savedDRE[0] as any);
+                            } else {
+                                if (dadosDREFicticios) {
+                                    fns.setDREDados(dadosDREFicticios as any);
+                                }
+                            }
+
+                            if (Array.isArray(savedCashFlow) && savedCashFlow.length > 0) {
+                                fns.setCashFlowDados(savedCashFlow as any);
+                            } else {
+                                if (dadosCashFlowFicticios.length > 0) {
+                                    fns.setCashFlowDados(dadosCashFlowFicticios as any);
+                                }
+                            }
+
+                            if (Array.isArray(savedIndicadores) && savedIndicadores.length > 0) {
+                                fns.setIndicadoresDados(savedIndicadores as any);
+                            } else {
+                                if (dadosIndicadoresFicticios.length > 0) {
+                                    fns.setIndicadoresDados(dadosIndicadoresFicticios as any);
+                                }
+                            }
+
+                            if (Array.isArray(savedOrcamento) && savedOrcamento.length > 0) {
+                                fns.setOrcamentoDados(savedOrcamento as any);
+                            } else {
+                                if (dadosOrcamentoFicticios.length > 0) {
+                                    fns.setOrcamentoDados(dadosOrcamentoFicticios as any);
+                                }
+                            }
+
+                            if (Array.isArray(savedBalancete) && savedBalancete.length > 0) {
+                                fns.setBalanceteDados(savedBalancete as any);
+                            } else {
+                                if (dadosBalanceteFicticios.length > 0) {
+                                    fns.setBalanceteDados(dadosBalanceteFicticios as any);
+                                }
+                            }
+
+                            markUserDataLoaded();
+
+                            // Best-effort: if there is an active Sheets connection, show it as the data source.
+                            try {
+                                const { data: activeConn } = await supabase
+                                    .from('google_sheets_connections')
+                                    .select('id')
+                                    .eq('user_id', effectiveUserId)
+                                    .eq('is_active', true)
+                                    .limit(1);
+
+                                if (activeConn && activeConn.length > 0) {
+                                    markDataSource('google_sheets');
+                                } else {
+                                    markDataSource('backup');
+                                }
+                            } catch {
+                                markDataSource('backup');
+                            }
+
+                            setExamplesLoaded(true);
+                            return;
+                        }
+                    } catch (error) {
+                        console.warn('Erro ao carregar dados salvos:', error);
+                    }
+                }
+
+                // Fallback: carregar dados fictícios se não conseguiu backups
                 const loadedAny = applyExampleData();
                 setExamplesLoaded(loadedAny);
-
-                // Only mark examples if we don't end up loading backups for the logged-in user.
-                // We'll finalize this after we try to fetch backups below.
                 markUsingExampleData();
             } catch (error) {
-                console.error('Erro ao carregar dados ficticios:', error);
+                console.error('Erro ao carregar dados:', error);
             } finally {
                 setIsLoadingExamples(false);
-            }
-
-            if (!authLoading && user?.id) {
-                try {
-                    // Ensure Supabase auth/session is really ready before querying tables protected by RLS.
-                    // In some boot sequences, React auth state becomes available slightly before the Supabase
-                    // client has the session in memory for outgoing requests, which can cause SELECT to return empty.
-                    let sessionUserId: string | null = null;
-                    for (let attempt = 0; attempt < 5; attempt++) {
-                        const { data: sessionData } = await supabase.auth.getSession();
-                        sessionUserId = sessionData?.session?.user?.id ?? null;
-                        if (sessionUserId) break;
-                        await new Promise((r) => setTimeout(r, 120 * (attempt + 1)));
-                    }
-
-                    const { data } = await supabase.auth.getUser();
-                    const effectiveUserId = data?.user?.id ?? sessionUserId ?? user.id;
-                    await applySavedDataForUser(effectiveUserId);
-                } catch (error) {
-                    console.warn('Erro ao carregar dados salvos:', error);
-                }
             }
         };
 
         run();
-
         return () => {
             cancelled = true;
         };
-    }, [user?.id]);
+    }, [user?.id, authLoading]);
 
     return { isLoadingExamples, examplesLoaded };
 };

@@ -17,6 +17,7 @@ import { useTheme } from '../context/ThemeContext.tsx';
 import { importFromExcel } from '@/utils/excelUtils';
 import { saveDataToHistory } from '@/utils/dataHistoryManager';
 import { markDataSource, markUserDataLoaded } from '@/utils/userDataState';
+import { useExampleData } from '../utils/useExampleData';
 
 const Dashboard: React.FC = () => {
   const { dados, carregarDados } = useFinance();
@@ -26,6 +27,7 @@ const Dashboard: React.FC = () => {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' | 'warning' } | null>(null);
 
   // Se não houver dados, mostrar disclaimer
+  const { isLoadingExamples } = useExampleData();
   if (dados.length === 0) {
     return (
       <div className={`flex-1 flex flex-col h-screen overflow-hidden ${isDark ? 'bg-background-dark' : 'bg-white'}`}>
@@ -42,6 +44,12 @@ const Dashboard: React.FC = () => {
               <p data-cta-text style={{ color: '#d1d5db !important' }}>
                 Importe um arquivo Excel com dados financeiros para visualizar
               </p>
+              {isLoadingExamples && (
+                <div className="mt-4 flex items-center justify-center">
+                  <div className="animate-spin h-6 w-6 border-2 border-blue-400 border-t-transparent rounded-full"></div>
+                  <span className="ml-2 text-blue-300 text-xs">Carregando dados do backup...</span>
+                </div>
+              )}
             </div>
 
             {/* Informações do Formato */}
@@ -96,6 +104,13 @@ const Dashboard: React.FC = () => {
                 Baixar Arquivo
               </a>
             </div>
+
+            {/* Botões de ação */}
+            <div className="flex flex-wrap gap-2 mt-8 justify-center">
+              <InsertDataButton onClick={() => setShowUploadModal(true)} />
+              <SaveDataButton dashboardType="dashboard" data={[]} />
+              <ClearDataButton onClear={() => carregarDados([])} />
+            </div>
           </div>
         </div>
       </div>
@@ -130,8 +145,8 @@ const Dashboard: React.FC = () => {
                   message: `❌ Erro ao salvar: ${error}`,
                   type: 'error'
                 });
-                }}
-              />
+              }}
+            />
             <ClearDataButton
               onClear={() => {
                 carregarDados([]);
