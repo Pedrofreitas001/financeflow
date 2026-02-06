@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from './components/Sidebar.tsx';
 import Header from './components/Header.tsx';
 import Dashboard from './components/Dashboard.tsx';
@@ -15,23 +15,29 @@ import ReportCover from './components/ReportCover.tsx';
 import AIChat from './components/AIChat.tsx';
 import { FinanceProvider, useFinance } from './context/FinanceContext.tsx';
 import { DespesasProvider, useDespesas } from './context/DespesasContext.tsx';
-import { DREProvider } from './context/DREContext.tsx';
-import { CashFlowProvider } from './context/CashFlowContext/CashFlowContext.tsx';
-import { IndicadoresProvider } from './context/IndicadoresContext/IndicadoresContext.tsx';
-import { OrcamentoProvider } from './context/OrcamentoContext/OrcamentoContext.tsx';
-import { BalanceteProvider } from './context/BalanceteContext.tsx';
+import { DREProvider, useDRE } from './context/DREContext.tsx';
+import { CashFlowProvider, useCashFlow } from './context/CashFlowContext/CashFlowContext.tsx';
+import { IndicadoresProvider, useIndicadores } from './context/IndicadoresContext/IndicadoresContext.tsx';
+import { OrcamentoProvider, useOrcamento } from './context/OrcamentoContext/OrcamentoContext.tsx';
+import { BalanceteProvider, useBalancete } from './context/BalanceteContext.tsx';
 import { ThemeProvider, useTheme } from './context/ThemeContext.tsx';
 import { useAuth } from './context/AuthContext.tsx';
 import { useUserPlan } from './hooks/useUserPlan.ts';
 import { useExampleData } from './utils/useExampleData.ts';
+import { loadSavedDashboard } from './utils/savedDashboardManager.ts';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 type PageType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete' | 'settings' | 'ai-insights';
 
 const AppContent: React.FC = () => {
-  const { filtros, kpis } = useFinance();
-  const { filtrosDespesas } = useDespesas();
+  const { filtros, kpis, carregarDados } = useFinance();
+  const { filtrosDespesas, carregarDadosDespesas } = useDespesas();
+  const { setDados: setDreDados } = useDRE();
+  const { setDados: setCashFlowDados } = useCashFlow();
+  const { setDados: setIndicadoresDados } = useIndicadores();
+  const { setDados: setOrcamentoDados } = useOrcamento();
+  const { setDados: setBalanceteDados } = useBalancete();
   const { theme } = useTheme();
   const { isLoadingExamples, examplesLoaded } = useExampleData();
   const [isExporting, setIsExporting] = useState(false);
@@ -48,6 +54,56 @@ const AppContent: React.FC = () => {
 
   // Diamond e Premium têm acesso a exportação de PDF
   const hasExportAccess = userPlan.isDiamond || userPlan.isPremium;
+
+  // Aplica dados ao contexto correto com base no tipo de dashboard
+  const applyDataToContext = useCallback((dashboardType: string, data: any[]) => {
+    if (!data || data.length === 0) return;
+    switch (dashboardType) {
+      case 'dashboard':
+        carregarDados(data);
+        break;
+      case 'despesas':
+        carregarDadosDespesas(data as any);
+        break;
+      case 'dre':
+        setDreDados(data[0] as any);
+        break;
+      case 'cashflow':
+        setCashFlowDados(data as any);
+        break;
+      case 'indicadores':
+        setIndicadoresDados(data as any);
+        break;
+      case 'orcamento':
+        setOrcamentoDados(data as any);
+        break;
+      case 'balancete':
+        setBalanceteDados(data as any);
+        break;
+    }
+  }, [carregarDados, carregarDadosDespesas, setDreDados, setCashFlowDados, setIndicadoresDados, setOrcamentoDados, setBalanceteDados]);
+
+  // Escuta evento de sincronização do Google Sheets (disparado pela aba de histórico)
+  // Quando o usuário clica "Atualizar" na aba de histórico, carrega os dados no dashboard correspondente
+  useEffect(() => {
+    const handleGoogleSheetsSync = async (event: Event) => {
+      const customEvent = event as CustomEvent<{ dashboardType: string }>;
+      const dashboardType = customEvent.detail?.dashboardType;
+      if (!dashboardType || !user?.id) return;
+
+      try {
+        const data = await loadSavedDashboard(user.id, dashboardType as any);
+        if (data) {
+          applyDataToContext(dashboardType, data);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar dados após sync do Google Sheets:', err);
+      }
+    };
+
+    window.addEventListener('google-sheets-synced', handleGoogleSheetsSync);
+    return () => window.removeEventListener('google-sheets-synced', handleGoogleSheetsSync);
+  }, [user?.id, applyDataToContext]);
 
   const handleExportPDF = async () => {
     // Verificar se tem acesso (Premium ou Diamond)

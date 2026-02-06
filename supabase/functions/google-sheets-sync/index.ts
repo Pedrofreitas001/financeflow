@@ -11,6 +11,7 @@ const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET") || "";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
@@ -99,8 +100,8 @@ serve(async (req) => {
                 const accessToken = refreshed.access_token;
 
                 const sheetName = connection.sheet_name || "Sheet1";
-                const range = connection.range || "A1:Z1000";
-                const rangeWithSheet = `${sheetName}!${range}`;
+                const rawRange = connection.range || "A1:Z1000";
+                const rangeWithSheet = rawRange.includes("!") ? rawRange : `${sheetName}!${rawRange}`;
 
                 const valuesResponse = await fetch(
                     `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(connection.spreadsheet_id)}/values/${encodeURIComponent(rangeWithSheet)}`,

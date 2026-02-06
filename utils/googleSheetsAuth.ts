@@ -29,7 +29,7 @@ export async function getGoogleAuthUrl(state?: string) {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 }
 
-export async function exchangeCodeForToken(code: string, redirectUri?: string) {
+export async function exchangeCodeForToken(code: string, redirectUri?: string, state?: string) {
     const { data: sessionData } = await supabase.auth.getSession();
     const accessToken = sessionData?.session?.access_token;
 
@@ -43,6 +43,7 @@ export async function exchangeCodeForToken(code: string, redirectUri?: string) {
         },
         body: {
             code,
+            state,
             redirect_uri: redirectUri || REDIRECT_URI
         }
     });

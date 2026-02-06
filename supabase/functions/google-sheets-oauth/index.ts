@@ -15,12 +15,14 @@ type StatePayload = {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "";
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
 const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID") || "";
 const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET") || "";
 const GOOGLE_REDIRECT_URI = Deno.env.get("GOOGLE_REDIRECT_URI") || "";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
@@ -122,26 +124,65 @@ serve(async (req) => {
         const range = statePayload.range || "A1:Z1000";
         const syncIntervalSeconds = statePayload.syncIntervalSeconds || 28800;
 
-        const { error: upsertError } = await supabase
-            .from("google_sheets_connections")
-            .upsert({
-                user_id: userData.user.id,
-                dashboard_type: dashboardType,
-                spreadsheet_id: spreadsheetId,
-                spreadsheet_name: spreadsheetId,
-                sheet_name: sheetName,
-                sheet_names: sheetName ? [sheetName] : [],
-                range,
-                access_token: tokens.access_token,
-                refresh_token: tokens.refresh_token || "",
-                sync_interval_seconds: syncIntervalSeconds,
-                is_active: true,
-            }, {
-                onConflict: "user_id,spreadsheet_id",
-            });
+        // Fetch spreadsheet name from Google API
+        let spreadsheetName = spreadsheetId;
+        if (spreadsheetId && tokens.access_token) {
+            try {
+                const metaRes = await fetch(
+                    `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}?fields=properties.title`,
+                    { headers: { Authorization: `Bearer ${tokens.access_token}` } }
+                );
+                if (metaRes.ok) {
+                    const meta = await metaRes.json();
+                    spreadsheetName = meta?.properties?.title || spreadsheetId;
+                }
+            } catch {
+                // fallback to spreadsheetId
+            }
+        }
 
-        if (upsertError) {
-            throw upsertError;
+        // Use service role client to bypass RLS for upsert
+        const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+            auth: { persistSession: false },
+        });
+
+        const userId = userData.user.id;
+
+        // Check if a connection already exists for this user + dashboard_type
+        const { data: existing } = await supabaseAdmin
+            .from("google_sheets_connections")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("dashboard_type", dashboardType)
+            .maybeSingle();
+
+        const connectionData = {
+            user_id: userId,
+            dashboard_type: dashboardType,
+            spreadsheet_id: spreadsheetId,
+            spreadsheet_name: spreadsheetName,
+            sheet_name: sheetName,
+            sheet_names: sheetName ? [sheetName] : [],
+            range,
+            access_token: tokens.access_token,
+            refresh_token: tokens.refresh_token || "",
+            sync_interval_seconds: syncIntervalSeconds,
+            is_active: true,
+        };
+
+        if (existing?.id) {
+            // Update existing connection for this dashboard type
+            const { error: updateError } = await supabaseAdmin
+                .from("google_sheets_connections")
+                .update(connectionData)
+                .eq("id", existing.id);
+            if (updateError) throw updateError;
+        } else {
+            // Insert new connection
+            const { error: insertError } = await supabaseAdmin
+                .from("google_sheets_connections")
+                .insert(connectionData);
+            if (insertError) throw insertError;
         }
 
         return new Response(JSON.stringify({

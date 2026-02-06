@@ -43,7 +43,7 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                 .select('id, spreadsheet_name, sheet_name, sheet_names, last_sync, is_active, sync_interval_seconds')
                 .eq('user_id', userId)
                 .eq('dashboard_type', dashboardType)
-                .single();
+                .maybeSingle();
 
             if (googleData) {
                 const resolvedSheetName = googleData.sheet_name || (Array.isArray(googleData.sheet_names) ? googleData.sheet_names[0] : '');
@@ -55,6 +55,8 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                     isActive: googleData.is_active,
                     syncIntervalSeconds: googleData.sync_interval_seconds
                 });
+            } else {
+                setGoogleConnection(null);
             }
         } catch (error) {
             console.error('Erro ao carregar histórico:', error);
