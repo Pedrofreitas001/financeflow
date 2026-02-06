@@ -289,7 +289,7 @@ const DashboardOrcamento: React.FC = () => {
                 </div>
 
                 {/* KPIs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                <div id="pdf-section-orcamento-kpis" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                     <KPIOrcamentoCard
                         titulo="Total Orçado"
                         valor={totalOrcadoFiltrado}
@@ -329,7 +329,7 @@ const DashboardOrcamento: React.FC = () => {
                 </div>
 
                 {/* Gráficos */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div id="pdf-section-orcamento-charts" className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
                         <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Orçado vs Realizado</h2>
                         <ResponsiveContainer width="100%" height={280}>
@@ -361,7 +361,7 @@ const DashboardOrcamento: React.FC = () => {
                 </div>
 
                 {/* Tabela - Desvios Críticos */}
-                <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden mb-6">
+                <div id="pdf-section-orcamento-desvios" className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden mb-6">
                     <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Desvios Críticos (variância &gt; 5%)</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
@@ -404,7 +404,7 @@ const DashboardOrcamento: React.FC = () => {
                 </div>
 
                 {/* Tabela - Detalhamento Completo */}
-                <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
+                <div id="pdf-section-orcamento-tabela" className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
                     <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Detalhamento Completo</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">

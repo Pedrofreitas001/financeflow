@@ -296,7 +296,7 @@ const Dashboard: React.FC = () => {
         <KPIGrid />
 
         {/* Gráficos principais */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
+        <div id="pdf-section-middle" className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
           <ExecutiveDRE />
           <CashFlowChart />
         </div>

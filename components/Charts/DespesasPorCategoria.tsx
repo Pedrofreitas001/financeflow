@@ -82,7 +82,7 @@ const DespesasPorCategoria: React.FC = () => {
                     <div key={idx} className="flex items-center justify-between p-3 bg-background-dark rounded-lg">
                         <div className="flex items-center gap-2">
                             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: cat.color }}></div>
-                            <span className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs font-medium truncate`}>{cat.name}</span>
+                            <span className={`${isDark ? 'text-text-muted' : 'text-gray-600'} text-xs font-medium`}>{cat.name}</span>
                         </div>
                         <div className="text-right">
                             <p className={`${isDark ? 'text-white' : 'text-gray-900'} text-sm font-bold`}>{cat.percentage}%</p>

@@ -37,12 +37,14 @@ const KPIBalanceteCard: React.FC<KPIBalanceteCardProps> = ({ titulo, valor, unid
     return (
         <div className={`${isDarkCard ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl p-5 border shadow-lg hover:shadow-xl hover:border-primary/50 transition-all`}>
             <p className={`${isDarkCard ? 'text-text-muted' : 'text-gray-900'} text-xs font-medium uppercase tracking-wide`}>{titulo}</p>
-            <p className={`text-2xl font-bold ${isDarkCard ? cor : 'text-gray-900'} mt-2 tracking-tight`}>
-                {unidade === 'R$' ? `R$ ${(valor / 1000000).toFixed(2)}M` : `${valor.toFixed(2)}%`}
-            </p>
-            <div className={`mt-3 px-3 py-1 rounded-full w-fit text-xs font-semibold flex items-center gap-1 ${statusColor}`}>
-                <span>{statusIcon}</span>
-                <span>{status === 'ok' ? 'OK' : status === 'alerta' ? 'Atenção' : 'Erro'}</span>
+            <div className="flex items-center gap-3 mt-2 flex-wrap">
+                <p className={`text-2xl font-bold ${isDarkCard ? cor : 'text-gray-900'} tracking-tight`}>
+                    {unidade === 'R$' ? `R$ ${(valor / 1000000).toFixed(2)}M` : `${valor.toFixed(2)}%`}
+                </p>
+                <div className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 ${statusColor}`}>
+                    <span>{statusIcon}</span>
+                    <span>{status === 'ok' ? 'OK' : status === 'alerta' ? 'Atenção' : 'Erro'}</span>
+                </div>
             </div>
         </div>
     );
@@ -388,7 +390,7 @@ const DashboardBalancete: React.FC = () => {
                     )}
 
                     {/* KPIs Principais */}
-                    <div>
+                    <div id="pdf-section-balancete-kpis">
                         <h2 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                             Indicadores Principais
                         </h2>
@@ -427,7 +429,7 @@ const DashboardBalancete: React.FC = () => {
                     </div>
 
                     {/* Gráficos */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div id="pdf-section-balancete-charts" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Distribuição do Ativo */}
                         <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
                             <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -472,7 +474,7 @@ const DashboardBalancete: React.FC = () => {
                                                 <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
                                                 <div className="flex flex-col flex-1 min-w-0">
                                                     <div className="flex justify-between items-center w-full gap-2">
-                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider`}>
                                                             {item.name}
                                                         </span>
                                                         <span className="text-xs text-primary font-bold shrink-0">
@@ -531,7 +533,7 @@ const DashboardBalancete: React.FC = () => {
                                                 <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
                                                 <div className="flex flex-col flex-1 min-w-0">
                                                     <div className="flex justify-between items-center w-full gap-2">
-                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider`}>
                                                             {item.name}
                                                         </span>
                                                         <span className="text-xs text-primary font-bold shrink-0">
@@ -590,7 +592,7 @@ const DashboardBalancete: React.FC = () => {
                                                 <span className={`h-3 w-3 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: item.color }}></span>
                                                 <div className="flex flex-col flex-1 min-w-0">
                                                     <div className="flex justify-between items-center w-full gap-2">
-                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider truncate`}>
+                                                        <span className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} font-semibold uppercase tracking-wider`}>
                                                             {item.name}
                                                         </span>
                                                         <span className="text-xs text-primary font-bold shrink-0">
@@ -609,6 +611,7 @@ const DashboardBalancete: React.FC = () => {
                     {/* Novos Componentes Executivos */}
                     <div className="space-y-8">
                         {/* Snapshot Executivo */}
+                        <div id="pdf-section-balancete-snapshot">
                         <SnapshotExecutivo
                             dados={dados}
                             empresas={empresas}
@@ -622,8 +625,10 @@ const DashboardBalancete: React.FC = () => {
                                 passivoNaoCirculante: passivoNaoCirculante,
                             }}
                         />
+                        </div>
 
                         {/* Mapa Patrimonial */}
+                        <div id="pdf-section-balancete-mapa">
                         <MapaPatrimonial
                             dados={dados}
                             empresas={empresas}
@@ -633,8 +638,10 @@ const DashboardBalancete: React.FC = () => {
                                 pl: totalPL,
                             }}
                         />
+                        </div>
 
                         {/* Pirâmide de Solidez */}
+                        <div id="pdf-section-balancete-piramide">
                         <PiramideSolidez
                             empresas={empresas}
                             totais={{
@@ -645,16 +652,19 @@ const DashboardBalancete: React.FC = () => {
                                 passivoNaoCirculante: passivoNaoCirculante,
                             }}
                         />
+                        </div>
 
                         {/* Ranking de Contas Críticas */}
+                        <div id="pdf-section-balancete-ranking">
                         <RankingContas
                             dados={dados}
                             empresas={empresas}
                         />
+                        </div>
                     </div>
 
                     {/* Tabela de Balancete */}
-                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
+                    <div id="pdf-section-balancete-tabela" className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
                         <div className="p-6 border-b border-border-dark">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>

@@ -232,9 +232,11 @@ const DREDashboard: React.FC = () => {
           ))}
         </div>
         {/* Filtros e tabelas */}
-        <DREFilters />
+        <div id="pdf-section-dre-filters">
+          <DREFilters />
+        </div>
         {/* Renderização condicional das tabelas */}
-        <div style={{ marginTop: '24px' }}>
+        <div id="pdf-section-dre-table" style={{ marginTop: '24px' }}>
           {viewType === 'mensal' && <DREMensalTable />}
           {viewType === 'acumulado' && <DREAcumuladoTable />}
           {viewType === 'comparativo' && <DREComparativoTable />}

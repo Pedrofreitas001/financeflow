@@ -64,10 +64,10 @@ const ExpenseDonut: React.FC = () => {
                 <span className={`h-3.5 w-3.5 rounded-full shrink-0 border ${isDark ? 'border-white/5' : 'border-gray-300/30'}`} style={{ backgroundColor: cat.color }}></span>
                 <div className="flex flex-col flex-1 min-w-0">
                   <div className="flex justify-between items-center w-full gap-2">
-                    <span className={`text-[10px] ${isDark ? 'text-[#9db9a8]' : 'text-gray-600'} font-bold uppercase tracking-wider truncate`}>
+                    <span className={`text-xs ${isDark ? 'text-[#9db9a8]' : 'text-gray-600'} font-bold uppercase tracking-wider`}>
                       {cat.name}
                     </span>
-                    <span className="text-[10px] text-primary font-black shrink-0">
+                    <span className="text-xs text-primary font-black shrink-0">
                       {cat.percentage}%
                     </span>
                   </div>
