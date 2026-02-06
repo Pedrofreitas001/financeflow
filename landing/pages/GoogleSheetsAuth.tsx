@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { supabase } from '@/lib/supabase';
 import { exchangeCodeForToken } from '@/utils/googleSheetsAuth';
 
 export default function GoogleSheetsAuth() {
@@ -16,55 +15,23 @@ export default function GoogleSheetsAuth() {
         const handleCallback = async () => {
             try {
                 const code = searchParams.get('code');
-                const state = searchParams.get('state');
+                const state = searchParams.get('state') || undefined;
 
                 if (!code) {
                     throw new Error('Código de autorização não encontrado');
                 }
 
-                // 1. Trocar código por access token
-                const tokens = await exchangeCodeForToken(code);
+                // 1. Trocar código por access token via edge function
+                // A edge function já faz o upsert na tabela google_sheets_connections
+                // usando o state payload (dashboardType, spreadsheetId, sheetName, range)
+                await exchangeCodeForToken(code, undefined, state);
 
-                // 2. Buscar informações do usuário Google
-                const userResponse = await fetch(
-                    'https://www.googleapis.com/oauth2/v2/userinfo',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${tokens.access_token}`
-                        }
-                    }
-                );
-
-                const googleUser = await userResponse.json();
-
-                // 3. Buscar usuário autenticado do Supabase
-                const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-                if (userError || !user) {
-                    throw new Error('Usuário não autenticado');
-                }
-
-                // 4. Armazenar tokens no Supabase de forma segura
-                const { error: insertError } = await supabase
-                    .from('google_sheets_connections')
-                    .insert({
-                        user_id: user.id,
-                        spreadsheet_id: state || '', // Você passará ao iniciar o login
-                        spreadsheet_name: 'A definir',
-                        sheet_names: [],
-                        access_token: tokens.access_token,
-                        refresh_token: tokens.refresh_token || '',
-                        google_user_email: googleUser.email
-                    });
-
-                if (insertError) throw insertError;
-
-                // 5. Redirecionar para seleção de planilha
-                navigate('/preparar-dados?google-connected=true');
+                // 2. Redirecionar para o dashboard na aba de configurações
+                navigate('/dashboard?google-connected=true');
             } catch (err) {
                 console.error('Erro na autenticação Google:', err);
                 setError(err instanceof Error ? err.message : 'Erro desconhecido');
-                setTimeout(() => navigate('/preparar-dados?error=google-auth'), 3000);
+                setTimeout(() => navigate('/dashboard?error=google-auth'), 3000);
             } finally {
                 setLoading(false);
             }
