@@ -1,10 +1,13 @@
 // utils/googleSheetsFetchOne.ts
-// Busca dados do Google Sheets - tenta edge function, com fallback client-side.
+// Busca dados do Google Sheets - tenta edge function, com fallback client-side + auto-refresh de token.
 
 import { supabase } from '@/lib/supabase';
 import { saveDashboardData } from '@/utils/savedDashboardManager';
 
 export type DashboardType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete';
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET || '';
 
 /**
  * Verifica se existe conexão ativa com Google Sheets para o dashboard.
@@ -44,8 +47,54 @@ function toObjects(values: any[][]): Record<string, any>[] {
 }
 
 /**
+ * Usa o refresh_token para obter um novo access_token do Google.
+ * Retorna o novo access_token ou null se falhar.
+ */
+async function refreshAccessToken(refreshToken: string): Promise<string | null> {
+    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !refreshToken) {
+        return null;
+    }
+
+    try {
+        const params = new URLSearchParams({
+            client_id: GOOGLE_CLIENT_ID,
+            client_secret: GOOGLE_CLIENT_SECRET,
+            refresh_token: refreshToken,
+            grant_type: 'refresh_token',
+        });
+
+        const res = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString(),
+        });
+
+        if (!res.ok) {
+            console.warn('[refreshAccessToken] Falhou:', await res.text());
+            return null;
+        }
+
+        const data = await res.json();
+        return data.access_token || null;
+    } catch (err) {
+        console.warn('[refreshAccessToken] Erro:', err);
+        return null;
+    }
+}
+
+/**
+ * Busca dados de uma planilha Google Sheets usando um access_token.
+ */
+async function fetchSheetValues(spreadsheetId: string, rangeWithSheet: string, accessToken: string): Promise<Response> {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(rangeWithSheet)}`;
+    return fetch(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+    });
+}
+
+/**
  * Fallback client-side: busca dados diretamente da Google Sheets API
- * usando o access_token armazenado na conexão.
+ * usando o access_token armazenado. Se expirado, tenta refresh automático.
  */
 async function fetchClientSide(dashboardType: string): Promise<any[]> {
     const { data: { user } } = await supabase.auth.getUser();
@@ -76,12 +125,27 @@ async function fetchClientSide(dashboardType: string): Promise<any[]> {
     const rawRange = conn.range || 'A1:Z1000';
     const rangeWithSheet = rawRange.includes('!') ? rawRange : `${sheetName}!${rawRange}`;
 
-    // Tentar buscar com o access_token atual
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(conn.spreadsheet_id)}/values/${encodeURIComponent(rangeWithSheet)}`;
+    // 1. Tentar buscar com o access_token atual
+    let response = await fetchSheetValues(conn.spreadsheet_id, rangeWithSheet, conn.access_token);
 
-    const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${conn.access_token}` },
-    });
+    // 2. Se 401 (token expirado), tentar refresh automático
+    if (response.status === 401 && conn.refresh_token) {
+        console.log('[fetchClientSide] Token expirado, tentando refresh...');
+        const newAccessToken = await refreshAccessToken(conn.refresh_token);
+
+        if (newAccessToken) {
+            // Salvar novo token no Supabase
+            await supabase
+                .from('google_sheets_connections')
+                .update({ access_token: newAccessToken })
+                .eq('id', conn.id);
+
+            // Tentar novamente com o novo token
+            response = await fetchSheetValues(conn.spreadsheet_id, rangeWithSheet, newAccessToken);
+        } else {
+            throw new Error('Token expirado e não foi possível renovar. Reconecte a planilha em Configurações > Histórico de Dados.');
+        }
+    }
 
     if (!response.ok) {
         const errorText = await response.text();
@@ -133,6 +197,6 @@ export async function fetchGoogleSheetsData(dashboardType: string): Promise<any[
         console.warn('[fetchGoogleSheetsData] Edge function falhou, tentando fallback client-side:', edgeFnError);
     }
 
-    // Fallback: buscar diretamente via client-side
+    // Fallback: buscar diretamente via client-side (com auto-refresh de token)
     return fetchClientSide(dashboardType);
 }
