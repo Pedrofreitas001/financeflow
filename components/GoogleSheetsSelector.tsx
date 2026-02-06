@@ -83,51 +83,26 @@ export function GoogleSheetsSelector({
         setError('');
 
         try {
-            const range = selectedTab ? `'${selectedTab.replace(/'/g, "''")}'!A1:ZZ10000` : 'Sheet1!A1:ZZ10000';
-
-            // Ler dados
-            const result = await readSpreadsheet(sheetId, range);
-
-            // Converter para objetos
-            const data = result.values.map((row: any[]) => {
-                const obj: any = {};
-                result.columns.forEach((col: string, index: number) => {
-                    obj[col] = row[index] || '';
-                });
-                return obj;
-            });
-
-            // Salvar no histórico
-            const { data: { user } } = await supabase.auth.getUser();
-            const selectedSheet = spreadsheets.find(s => s.id === sheetId);
-            if (user) {
-                await saveDataToHistory(
-                    user.id,
-                    dashboardType,
-                    'google_sheets',
-                    `Google Sheets: ${selectedSheet?.name || sheetId} (${selectedTab || 'Sheet1'})`,
-                    result.rowCount,
-                    result.columns
-                );
-            }
-
-            onDataLoaded(data);
-            onConnected?.({
-                sheetId,
-                sheetName: selectedSheet?.name || sheetId,
-                tabName: selectedTab || 'Sheet1',
+            // Iniciar fluxo OAuth com state correto
+            const range = `'${selectedTab.replace(/'/g, "''")}'!A1:ZZ10000`;
+            const statePayload = {
+                dashboardType,
+                spreadsheetId: sheetId,
+                sheetName: selectedTab,
                 range,
-                rowCount: result.rowCount,
-                columns: result.columns,
-            });
-            onClose();
+                // Pode adicionar outros campos se necessário
+            };
+            const { getGoogleAuthUrl } = await import('@/utils/googleSheetsAuth');
+            const encodedState = btoa(JSON.stringify(statePayload));
+            const authUrl = await getGoogleAuthUrl(encodedState);
+            window.location.href = authUrl;
         } catch (err: any) {
             console.error('Erro:', err);
-            setError(err?.message || 'Erro ao carregar dados da planilha');
+            setError(err?.message || 'Erro ao iniciar autenticação Google');
         } finally {
             setLoading(false);
         }
-    }, [readSpreadsheet, spreadsheets, dashboardType, onDataLoaded, onClose, selectedTab]);
+    }, [dashboardType, selectedTab]);
 
     const loadTabsForSheet = useCallback(async (sheetId: string) => {
         try {
