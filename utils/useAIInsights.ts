@@ -1,13 +1,16 @@
 /**
  * Hook para gerenciar insights de IA no Supabase
- * 
- * Funcionalidades:
- * - Salvar insights gerados
- * - Buscar histórico de insights
- * - Buscar insights por empresa/período
+ *
+ * Tabela ai_insights:
+ *   id, user_id, dashboard_type, analysis_type, insights (JSONB),
+ *   tokens_used, confidence_score, created_at, updated_at
+ *
+ * O campo `insights` JSONB armazena o resultado completo da análise:
+ *   { empresa, periodo, insights[], trends[], alerts[], recommendations[],
+ *     summary, business_context, raw_data }
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import type { AnalysisResult, AnalysisType } from '../utils/dashboardAIAnalysis';
@@ -15,19 +18,27 @@ import type { AnalysisResult, AnalysisType } from '../utils/dashboardAIAnalysis'
 export interface SavedInsight {
     id: string;
     user_id: string;
-    empresa: string;
-    dashboard_type: AnalysisType;
-    periodo: string;
-    insights: string[];
-    trends: string[];
-    alerts: string[];
-    recommendations: string[];
-    summary: string;
-    confidence: number;
-    business_context?: any;
-    raw_data?: any;
+    dashboard_type: string;
+    analysis_type: string;
+    insights: {
+        empresa?: string;
+        periodo?: string;
+        insights: string[];
+        trends: string[];
+        alerts: string[];
+        recommendations: string[];
+        summary: string;
+        business_context?: any;
+        raw_data?: any;
+    };
+    tokens_used: number;
+    confidence_score: number;
     created_at: string;
     updated_at: string;
+}
+
+function estimateTokens(text: string): number {
+    return Math.ceil(text.length / 4);
 }
 
 export const useAIInsights = () => {
@@ -56,21 +67,34 @@ export const useAIInsights = () => {
         setError(null);
 
         try {
+            // Armazena tudo no campo JSONB `insights`
+            const insightsPayload = {
+                empresa,
+                periodo,
+                insights: analysisResult.insights,
+                trends: analysisResult.trends,
+                alerts: analysisResult.alerts,
+                recommendations: analysisResult.recommendations,
+                summary: analysisResult.summary,
+                business_context: businessContext,
+                raw_data: rawData
+            };
+
+            const tokensUsed = estimateTokens(JSON.stringify(insightsPayload));
+            const confidenceScore = Math.min(
+                parseFloat((analysisResult.confidence / 100).toFixed(2)),
+                0.99
+            );
+
             const { data, error: saveError } = await supabase
                 .from('ai_insights')
                 .insert({
                     user_id: user.id,
-                    empresa,
                     dashboard_type: dashboardType,
-                    periodo,
-                    insights: analysisResult.insights,
-                    trends: analysisResult.trends,
-                    alerts: analysisResult.alerts,
-                    recommendations: analysisResult.recommendations,
-                    summary: analysisResult.summary,
-                    confidence: analysisResult.confidence,
-                    business_context: businessContext,
-                    raw_data: rawData
+                    analysis_type: dashboardType,
+                    insights: insightsPayload,
+                    tokens_used: tokensUsed,
+                    confidence_score: confidenceScore
                 })
                 .select()
                 .single();
@@ -78,6 +102,10 @@ export const useAIInsights = () => {
             if (saveError) throw saveError;
 
             console.log('✅ Insight salvo no Supabase:', data.id);
+
+            // Atualizar lista local
+            setSavedInsights(prev => [data as SavedInsight, ...prev]);
+
             return data as SavedInsight;
         } catch (err) {
             console.error('❌ Erro ao salvar insight:', err);
@@ -91,9 +119,8 @@ export const useAIInsights = () => {
     /**
      * Buscar todos os insights do usuário
      */
-    const fetchAllInsights = async (): Promise<SavedInsight[]> => {
+    const fetchAllInsights = useCallback(async (): Promise<SavedInsight[]> => {
         if (!user) {
-            setError('Usuário não autenticado');
             return [];
         }
 
@@ -109,8 +136,9 @@ export const useAIInsights = () => {
 
             if (fetchError) throw fetchError;
 
-            setSavedInsights(data || []);
-            return data || [];
+            const insights = (data || []) as SavedInsight[];
+            setSavedInsights(insights);
+            return insights;
         } catch (err) {
             console.error('❌ Erro ao buscar insights:', err);
             setError(err instanceof Error ? err.message : 'Erro ao buscar insights');
@@ -118,41 +146,12 @@ export const useAIInsights = () => {
         } finally {
             setIsLoading(false);
         }
-    };
-
-    /**
-     * Buscar insights de uma empresa específica
-     */
-    const fetchInsightsByEmpresa = async (empresa: string): Promise<SavedInsight[]> => {
-        if (!user) return [];
-
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const { data, error: fetchError } = await supabase
-                .from('ai_insights')
-                .select('*')
-                .eq('user_id', user.id)
-                .eq('empresa', empresa)
-                .order('created_at', { ascending: false });
-
-            if (fetchError) throw fetchError;
-
-            return data || [];
-        } catch (err) {
-            console.error('❌ Erro ao buscar insights por empresa:', err);
-            setError(err instanceof Error ? err.message : 'Erro ao buscar insights');
-            return [];
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    }, [user]);
 
     /**
      * Buscar insights por tipo de dashboard
      */
-    const fetchInsightsByType = async (dashboardType: AnalysisType): Promise<SavedInsight[]> => {
+    const fetchInsightsByType = async (dashboardType: string): Promise<SavedInsight[]> => {
         if (!user) return [];
 
         setIsLoading(true);
@@ -168,38 +167,9 @@ export const useAIInsights = () => {
 
             if (fetchError) throw fetchError;
 
-            return data || [];
+            return (data || []) as SavedInsight[];
         } catch (err) {
             console.error('❌ Erro ao buscar insights por tipo:', err);
-            setError(err instanceof Error ? err.message : 'Erro ao buscar insights');
-            return [];
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    /**
-     * Buscar insights mais recentes (limit)
-     */
-    const fetchRecentInsights = async (limit: number = 10): Promise<SavedInsight[]> => {
-        if (!user) return [];
-
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const { data, error: fetchError } = await supabase
-                .from('ai_insights')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false })
-                .limit(limit);
-
-            if (fetchError) throw fetchError;
-
-            return data || [];
-        } catch (err) {
-            console.error('❌ Erro ao buscar insights recentes:', err);
             setError(err instanceof Error ? err.message : 'Erro ao buscar insights');
             return [];
         } finally {
@@ -226,7 +196,6 @@ export const useAIInsights = () => {
             if (deleteError) throw deleteError;
 
             console.log('✅ Insight deletado:', insightId);
-            // Atualizar lista local
             setSavedInsights(prev => prev.filter(i => i.id !== insightId));
             return true;
         } catch (err) {
@@ -247,7 +216,7 @@ export const useAIInsights = () => {
         try {
             const { data, error: fetchError } = await supabase
                 .from('ai_insights')
-                .select('dashboard_type, confidence')
+                .select('dashboard_type, confidence_score, tokens_used')
                 .eq('user_id', user.id);
 
             if (fetchError) throw fetchError;
@@ -255,14 +224,16 @@ export const useAIInsights = () => {
             const stats = {
                 total: data.length,
                 byType: {} as Record<string, number>,
-                avgConfidence: 0
+                avgConfidence: 0,
+                totalTokens: 0
             };
 
             data.forEach((insight: any) => {
                 stats.byType[insight.dashboard_type] = (stats.byType[insight.dashboard_type] || 0) + 1;
+                stats.totalTokens += insight.tokens_used || 0;
             });
 
-            const totalConfidence = data.reduce((sum: number, i: any) => sum + (i.confidence || 0), 0);
+            const totalConfidence = data.reduce((sum: number, i: any) => sum + (i.confidence_score || 0), 0);
             stats.avgConfidence = data.length > 0 ? totalConfidence / data.length : 0;
 
             return stats;
@@ -277,20 +248,15 @@ export const useAIInsights = () => {
         if (user) {
             fetchAllInsights();
         }
-    }, [user]);
+    }, [user, fetchAllInsights]);
 
     return {
-        // Estados
         savedInsights,
         isLoading,
         error,
-
-        // Métodos
         saveInsight,
         fetchAllInsights,
-        fetchInsightsByEmpresa,
         fetchInsightsByType,
-        fetchRecentInsights,
         deleteInsight,
         fetchInsightsStats
     };
