@@ -388,7 +388,7 @@ const DashboardBalancete: React.FC = () => {
                     )}
 
                     {/* KPIs Principais */}
-                    <div>
+                    <div id="pdf-section-balancete-kpis">
                         <h2 className={`text-lg font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
                             Indicadores Principais
                         </h2>
@@ -427,7 +427,7 @@ const DashboardBalancete: React.FC = () => {
                     </div>
 
                     {/* Gráficos */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div id="pdf-section-balancete-charts" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Distribuição do Ativo */}
                         <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg p-6 flex flex-col h-[380px]`}>
                             <h3 className={`text-sm font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
@@ -609,6 +609,7 @@ const DashboardBalancete: React.FC = () => {
                     {/* Novos Componentes Executivos */}
                     <div className="space-y-8">
                         {/* Snapshot Executivo */}
+                        <div id="pdf-section-balancete-snapshot">
                         <SnapshotExecutivo
                             dados={dados}
                             empresas={empresas}
@@ -622,8 +623,10 @@ const DashboardBalancete: React.FC = () => {
                                 passivoNaoCirculante: passivoNaoCirculante,
                             }}
                         />
+                        </div>
 
                         {/* Mapa Patrimonial */}
+                        <div id="pdf-section-balancete-mapa">
                         <MapaPatrimonial
                             dados={dados}
                             empresas={empresas}
@@ -633,8 +636,10 @@ const DashboardBalancete: React.FC = () => {
                                 pl: totalPL,
                             }}
                         />
+                        </div>
 
                         {/* Pirâmide de Solidez */}
+                        <div id="pdf-section-balancete-piramide">
                         <PiramideSolidez
                             empresas={empresas}
                             totais={{
@@ -645,16 +650,19 @@ const DashboardBalancete: React.FC = () => {
                                 passivoNaoCirculante: passivoNaoCirculante,
                             }}
                         />
+                        </div>
 
                         {/* Ranking de Contas Críticas */}
+                        <div id="pdf-section-balancete-ranking">
                         <RankingContas
                             dados={dados}
                             empresas={empresas}
                         />
+                        </div>
                     </div>
 
                     {/* Tabela de Balancete */}
-                    <div className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
+                    <div id="pdf-section-balancete-tabela" className={`${isDark ? 'bg-surface-dark border-border-dark' : 'bg-white border-gray-300'} rounded-2xl border shadow-lg overflow-hidden`}>
                         <div className="p-6 border-b border-border-dark">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>

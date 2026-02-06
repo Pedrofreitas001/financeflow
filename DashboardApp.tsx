@@ -11,6 +11,7 @@ import DashboardBalancete from './components/Balancete/DashboardBalancete.tsx';
 import DashboardSettings from './components/Settings/DashboardSettings.tsx';
 import DashboardAIInsights from './components/AIInsights/DashboardAIInsights.tsx';
 import PremiumModal from './components/PremiumModal.tsx';
+import PDFExportModal from './components/PDFExportModal.tsx';
 import ReportCover from './components/ReportCover.tsx';
 import AIChat from './components/AIChat.tsx';
 import { FinanceProvider, useFinance } from './context/FinanceContext.tsx';
@@ -25,8 +26,8 @@ import { useAuth } from './context/AuthContext.tsx';
 import { useUserPlan } from './hooks/useUserPlan.ts';
 import { useExampleData } from './utils/useExampleData.ts';
 import { loadSavedDashboard } from './utils/savedDashboardManager.ts';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import { generatePDF } from './utils/pdfExportService.ts';
+import { pdfTabConfigs } from './utils/pdfExportConfig.ts';
 
 type PageType = 'dashboard' | 'despesas' | 'dre' | 'cashflow' | 'indicadores' | 'orcamento' | 'balancete' | 'settings' | 'ai-insights';
 
@@ -44,6 +45,7 @@ const AppContent: React.FC = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [currentPage, setCurrentPage] = useState<PageType>('dashboard');
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [premiumFeature, setPremiumFeature] = useState<{ feature: string; description: string }>({
     feature: '',
     description: ''
@@ -105,7 +107,7 @@ const AppContent: React.FC = () => {
     return () => window.removeEventListener('google-sheets-synced', handleGoogleSheetsSync);
   }, [user?.id, applyDataToContext]);
 
-  const handleExportPDF = async () => {
+  const handleExportPDFClick = () => {
     // Verificar se tem acesso (Premium ou Diamond)
     if (!hasExportAccess) {
       setPremiumFeature({
@@ -116,76 +118,33 @@ const AppContent: React.FC = () => {
       return;
     }
 
+    // Abas sem gráficos exportáveis
+    if (currentPage === 'settings' || currentPage === 'ai-insights') {
+      return;
+    }
+
+    // Verificar se a aba tem configuração de PDF
+    if (!pdfTabConfigs[currentPage]) {
+      return;
+    }
+
+    setShowExportModal(true);
+  };
+
+  const handleExportPDF = async (selectedSections: string[]) => {
+    setShowExportModal(false);
     setIsExporting(true);
 
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 12;
-    const innerWidth = pageWidth - (margin * 2);
-
-    // Cores baseadas no tema
-    const bgColor = isDark ? '#111827' : '#f5f5f5';
-    const fillColorRGB = isDark ? [17, 24, 39] : [245, 245, 245];
+    await new Promise(resolve => setTimeout(resolve, 600));
 
     try {
-      const coverElement = document.getElementById('pdf-cover');
-      if (coverElement) {
-        const coverCanvas = await html2canvas(coverElement, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: bgColor,
-          logging: false
-        });
-        const coverImg = coverCanvas.toDataURL('image/png');
-        pdf.addImage(coverImg, 'PNG', 0, 0, pageWidth, pageHeight);
-      }
-
-      const sections = [
-        'pdf-section-kpis',
-        'pdf-section-middle',
-        'pdf-section-waterfall',
-        'pdf-section-bottom',
-        'pdf-section-expense-evolution'
-      ];
-
-      pdf.addPage();
-      pdf.setFillColor(fillColorRGB[0], fillColorRGB[1], fillColorRGB[2]);
-      pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-
-      let currentY = margin;
-
-      for (const sectionId of sections) {
-        const element = document.getElementById(sectionId);
-        if (!element) continue;
-
-        const canvas = await html2canvas(element, {
-          scale: 2,
-          backgroundColor: bgColor,
-          useCORS: true,
-          logging: false
-        });
-
-        const imgData = canvas.toDataURL('image/png');
-        const imgProps = pdf.getImageProperties(imgData);
-        const imgHeight = (imgProps.height * innerWidth) / imgProps.width;
-
-        if (currentY + imgHeight > pageHeight - margin) {
-          pdf.addPage();
-          pdf.setFillColor(fillColorRGB[0], fillColorRGB[1], fillColorRGB[2]);
-          pdf.rect(0, 0, pageWidth, pageHeight, 'F');
-          currentY = margin;
-        }
-
-        pdf.addImage(imgData, 'PNG', margin, currentY, innerWidth, imgHeight);
-        currentY += imgHeight + 6;
-      }
-
-      const timestamp = new Date().toISOString().split('T')[0];
-      const fileName = `FinanceFlow_Report_${filtros.empresa === 'Todas' ? 'Global' : filtros.empresa}_${timestamp}.pdf`;
-      pdf.save(fileName);
+      const config = pdfTabConfigs[currentPage];
+      await generatePDF({
+        selectedSections,
+        isDark,
+        tabTitle: config.title,
+        fileName: config.fileName,
+      });
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       alert("Houve um erro ao gerar o relatório. Por favor, tente novamente.");
@@ -197,7 +156,7 @@ const AppContent: React.FC = () => {
   return (
     <div className="flex h-screen bg-background-dark overflow-hidden">
       <Sidebar
-        onExport={handleExportPDF}
+        onExport={handleExportPDFClick}
         visible={sidebarVisible}
         currentPage={currentPage}
         onNavigate={setCurrentPage}
@@ -228,6 +187,15 @@ const AppContent: React.FC = () => {
 
         {/* IA Chat Component */}
         <AIChat />
+
+        {/* PDF Export Modal */}
+        <PDFExportModal
+          isOpen={showExportModal}
+          onClose={() => setShowExportModal(false)}
+          currentPage={currentPage}
+          onExport={handleExportPDF}
+          isExporting={isExporting}
+        />
 
         {/* Premium Modal */}
         <PremiumModal

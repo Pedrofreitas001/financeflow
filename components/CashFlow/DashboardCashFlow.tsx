@@ -222,7 +222,7 @@ const DashboardCashFlow: React.FC = () => {
                 </div>
 
                 {/* KPIs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                <div id="pdf-section-cashflow-kpis" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                     <div className="bg-surface-dark rounded-xl p-4 border border-border-dark">
                         <p className="text-xs font-bold text-text-muted uppercase mb-2">Saldo Atual</p>
                         <p className="text-2xl font-bold text-blue-500">{formatCurrency(saldoAtual)}</p>
@@ -248,7 +248,7 @@ const DashboardCashFlow: React.FC = () => {
                 </div>
 
                 {/* Gráficos */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div id="pdf-section-cashflow-charts" className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
                         <h2 className="text-base font-bold text-white mb-4">Receitas vs Despesas</h2>
                         <ResponsiveContainer width="100%" height={280}>
@@ -279,7 +279,7 @@ const DashboardCashFlow: React.FC = () => {
                 </div>
 
                 {/* Tabela */}
-                <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
+                <div id="pdf-section-cashflow-tabela" className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
                     <h2 className="text-base font-bold text-white mb-4">Detalhamento de Contas</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">

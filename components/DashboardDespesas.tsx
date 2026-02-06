@@ -287,19 +287,19 @@ const DashboardDespesas: React.FC = () => {
                 {/* KPIs */}
                 <KPIGridDespesas />
 
-                {/* GrÃ¡ficos principais */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
+                {/* Gráficos principais */}
+                <div id="pdf-section-despesas-charts" className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
                     <EvolucaoDespesasMensal />
                     <DespesasPorCategoria />
                 </div>
 
-                {/* ComparaÃ§Ã£o de perÃ­odos - largura total */}
-                <div className="w-full">
+                {/* Comparação de períodos - largura total */}
+                <div id="pdf-section-despesas-comparacao" className="w-full">
                     <ComparacaoPeriodos />
                 </div>
 
                 {/* Tabela de Plano de Contas - largura total */}
-                <div className="w-full">
+                <div id="pdf-section-despesas-tabela" className="w-full">
                     <TabelaPlanoConta />
                 </div>
 

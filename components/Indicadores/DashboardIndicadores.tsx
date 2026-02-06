@@ -197,7 +197,7 @@ const DashboardIndicadores: React.FC = () => {
                 </div>
 
                 {/* KPIs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                <div id="pdf-section-indicadores-kpis" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                     <KPIIndicadorCard
                         titulo="ROE"
                         valor={indicadores.roe}
@@ -241,7 +241,7 @@ const DashboardIndicadores: React.FC = () => {
                 </div>
 
                 {/* Gráficos */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div id="pdf-section-indicadores-charts" className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                     <div className="bg-surface-dark rounded-xl p-6 border border-border-dark">
                         <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Evolução de Indicadores</h2>
                         <ResponsiveContainer width="100%" height={280}>
@@ -272,7 +272,7 @@ const DashboardIndicadores: React.FC = () => {
                 </div>
 
                 {/* Tabela */}
-                <div className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
+                <div id="pdf-section-indicadores-tabela" className="bg-surface-dark rounded-xl p-6 border border-border-dark overflow-hidden">
                     <h2 className={`text-base font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>Detalhamento</h2>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
