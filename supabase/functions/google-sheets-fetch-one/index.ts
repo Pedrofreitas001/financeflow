@@ -10,6 +10,7 @@ const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET") || "";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
@@ -137,8 +138,10 @@ serve(async (req) => {
         const accessToken = refreshed.access_token;
 
         const sheetName = conn.sheet_name || "Sheet1";
-        const range = conn.range || "A1:Z1000";
-        const rangeWithSheet = `${sheetName}!${range}`;
+        const rawRange = conn.range || "A1:Z1000";
+        // Se o range já contém "!" significa que já inclui o nome da aba (ex: "'Sheet1'!A1:ZZ10000")
+        // Nesse caso usar como está; caso contrário, prefixar com o nome da aba
+        const rangeWithSheet = rawRange.includes("!") ? rawRange : `${sheetName}!${rawRange}`;
 
         const valuesResponse = await fetch(
             `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(conn.spreadsheet_id)}/values/${encodeURIComponent(rangeWithSheet)}`,

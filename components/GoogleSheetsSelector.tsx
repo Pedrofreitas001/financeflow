@@ -84,13 +84,13 @@ export function GoogleSheetsSelector({
 
         try {
             // Iniciar fluxo OAuth com state correto
-            const range = `'${selectedTab.replace(/'/g, "''")}'!A1:ZZ10000`;
+            // Range sem prefixo de sheet - a edge function adiciona o sheetName separadamente
+            const range = 'A1:ZZ10000';
             const statePayload = {
                 dashboardType,
                 spreadsheetId: sheetId,
                 sheetName: selectedTab,
                 range,
-                // Pode adicionar outros campos se necessário
             };
             const { getGoogleAuthUrl } = await import('@/utils/googleSheetsAuth');
             const encodedState = btoa(JSON.stringify(statePayload));
