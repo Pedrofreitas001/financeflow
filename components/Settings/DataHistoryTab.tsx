@@ -182,35 +182,16 @@ export default function DataHistoryTab({ userId, dashboardType, variant = 'dark'
                 isOpen={showSelector}
                 onClose={() => setShowSelector(false)}
                 dashboardType={dashboardType as any}
-                onDataLoaded={() => {
-                    // Não carregar dados na tela aqui
-                }}
-                onConnected={async ({ sheetId, sheetName, tabName, range }) => {
+                onDataLoaded={async () => {
+                    // Após conectar e importar, recarrega histórico e dados
+                    await loadHistory();
                     try {
-                        await supabase
-                            .from('google_sheets_connections')
-                            .upsert({
-                                user_id: userId,
-                                dashboard_type: dashboardType,
-                                spreadsheet_id: sheetId,
-                                spreadsheet_name: sheetName,
-                                sheet_name: tabName,
-                                sheet_names: [tabName],
-                                range,
-                                is_active: true,
-                            }, {
-                                onConflict: 'user_id,spreadsheet_id'
-                            });
-                        await loadHistory();
-                        try {
-                            await fetchGoogleSheetsData(dashboardType);
-                            window.dispatchEvent(new CustomEvent('google-sheets-synced', { detail: { dashboardType } }));
-                        } catch (_) {
-                            console.warn('Primeira carga do Google Sheets pode ser feita pelo botão Atualizar.');
-                        }
-                    } finally {
-                        setShowSelector(false);
+                        await fetchGoogleSheetsData(dashboardType);
+                        window.dispatchEvent(new CustomEvent('google-sheets-synced', { detail: { dashboardType } }));
+                    } catch (_) {
+                        console.warn('Primeira carga do Google Sheets pode ser feita pelo botão Atualizar.');
                     }
+                    setShowSelector(false);
                 }}
             />
 
