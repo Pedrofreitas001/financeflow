@@ -9,19 +9,15 @@ interface ExportOptions {
   coverElementId?: string;
 }
 
-// Largura fixa de captura que mapeia bem para A4 (proporcional)
 const CAPTURE_WIDTH = 900;
-const FOOTER_RESERVE = 14; // mm reservados para footer
+const FOOTER_RESERVE = 14;
 
 /**
- * Detecta se um elemento é um grid/flex com múltiplos filhos visíveis (2+ colunas).
- * Se sim, retornamos os filhos diretos para capturar individualmente.
+ * Detecta se um elemento é um grid/flex com filhos lado a lado.
  */
 function getGridChildren(element: HTMLElement): HTMLElement[] | null {
   const style = window.getComputedStyle(element);
   const display = style.display;
-
-  // Só separar grids/flex com mais de 1 filho visível
   if (display !== 'grid' && display !== 'flex') return null;
 
   const children = Array.from(element.children).filter(
@@ -30,94 +26,172 @@ function getGridChildren(element: HTMLElement): HTMLElement[] | null {
 
   if (children.length < 2) return null;
 
-  // Verificar se os filhos estão dispostos em colunas (lado a lado)
-  if (children.length >= 2) {
-    const firstRect = children[0].getBoundingClientRect();
-    const secondRect = children[1].getBoundingClientRect();
-    // Se o segundo filho começa à direita do primeiro = layout em colunas
-    if (secondRect.left > firstRect.left + firstRect.width * 0.3) {
-      return children;
-    }
+  const firstRect = children[0].getBoundingClientRect();
+  const secondRect = children[1].getBoundingClientRect();
+  if (secondRect.left > firstRect.left + firstRect.width * 0.3) {
+    return children;
   }
-
   return null;
 }
 
 /**
- * Prepara um elemento para captura: ajusta legibilidade de textos SVG e legendas.
+ * Detecta se um elemento é um grid de KPI cards (4+ filhos pequenos).
  */
-function prepareForCapture(element: HTMLElement, isDark: boolean): () => void {
-  const originals: { el: any; prop: string; value: string }[] = [];
+function isKpiGrid(element: HTMLElement): boolean {
+  const style = window.getComputedStyle(element);
+  if (style.display !== 'grid') return false;
+  const children = Array.from(element.children).filter(
+    (c) => c instanceof HTMLElement
+  ) as HTMLElement[];
+  return children.length >= 4;
+}
 
-  function store(el: any, prop: string, value: string) {
-    originals.push({ el, prop, value });
+interface StyleBackup {
+  el: HTMLElement;
+  prop: string;
+  value: string;
+  isAttr?: boolean;
+  isClass?: boolean;
+}
+
+/**
+ * Prepara o DOM de um elemento para captura em PDF:
+ * - Remove overflow hidden, truncate, min-h-0
+ * - Remove alturas fixas de containers de gráfico
+ * - Força 3 colunas em grids de KPI
+ * - Melhora legibilidade de textos SVG e legendas
+ */
+function prepareElementForPdf(root: HTMLElement, isDark: boolean): () => void {
+  const backups: StyleBackup[] = [];
+
+  function backupStyle(el: HTMLElement, prop: string) {
+    backups.push({ el, prop, value: (el.style as any)[prop] || '' });
   }
 
-  // Textos SVG (eixos recharts)
-  element.querySelectorAll<SVGTextElement>('svg text').forEach((text) => {
-    const size = parseFloat(window.getComputedStyle(text).fontSize) || 12;
-    if (size < 12) {
-      store(text, '_fontSize', text.style.fontSize);
-      text.style.fontSize = '12px';
+  function backupClass(el: HTMLElement, cls: string) {
+    if (el.classList.contains(cls)) {
+      backups.push({ el, prop: cls, value: cls, isClass: true });
+      el.classList.remove(cls);
     }
-    const fill = text.getAttribute('fill');
-    if (!fill || fill === '#666' || fill === '#999') {
-      store(text, '_fill', fill || '');
-      text.setAttribute('fill', isDark ? '#d1d5db' : '#374151');
-    }
-  });
+  }
 
-  // Legendas recharts
-  element.querySelectorAll<HTMLElement>('.recharts-legend-item-text').forEach((text) => {
-    store(text, '_fontSize', text.style.fontSize);
-    store(text, '_fontWeight', text.style.fontWeight);
+  function backupAttr(el: HTMLElement, attr: string) {
+    backups.push({ el, prop: attr, value: el.getAttribute(attr) || '', isAttr: true });
+  }
+
+  const allElements = [root, ...Array.from(root.querySelectorAll<HTMLElement>('*'))];
+
+  for (const el of allElements) {
+    // Remove truncation and overflow clipping
+    backupClass(el, 'truncate');
+    backupClass(el, 'overflow-hidden');
+    backupClass(el, 'overflow-x-auto');
+    backupClass(el, 'min-h-0');
+
+    const computed = window.getComputedStyle(el);
+
+    if (computed.overflow === 'hidden' || computed.overflowX === 'hidden') {
+      backupStyle(el, 'overflow');
+      el.style.overflow = 'visible';
+    }
+
+    // Remove fixed heights on chart containers (h-[420px], h-[380px], etc.)
+    const className = el.className;
+    if (typeof className === 'string' && /h-\[\d+px\]/.test(className)) {
+      backupStyle(el, 'height');
+      el.style.height = 'auto';
+      backupStyle(el, 'minHeight');
+      el.style.minHeight = '300px';
+    }
+
+    // Fix SVG text legibility
+    if (el instanceof SVGTextElement) {
+      const size = parseFloat(computed.fontSize) || 12;
+      if (size < 12) {
+        backupStyle(el as any, 'fontSize');
+        (el as any).style.fontSize = '12px';
+      }
+      const fill = el.getAttribute('fill');
+      if (!fill || fill === '#666' || fill === '#999') {
+        backupAttr(el as any, 'fill');
+        el.setAttribute('fill', isDark ? '#d1d5db' : '#374151');
+      }
+    }
+  }
+
+  // Fix recharts legend text
+  root.querySelectorAll<HTMLElement>('.recharts-legend-item-text').forEach((text) => {
+    backupStyle(text, 'fontSize');
+    backupStyle(text, 'fontWeight');
     text.style.fontSize = '12px';
     text.style.fontWeight = '600';
   });
 
-  // Linhas de grade
-  element.querySelectorAll<SVGLineElement>('.recharts-cartesian-grid line').forEach((line) => {
+  // Fix grid lines
+  root.querySelectorAll<SVGLineElement>('.recharts-cartesian-grid line').forEach((line) => {
     const stroke = line.getAttribute('stroke');
     if (stroke === '#333' || stroke === '#444') {
-      store(line, '_stroke', stroke);
+      backupAttr(line as any, 'stroke');
       line.setAttribute('stroke', isDark ? '#4b5563' : '#d1d5db');
     }
   });
 
+  // Force 3-column layout on KPI grids for better readability
+  if (isKpiGrid(root)) {
+    backupStyle(root, 'gridTemplateColumns');
+    root.style.gridTemplateColumns = 'repeat(3, 1fr)';
+  }
+  root.querySelectorAll<HTMLElement>('[class*="grid-cols"]').forEach((grid) => {
+    if (isKpiGrid(grid)) {
+      backupStyle(grid, 'gridTemplateColumns');
+      grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    }
+  });
+
   return () => {
-    originals.forEach(({ el, prop, value }) => {
-      if (prop === '_fill') el.setAttribute('fill', value);
-      else if (prop === '_stroke') el.setAttribute('stroke', value);
-      else if (prop === '_fontSize') el.style.fontSize = value;
-      else if (prop === '_fontWeight') el.style.fontWeight = value;
-    });
+    for (const b of backups) {
+      if (b.isClass) {
+        b.el.classList.add(b.value);
+      } else if (b.isAttr) {
+        if (b.value) {
+          b.el.setAttribute(b.prop, b.value);
+        } else {
+          b.el.removeAttribute(b.prop);
+        }
+      } else {
+        (b.el.style as any)[b.prop] = b.value;
+      }
+    }
   };
 }
 
 /**
- * Captura um elemento HTML como imagem PNG via html2canvas.
- * Usa um wrapper temporário com largura fixa para garantir proporções consistentes.
+ * Captura um elemento HTML como imagem PNG.
  */
 async function captureElement(
   element: HTMLElement,
-  bgColor: string
+  bgColor: string,
+  isDark: boolean
 ): Promise<string> {
-  // Salvar estilos originais
   const origWidth = element.style.width;
   const origMaxWidth = element.style.maxWidth;
   const origMinWidth = element.style.minWidth;
-  const origPosition = element.style.position;
-  const origLeft = element.style.left;
   const origBoxSizing = element.style.boxSizing;
 
-  // Forçar largura fixa para captura consistente
+  // Preparar DOM
+  const cleanupDom = prepareElementForPdf(element, isDark);
+
+  // Forçar largura fixa
   element.style.width = `${CAPTURE_WIDTH}px`;
   element.style.maxWidth = `${CAPTURE_WIDTH}px`;
   element.style.minWidth = `${CAPTURE_WIDTH}px`;
   element.style.boxSizing = 'border-box';
 
-  // Aguardar relayout
-  await new Promise((r) => setTimeout(r, 200));
+  // Trigger resize para ResponsiveContainer re-calcular
+  window.dispatchEvent(new Event('resize'));
+
+  // Esperar recharts re-renderizar completamente
+  await new Promise((r) => setTimeout(r, 700));
 
   try {
     const canvas = await html2canvas(element, {
@@ -130,19 +204,17 @@ async function captureElement(
     });
     return canvas.toDataURL('image/png');
   } finally {
-    // Restaurar
     element.style.width = origWidth;
     element.style.maxWidth = origMaxWidth;
     element.style.minWidth = origMinWidth;
-    element.style.position = origPosition;
-    element.style.left = origLeft;
     element.style.boxSizing = origBoxSizing;
+    cleanupDom();
+    window.dispatchEvent(new Event('resize'));
   }
 }
 
 /**
- * Adiciona uma imagem ao PDF com lógica de quebra de página.
- * Retorna a nova posição Y.
+ * Adiciona imagem ao PDF com paginação inteligente.
  */
 function addImageToPdf(
   pdf: jsPDF,
@@ -156,11 +228,8 @@ function addImageToPdf(
 ): number {
   const imgProps = pdf.getImageProperties(imgData);
   const imgHeight = (imgProps.height * innerWidth) / imgProps.width;
-
-  // Altura máxima disponível (descontando footer)
   const maxContentY = pageHeight - margin - FOOTER_RESERVE;
 
-  // Se não cabe, nova página
   if (currentY + imgHeight > maxContentY) {
     pdf.addPage();
     pdf.setFillColor(fillColorRGB[0], fillColorRGB[1], fillColorRGB[2]);
@@ -168,10 +237,8 @@ function addImageToPdf(
     currentY = margin;
   }
 
-  // Se a imagem sozinha é maior que uma página inteira, escalar para caber
   const availableHeight = maxContentY - currentY;
   if (imgHeight > availableHeight && currentY === margin) {
-    // Escalar para caber na página
     const scale = availableHeight / imgHeight;
     const scaledWidth = innerWidth * scale;
     const scaledHeight = imgHeight * scale;
@@ -204,7 +271,7 @@ export async function generatePDF(options: ExportOptions): Promise<void> {
     ? [17, 24, 39]
     : [245, 245, 245];
 
-  // ─── Página 1: Capa ──────────────────────────────
+  // ─── Capa ────────────────────────────────────────
   const coverElement = document.getElementById(coverElementId);
   if (coverElement) {
     const coverCanvas = await html2canvas(coverElement, {
@@ -213,16 +280,14 @@ export async function generatePDF(options: ExportOptions): Promise<void> {
       backgroundColor: bgColor,
       logging: false,
     });
-    const coverImg = coverCanvas.toDataURL('image/png');
-    pdf.addImage(coverImg, 'PNG', 0, 0, pageWidth, pageHeight);
+    pdf.addImage(coverCanvas.toDataURL('image/png'), 'PNG', 0, 0, pageWidth, pageHeight);
   }
 
-  // ─── Página de conteúdo ──────────────────────────
+  // ─── Conteúdo ────────────────────────────────────
   pdf.addPage();
   pdf.setFillColor(fillColorRGB[0], fillColorRGB[1], fillColorRGB[2]);
   pdf.rect(0, 0, pageWidth, pageHeight, 'F');
 
-  // Header
   pdf.setFont('helvetica', 'bold');
   pdf.setFontSize(16);
   pdf.setTextColor(isDark ? 255 : 30);
@@ -247,56 +312,26 @@ export async function generatePDF(options: ExportOptions): Promise<void> {
 
   let currentY = margin + 22;
 
-  // ─── Capturar cada seção ─────────────────────────
   for (const sectionId of selectedSections) {
     const element = document.getElementById(sectionId);
     if (!element) continue;
 
-    // Verificar se é um grid com colunas lado a lado
     const gridChildren = getGridChildren(element);
 
     if (gridChildren && gridChildren.length >= 2) {
-      // Capturar cada filho do grid individualmente (um por linha no PDF)
       for (const child of gridChildren) {
-        const cleanup = prepareForCapture(child, isDark);
-        await new Promise((r) => setTimeout(r, 50));
-
-        try {
-          const imgData = await captureElement(child, bgColor);
-          currentY = addImageToPdf(
-            pdf,
-            imgData,
-            currentY,
-            margin,
-            innerWidth,
-            pageHeight,
-            fillColorRGB,
-            pageWidth
-          );
-        } finally {
-          cleanup();
-        }
+        const imgData = await captureElement(child, bgColor, isDark);
+        currentY = addImageToPdf(
+          pdf, imgData, currentY, margin, innerWidth,
+          pageHeight, fillColorRGB, pageWidth
+        );
       }
     } else {
-      // Capturar o elemento inteiro
-      const cleanup = prepareForCapture(element, isDark);
-      await new Promise((r) => setTimeout(r, 50));
-
-      try {
-        const imgData = await captureElement(element, bgColor);
-        currentY = addImageToPdf(
-          pdf,
-          imgData,
-          currentY,
-          margin,
-          innerWidth,
-          pageHeight,
-          fillColorRGB,
-          pageWidth
-        );
-      } finally {
-        cleanup();
-      }
+      const imgData = await captureElement(element, bgColor, isDark);
+      currentY = addImageToPdf(
+        pdf, imgData, currentY, margin, innerWidth,
+        pageHeight, fillColorRGB, pageWidth
+      );
     }
   }
 
