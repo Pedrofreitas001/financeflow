@@ -95,13 +95,19 @@ function prepareElementForPdf(root: HTMLElement, isDark: boolean): () => void {
       el.style.overflow = 'visible';
     }
 
-    // Remove fixed heights on chart containers (h-[420px], h-[380px], etc.)
+    // Ensure chart containers with fixed heights keep their height
+    // (ResponsiveContainer needs a defined pixel height from parent)
+    // but ensure their content is not clipped
     const className = el.className;
     if (typeof className === 'string' && /h-\[\d+px\]/.test(className)) {
-      backupStyle(el, 'height');
-      el.style.height = 'auto';
-      backupStyle(el, 'minHeight');
-      el.style.minHeight = '300px';
+      backupStyle(el, 'overflow');
+      el.style.overflow = 'visible';
+    }
+
+    // Ensure ResponsiveContainer wrapper and its SVG have proper dimensions
+    if (el.classList.contains('recharts-responsive-container')) {
+      backupStyle(el, 'overflow');
+      el.style.overflow = 'visible';
     }
 
     // Fix SVG text legibility
@@ -187,11 +193,17 @@ async function captureElement(
   element.style.minWidth = `${CAPTURE_WIDTH}px`;
   element.style.boxSizing = 'border-box';
 
-  // Trigger resize para ResponsiveContainer re-calcular
+  // Trigger resize para ResponsiveContainer re-calcular dimensões
   window.dispatchEvent(new Event('resize'));
 
-  // Esperar recharts re-renderizar completamente
-  await new Promise((r) => setTimeout(r, 700));
+  // Aguardar primeiro re-layout
+  await new Promise((r) => setTimeout(r, 200));
+
+  // Segundo resize para garantir que ResponsiveContainer recalculou completamente
+  window.dispatchEvent(new Event('resize'));
+
+  // Esperar recharts re-renderizar completamente (SVG paths, bars, etc.)
+  await new Promise((r) => setTimeout(r, 800));
 
   try {
     const canvas = await html2canvas(element, {
