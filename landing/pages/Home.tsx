@@ -89,27 +89,27 @@ const GalleryGrid: React.FC = () => {
 
     return (
         <>
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {images.map((image, index) => (
-                            <div
-                                key={index}
-                                onClick={() => setSelectedImage(image.src)}
-                                className="cursor-pointer group relative overflow-hidden rounded-md border border-slate-200 hover:border-blue-400/70 transition-all hover:shadow-lg hover:shadow-blue-200/40 bg-white"
-                            >
-                                <img
-                                    src={image.src}
-                                    alt={image.alt}
-                                    loading="lazy"
-                                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity">
-                                        zoom_in
-                                    </span>
-                                </div>
-                            </div>
-                        ))}
+            <div className="grid md:grid-cols-3 gap-6">
+                {images.map((image, index) => (
+                    <div
+                        key={index}
+                        onClick={() => setSelectedImage(image.src)}
+                        className="cursor-pointer group relative overflow-hidden rounded-md border border-slate-200 hover:border-blue-400/70 transition-all hover:shadow-lg hover:shadow-blue-200/40 bg-white"
+                    >
+                        <img
+                            src={image.src}
+                            alt={image.alt}
+                            loading="lazy"
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                            <span className="material-symbols-outlined text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity">
+                                zoom_in
+                            </span>
+                        </div>
                     </div>
+                ))}
+            </div>
 
             {/* Modal */}
             {selectedImage && (
@@ -381,12 +381,12 @@ const Home: React.FC = () => {
 
                 {/* Soft blue accent top-right - subtle */}
                 <div className="absolute inset-0" style={{
-                    background: 'radial-gradient(ellipse 70% 60% at 90% 20%, rgba(59, 130, 200, 0.2) 0%, transparent 60%)'
+                    background: 'radial-gradient(ellipse 70% 60% at 90% 20%, rgba(62, 146, 230, 0.2) 0%, transparent 60%)'
                 }}></div>
 
                 {/* Very subtle glow behind dashboard */}
                 <div className="absolute inset-0" style={{
-                    background: 'radial-gradient(ellipse 60% 70% at 75% 50%, rgba(45, 90, 150, 0.15) 0%, transparent 60%)'
+                    background: 'radial-gradient(ellipse 60% 70% at 75% 50%, rgba(56, 108, 172, 0.15) 0%, transparent 60%)'
                 }}></div>
 
                 {/* Laminated vibrant circle - top center-left (main bright) */}
@@ -396,7 +396,7 @@ const Home: React.FC = () => {
 
                 {/* Laminated vibrant circle - upper center */}
                 <div className="absolute inset-0" style={{
-                    background: 'radial-gradient(circle at 55% 30%, rgba(80, 190, 255, 0.13) 0%, rgba(100, 210, 255, 0.065) 22%, transparent 45%)'
+                    background: 'radial-gradient(circle at 55% 30%, rgba(82, 171, 223, 0.13) 0%, rgba(100, 210, 255, 0.065) 22%, transparent 45%)'
                 }}></div>
 
                 {/* Laminated vibrant circle - center-left */}
@@ -416,7 +416,7 @@ const Home: React.FC = () => {
 
                 {/* Dot Grid Pattern */}
                 <div className="absolute inset-0" style={{
-                    backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)`,
+                    backgroundImage: `radial-gradient(rgba(200, 222, 227, 0.1) 1px, transparent 1.5px)`,
                     backgroundSize: '24px 24px'
                 }}></div>
 
@@ -424,74 +424,93 @@ const Home: React.FC = () => {
                     <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                         {/* Left Content */}
                         <div>
-                            <div className="inline-flex items-center gap-2 bg-[#1a2d4a] border border-blue-500/30 rounded-full px-4 py-2 mb-8">
-                                <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
-                                <span className="text-white/90 text-sm font-medium">Novo: Insights com IA Generativa</span>
-                            </div>
 
-                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-[1.1]">
-                                Dashboard Contábil<br />
-                                <span className="text-blue-400">Inteligente</span>
+
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-8 leading-[1.1]">
+                                Transforme planilhas em leitura executiva confiável
                             </h1>
 
-                            <p className="text-white/60 text-base sm:text-lg lg:text-xl leading-relaxed mb-8 sm:mb-10 max-w-lg">
-                                Transforme seus dados do Excel em dashboards profissionais com insights de IA. A solução completa para gestão financeira moderna.
+                            <p className="text-white/60 text-base sm:text-lg lg:text-lg leading-relaxed mt-4 mb-6 max-w-lg">
+                                Para empresas que ja tem dados financeiros e precisam de visão clara, controle e confiança
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4 mb-8 sm:mb-10">
+                            {/* subtexto2 removido conforme solicitado */}
+
+
+
+                            <div className="flex flex-col sm:flex-row gap-3 mt-14 mb-8 sm:mb-10">
                                 {user ? (
                                     <Link
                                         to="/dashboard"
-                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-blue-500 transition-all"
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm sm:text-sm font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-blue-500 transition-all"
                                     >
-                                        <span className="material-symbols-outlined text-xl">rocket_launch</span>
+                                        <span className="material-symbols-outlined text-lg">rocket_launch</span>
                                         Acessar Dashboard
                                     </Link>
                                 ) : (
                                     <button
                                         onClick={() => setShowSignupModal(true)}
-                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-blue-500 transition-all"
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm sm:text-sm font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-blue-500 transition-all"
                                     >
-                                        <span className="material-symbols-outlined text-xl">rocket_launch</span>
+                                        <span className="material-symbols-outlined text-lg">rocket_launch</span>
                                         Acessar Dashboard
                                     </button>
                                 )}
                                 <a
                                     href="#demo"
-                                    className="inline-flex items-center justify-center gap-2 bg-white/5 border border-white/20 text-white text-sm sm:text-base font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl hover:bg-white/10 transition-all"
+                                    className="inline-flex items-center justify-center gap-2 bg-white/5 border border-white/20 text-white text-sm sm:text-sm font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg hover:bg-white/10 transition-all"
                                 >
-                                    <span className="material-symbols-outlined text-xl">play_circle</span>
+                                    <span className="material-symbols-outlined text-lg">play_circle</span>
                                     Ver Demonstração
                                 </a>
                             </div>
 
-                            <div className="flex items-center gap-6 text-sm text-white/50">
+                            <div className="flex items-center gap-6 text-sm text-white/50 mt-6">
                                 <div className="flex items-center gap-2">
                                     <span className="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
-                                    <span>7 dias grátis</span>
+                                    <span>7 dias gratis</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
-                                    <span>Sem cartão</span>
+                                    <span>Teste seus dados</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
                                     <span>Cancele quando quiser</span>
                                 </div>
                             </div>
+
+                            {/* subtle widgets moved to the mockup (right side) */}
+
                         </div>
 
                         {/* Right Content - Dashboard Preview */}
-                        <div className="relative max-w-[520px] mx-auto lg:mx-0">
+                        <div className="relative max-w-[520px] mx-auto lg:mx-6">
+                            {/* Subtle widgets above mockup (top right of hero) */}
+                                <div className="mb-9 flex justify-end">
+                                    <div className="glass-pill flex items-center gap-5 px-4 py-3 rounded-full backdrop-blur-md bg-white/9 border border-white/20 shadow-lg text-xs" style={{boxShadow: '0 10px 8px 0 rgba(25, 25, 26, 0.1)'}}>
+                                        <div className="flex items-center gap-3 px-2 py-2 bg-white/5 rounded-full backdrop-blur-md">
+                                            <span className="material-symbols-outlined text-blue-300 text-base">link</span>
+                                            <span>Conexão com Google Sheets</span>
+                                        </div>
+                                        <div className="flex items-center gap-1 px-2 py-2 bg-white/5 rounded-full">
+                                            <span className="material-symbols-outlined text-blue-300 text-base">auto_awesome</span>
+                                            <span>Leitura financeira com apoio de IA</span>
+                                        </div>
+                                        <div className="flex items-center gap-1 px-2 py-2 bg-white/5 rounded-full">
+                                            <span className="material-symbols-outlined text-blue-300 text-base">picture_as_pdf</span>
+                                            <span>Apresentações com 1 clique</span>
+                                        </div>
+                                    </div>
+                            </div>
                             {/* Glow effect behind mockup */}
                             <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-blue-600/10 to-transparent rounded-3xl blur-2xl"></div>
 
                             <div
-                                className={`relative z-10 rounded-xl p-1 border shadow-2xl scale-[0.92] sm:scale-100 origin-top transition-all duration-500 ease-in-out ${
-                                    isMockupLight
-                                        ? 'bg-gradient-to-br from-[#dbe4ee] via-[#e6edf2] to-[#cfd8e3] border-slate-300 shadow-blue-200/35'
-                                        : 'bg-gradient-to-br from-[#1e3654] to-[#152238] border-white/15 shadow-blue-900/30'
-                                } ${isMockupTransitioning ? 'scale-[0.99]' : 'scale-100'}`}
+                                className={`relative z-10 rounded-xl p-1 border shadow-2xl scale-[0.92] sm:scale-100 origin-top transition-all duration-500 ease-in-out ${isMockupLight
+                                    ? 'bg-gradient-to-br from-[#dbe4ee] via-[#e6edf2] to-[#cfd8e3] border-slate-300 shadow-blue-200/35'
+                                    : 'bg-gradient-to-br from-[#1e3654] to-[#152238] border-white/15 shadow-blue-900/30'
+                                    } ${isMockupTransitioning ? 'scale-[0.99]' : 'scale-100'}`}
                             >
                                 {/* Browser Header */}
                                 <div className={`flex items-center gap-3 px-4 py-3 rounded-t-lg transition-colors duration-700 ease-in-out ${isMockupLight ? 'bg-slate-300 border-b border-slate-200' : 'bg-[#182d4a]/90'}`}>
@@ -574,6 +593,13 @@ const Home: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+
+                           
+                            
+                           
+                            {/* ...existing code... */}
+                            {/* ...existing code... */}
+
                         </div>
                     </div>
                 </div>

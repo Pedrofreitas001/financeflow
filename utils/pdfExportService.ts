@@ -1,3 +1,11 @@
+// Detecta containers Recharts para garantir height fixo durante exportação PDF
+// Detecta containers Recharts pelo wrapper real ou SVG interno
+function isRechartsContainer(el: HTMLElement): boolean {
+  return (
+    el.querySelector('.recharts-wrapper') !== null ||
+    el.querySelector('svg.recharts-surface') !== null
+  );
+}
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -95,13 +103,20 @@ function prepareElementForPdf(root: HTMLElement, isDark: boolean): () => void {
       el.style.overflow = 'visible';
     }
 
-    // Remove fixed heights on chart containers (h-[420px], h-[380px], etc.)
+    // Remove fixed heights em containers, mas para Recharts forçar height: 420px
     const className = el.className;
     if (typeof className === 'string' && /h-\[\d+px\]/.test(className)) {
       backupStyle(el, 'height');
-      el.style.height = 'auto';
       backupStyle(el, 'minHeight');
-      el.style.minHeight = '300px';
+      if (isRechartsContainer(el)) {
+        // Para containers Recharts, garantir height fixo para ResponsiveContainer
+        el.style.height = '420px';
+        el.style.minHeight = '420px';
+      } else {
+        // Para outros containers, usar height:auto e minHeight padrão
+        el.style.height = 'auto';
+        el.style.minHeight = '300px';
+      }
     }
 
     // Fix SVG text legibility
@@ -173,28 +188,47 @@ async function captureElement(
   bgColor: string,
   isDark: boolean
 ): Promise<string> {
-  const origWidth = element.style.width;
-  const origMaxWidth = element.style.maxWidth;
-  const origMinWidth = element.style.minWidth;
-  const origBoxSizing = element.style.boxSizing;
+  // Refatorado: captura PDF sem tocar no DOM original
+  // 1. Clonar o container
+  const clone = element.cloneNode(true) as HTMLElement;
 
-  // Preparar DOM
-  const cleanupDom = prepareElementForPdf(element, isDark);
+  // 2. Renderizar clone offscreen
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.left = '-10000px';
+  wrapper.style.top = '0';
+  wrapper.style.width = `${CAPTURE_WIDTH}px`;
+  wrapper.style.zIndex = '9999';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
 
-  // Forçar largura fixa
-  element.style.width = `${CAPTURE_WIDTH}px`;
-  element.style.maxWidth = `${CAPTURE_WIDTH}px`;
-  element.style.minWidth = `${CAPTURE_WIDTH}px`;
-  element.style.boxSizing = 'border-box';
+  // 3. Garantir width/height fixos nos gráficos Recharts do clone
+  // Aplica width/height em todos .recharts-wrapper e svg.recharts-surface
+  clone.querySelectorAll('.recharts-wrapper').forEach((chart: HTMLElement) => {
+    chart.style.width = `${CAPTURE_WIDTH}px`;
+    chart.style.height = '420px';
+  });
+  clone.querySelectorAll('svg.recharts-surface').forEach((svg: SVGElement) => {
+    svg.setAttribute('width', `${CAPTURE_WIDTH}`);
+    svg.setAttribute('height', '420');
+    svg.style.width = `${CAPTURE_WIDTH}px`;
+    svg.style.height = '420px';
+  });
 
-  // Trigger resize para ResponsiveContainer re-calcular
-  window.dispatchEvent(new Event('resize'));
+  // 4. Disparar resize apenas no clone (simulado)
+  // Não há como disparar resize só no clone, mas o clone está offscreen e não afeta a UI
+  // 5. Duplo requestAnimationFrame + delay
+  await new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    });
+  });
+  await new Promise((r) => setTimeout(r, 130));
 
-  // Esperar recharts re-renderizar completamente
-  await new Promise((r) => setTimeout(r, 700));
-
+  // 6. Capturar imagem do clone
+  let imgData;
   try {
-    const canvas = await html2canvas(element, {
+    imgData = await html2canvas(clone, {
       scale: 2,
       backgroundColor: bgColor,
       useCORS: true,
@@ -202,14 +236,10 @@ async function captureElement(
       width: CAPTURE_WIDTH,
       windowWidth: CAPTURE_WIDTH + 40,
     });
-    return canvas.toDataURL('image/png');
+    return imgData.toDataURL('image/png');
   } finally {
-    element.style.width = origWidth;
-    element.style.maxWidth = origMaxWidth;
-    element.style.minWidth = origMinWidth;
-    element.style.boxSizing = origBoxSizing;
-    cleanupDom();
-    window.dispatchEvent(new Event('resize'));
+    // 7. Remover clone do DOM
+    document.body.removeChild(wrapper);
   }
 }
 
